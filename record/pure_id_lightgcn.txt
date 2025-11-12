@@ -1,0 +1,331 @@
+
+--- MPS is available! Using MPS. ---
+--- Loading raw data files ---
+Backing up raw user and item IDs...
+Cleaning sequence string format...
+Building full category map...
+--- Starting static global data processing ---
+Global maps created. Total users: 23921, Total items: 32782
+Full DataFrame remapped.
+Static metadata (cates, hyperparams) created.
+Global data processing finished. (Users: 23921, Items: 32782)
+--- GNN mode: Skipping pre-loading of text vectors. ---
+--- Evaluation setup: 1 positive vs 99 negative samples ---
+
+==================================================
+Starting run with Learning Rate: 0.001
+==================================================
+
+========================= Period 0 =========================
+--- Building LightGCN Graph (N=56703) ---
+--- Graph built. Shape: torch.Size([56703, 56703]), Device: cpu ---
+Incrementally updating item history and seen users pool...
+--- BPRDataset: 3741 users, 32782 items prepared. ---
+--- Initializing LightGCN ---
+  Users: 23921, Items: 32782
+  Embed Dim: 64, Layers: 3
+--- LightGCN Embeddings initialized (Xavier) ---
+--- Starting GNN training loop (Max Epochs: 100, Patience: 10) ---
+Epochs:  37%|██████████████████████████████████                                                          | 37/100 [01:11<02:11,  2.08s/it, patience=9/10, train_bpr=0.2671, val_bce=0.5098]--- Early stopping triggered after 38 epochs. ---
+Epochs:  37%|██████████████████████████████████                                                          | 37/100 [01:13<02:04,  1.98s/it, patience=9/10, train_bpr=0.2671, val_bce=0.5098]
+--- Training finished for period 0. Best embeddings saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_0/best_embeddings.pth ---
+
+========================= Period 1 =========================
+--- Building LightGCN Graph (N=56703) ---
+--- Graph built. Shape: torch.Size([56703, 56703]), Device: cpu ---
+Incrementally updating item history and seen users pool...
+--- BPRDataset: 3315 users, 32782 items prepared. ---
+--- Initializing LightGCN ---
+  Users: 23921, Items: 32782
+  Embed Dim: 64, Layers: 3
+--- LightGCN Embeddings initialized (Xavier) ---
+Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_0/best_embeddings.pth
+--- Successfully restored model EMBEDDINGS. ---
+--- Starting GNN training loop (Max Epochs: 100, Patience: 10) ---
+Epochs:  19%|█████████████████▍                                                                          | 19/100 [00:39<02:42,  2.01s/it, patience=9/10, train_bpr=0.2818, val_bce=0.5125]--- Early stopping triggered after 20 epochs. ---
+Epochs:  19%|█████████████████▍                                                                          | 19/100 [00:41<02:58,  2.21s/it, patience=9/10, train_bpr=0.2818, val_bce=0.5125]
+--- Training finished for period 1. Best embeddings saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_1/best_embeddings.pth ---
+
+========================= Period 2 =========================
+--- Building LightGCN Graph (N=56703) ---
+--- Graph built. Shape: torch.Size([56703, 56703]), Device: cpu ---
+Incrementally updating item history and seen users pool...
+--- BPRDataset: 2768 users, 32782 items prepared. ---
+--- Initializing LightGCN ---
+  Users: 23921, Items: 32782
+  Embed Dim: 64, Layers: 3
+--- LightGCN Embeddings initialized (Xavier) ---
+Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_1/best_embeddings.pth
+--- Successfully restored model EMBEDDINGS. ---
+--- Starting GNN training loop (Max Epochs: 100, Patience: 10) ---
+Epochs:  17%|███████████████▋                                                                            | 17/100 [00:33<02:46,  2.00s/it, patience=9/10, train_bpr=0.2740, val_bce=0.5131]--- Early stopping triggered after 18 epochs. ---
+Epochs:  17%|███████████████▋                                                                            | 17/100 [00:35<02:55,  2.11s/it, patience=9/10, train_bpr=0.2740, val_bce=0.5131]
+--- Training finished for period 2. Best embeddings saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_2/best_embeddings.pth ---
+
+========================= Period 3 =========================
+--- Building LightGCN Graph (N=56703) ---
+--- Graph built. Shape: torch.Size([56703, 56703]), Device: cpu ---
+Incrementally updating item history and seen users pool...
+--- BPRDataset: 3105 users, 32782 items prepared. ---
+--- Initializing LightGCN ---
+  Users: 23921, Items: 32782
+  Embed Dim: 64, Layers: 3
+--- LightGCN Embeddings initialized (Xavier) ---
+Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_2/best_embeddings.pth
+--- Successfully restored model EMBEDDINGS. ---
+--- Starting GNN training loop (Max Epochs: 100, Patience: 10) ---
+Epochs:  10%|█████████▏                                                                                  | 10/100 [00:22<03:32,  2.36s/it, patience=9/10, train_bpr=0.2999, val_bce=0.5589]--- Early stopping triggered after 11 epochs. ---
+Epochs:  10%|█████████▏                                                                                  | 10/100 [00:25<03:46,  2.52s/it, patience=9/10, train_bpr=0.2999, val_bce=0.5589]
+--- Training finished for period 3. Best embeddings saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_3/best_embeddings.pth ---
+
+========================= Period 4 =========================
+--- Building LightGCN Graph (N=56703) ---
+--- Graph built. Shape: torch.Size([56703, 56703]), Device: cpu ---
+Incrementally updating item history and seen users pool...
+--- BPRDataset: 2770 users, 32782 items prepared. ---
+--- Initializing LightGCN ---
+  Users: 23921, Items: 32782
+  Embed Dim: 64, Layers: 3
+--- LightGCN Embeddings initialized (Xavier) ---
+Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_3/best_embeddings.pth
+--- Successfully restored model EMBEDDINGS. ---
+--- Starting GNN training loop (Max Epochs: 100, Patience: 10) ---
+Epochs:  16%|██████████████▋                                                                             | 16/100 [00:35<03:02,  2.17s/it, patience=9/10, train_bpr=0.2990, val_bce=0.5148]--- Early stopping triggered after 17 epochs. ---
+Epochs:  16%|██████████████▋                                                                             | 16/100 [00:37<03:15,  2.32s/it, patience=9/10, train_bpr=0.2990, val_bce=0.5148]
+--- Training finished for period 4. Best embeddings saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_4/best_embeddings.pth ---
+
+========================= Period 5 =========================
+--- Building LightGCN Graph (N=56703) ---
+--- Graph built. Shape: torch.Size([56703, 56703]), Device: cpu ---
+Incrementally updating item history and seen users pool...
+--- BPRDataset: 2835 users, 32782 items prepared. ---
+--- Initializing LightGCN ---
+  Users: 23921, Items: 32782
+  Embed Dim: 64, Layers: 3
+--- LightGCN Embeddings initialized (Xavier) ---
+Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_4/best_embeddings.pth
+--- Successfully restored model EMBEDDINGS. ---
+--- Starting GNN training loop (Max Epochs: 100, Patience: 10) ---
+Epochs:  14%|████████████▉                                                                               | 14/100 [00:32<03:12,  2.24s/it, patience=9/10, train_bpr=0.2933, val_bce=0.5237]--- Early stopping triggered after 15 epochs. ---
+Epochs:  14%|████████████▉                                                                               | 14/100 [00:34<03:32,  2.47s/it, patience=9/10, train_bpr=0.2933, val_bce=0.5237]
+--- Training finished for period 5. Best embeddings saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_5/best_embeddings.pth ---
+
+========================= Period 6 =========================
+--- Building LightGCN Graph (N=56703) ---
+--- Graph built. Shape: torch.Size([56703, 56703]), Device: cpu ---
+Incrementally updating item history and seen users pool...
+--- BPRDataset: 2950 users, 32782 items prepared. ---
+--- Initializing LightGCN ---
+  Users: 23921, Items: 32782
+  Embed Dim: 64, Layers: 3
+--- LightGCN Embeddings initialized (Xavier) ---
+Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_5/best_embeddings.pth
+--- Successfully restored model EMBEDDINGS. ---
+--- Starting GNN training loop (Max Epochs: 100, Patience: 10) ---
+Epochs:  10%|█████████▏                                                                                  | 10/100 [00:24<03:37,  2.41s/it, patience=9/10, train_bpr=0.3050, val_bce=0.5326]--- Early stopping triggered after 11 epochs. ---
+Epochs:  10%|█████████▏                                                                                  | 10/100 [00:26<03:59,  2.66s/it, patience=9/10, train_bpr=0.3050, val_bce=0.5326]
+--- Training finished for period 6. Best embeddings saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_6/best_embeddings.pth ---
+
+========================= Period 7 =========================
+--- Building LightGCN Graph (N=56703) ---
+--- Graph built. Shape: torch.Size([56703, 56703]), Device: cpu ---
+Incrementally updating item history and seen users pool...
+--- BPRDataset: 2853 users, 32782 items prepared. ---
+--- Initializing LightGCN ---
+  Users: 23921, Items: 32782
+  Embed Dim: 64, Layers: 3
+--- LightGCN Embeddings initialized (Xavier) ---
+Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_6/best_embeddings.pth
+--- Successfully restored model EMBEDDINGS. ---
+--- Starting GNN training loop (Max Epochs: 100, Patience: 10) ---
+Epochs:  15%|█████████████▊                                                                              | 15/100 [00:38<03:40,  2.59s/it, patience=9/10, train_bpr=0.2848, val_bce=0.4598]--- Early stopping triggered after 16 epochs. ---
+Epochs:  15%|█████████████▊                                                                              | 15/100 [00:40<03:51,  2.72s/it, patience=9/10, train_bpr=0.2848, val_bce=0.4598]
+--- Training finished for period 7. Best embeddings saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_7/best_embeddings.pth ---
+
+========================= Period 8 =========================
+--- Building LightGCN Graph (N=56703) ---
+--- Graph built. Shape: torch.Size([56703, 56703]), Device: cpu ---
+Incrementally updating item history and seen users pool...
+--- BPRDataset: 2995 users, 32782 items prepared. ---
+--- Initializing LightGCN ---
+  Users: 23921, Items: 32782
+  Embed Dim: 64, Layers: 3
+--- LightGCN Embeddings initialized (Xavier) ---
+Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_7/best_embeddings.pth
+--- Successfully restored model EMBEDDINGS. ---
+--- Starting GNN training loop (Max Epochs: 100, Patience: 10) ---
+Epochs:  10%|█████████▏                                                                                  | 10/100 [00:28<04:31,  3.01s/it, patience=9/10, train_bpr=0.2866, val_bce=0.5733]--- Early stopping triggered after 11 epochs. ---
+Epochs:  10%|█████████▏                                                                                  | 10/100 [00:32<04:53,  3.26s/it, patience=9/10, train_bpr=0.2866, val_bce=0.5733]
+--- Training finished for period 8. Best embeddings saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_embeddings.pth ---
+--- Loading BEST embeddings from ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_embeddings.pth for evaluation ---
+--- GNN: Running full-graph forward pass for evaluation ---
+--- GNN: Embeddings are ready ---
+
+--- Running Unified Sampled Evaluation ---
+Evaluating (GNN): 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 18/18 [00:05<00:00,  3.18it/s]
+
+--- Period 8 Evaluation Finished ---
+  - GAUC     : 0.1975
+  - AUC      : 0.1975
+  -----------------------------------------------------
+  - Recall@5  : 0.0581   |   NDCG@5  : 0.0385
+  - Recall@10 : 0.0829   |   NDCG@10 : 0.0465
+  - Recall@20 : 0.1136   |   NDCG@20 : 0.0541
+  - Recall@50 : 0.1919   |   NDCG@50 : 0.0697
+  -----------------------------------------------------
+
+========================= Period 9 =========================
+--- Building LightGCN Graph (N=56703) ---
+--- Graph built. Shape: torch.Size([56703, 56703]), Device: cpu ---
+Incrementally updating item history and seen users pool...
+--- BPRDataset: 3276 users, 32782 items prepared. ---
+--- Initializing LightGCN ---
+  Users: 23921, Items: 32782
+  Embed Dim: 64, Layers: 3
+--- LightGCN Embeddings initialized (Xavier) ---
+Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_embeddings.pth
+--- Successfully restored model EMBEDDINGS. ---
+--- Starting GNN training loop (Max Epochs: 100, Patience: 10) ---
+Epochs:  10%|█████████▏                                                                                  | 10/100 [00:34<05:42,  3.81s/it, patience=9/10, train_bpr=0.2837, val_bce=0.5601]--- Early stopping triggered after 11 epochs. ---
+Epochs:  10%|█████████▏                                                                                  | 10/100 [00:38<05:47,  3.86s/it, patience=9/10, train_bpr=0.2837, val_bce=0.5601]
+--- Training finished for period 9. Best embeddings saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_embeddings.pth ---
+--- Loading BEST embeddings from ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_embeddings.pth for evaluation ---
+--- GNN: Running full-graph forward pass for evaluation ---
+--- GNN: Embeddings are ready ---
+
+--- Running Unified Sampled Evaluation ---
+Evaluating (GNN): 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 18/18 [00:06<00:00,  2.66it/s]
+
+--- Period 9 Evaluation Finished ---
+  - GAUC     : 0.2021
+  - AUC      : 0.2021
+  -----------------------------------------------------
+  - Recall@5  : 0.0645   |   NDCG@5  : 0.0533
+  - Recall@10 : 0.0970   |   NDCG@10 : 0.0636
+  - Recall@20 : 0.1322   |   NDCG@20 : 0.0724
+  - Recall@50 : 0.1967   |   NDCG@50 : 0.0853
+  -----------------------------------------------------
+
+========================= Period 10 =========================
+--- Building LightGCN Graph (N=56703) ---
+--- Graph built. Shape: torch.Size([56703, 56703]), Device: cpu ---
+Incrementally updating item history and seen users pool...
+--- BPRDataset: 3158 users, 32782 items prepared. ---
+--- Initializing LightGCN ---
+  Users: 23921, Items: 32782
+  Embed Dim: 64, Layers: 3
+--- LightGCN Embeddings initialized (Xavier) ---
+Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_embeddings.pth
+--- Successfully restored model EMBEDDINGS. ---
+--- Starting GNN training loop (Max Epochs: 100, Patience: 10) ---
+Epochs:  10%|█████████▏                                                                                  | 10/100 [00:41<05:51,  3.90s/it, patience=9/10, train_bpr=0.2852, val_bce=0.5614]--- Early stopping triggered after 11 epochs. ---
+Epochs:  10%|█████████▏                                                                                  | 10/100 [00:45<06:45,  4.51s/it, patience=9/10, train_bpr=0.2852, val_bce=0.5614]
+--- Training finished for period 10. Best embeddings saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_embeddings.pth ---
+--- Loading BEST embeddings from ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_embeddings.pth for evaluation ---
+--- GNN: Running full-graph forward pass for evaluation ---
+--- GNN: Embeddings are ready ---
+
+--- Running Unified Sampled Evaluation ---
+Evaluating (GNN): 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 18/18 [00:06<00:00,  2.79it/s]
+
+--- Period 10 Evaluation Finished ---
+  - GAUC     : 0.1798
+  - AUC      : 0.1798
+  -----------------------------------------------------
+  - Recall@5  : 0.0441   |   NDCG@5  : 0.0277
+  - Recall@10 : 0.0628   |   NDCG@10 : 0.0337
+  - Recall@20 : 0.0998   |   NDCG@20 : 0.0430
+  - Recall@50 : 0.1681   |   NDCG@50 : 0.0565
+  -----------------------------------------------------
+
+========================= Period 11 =========================
+--- Building LightGCN Graph (N=56703) ---
+--- Graph built. Shape: torch.Size([56703, 56703]), Device: cpu ---
+Incrementally updating item history and seen users pool...
+--- BPRDataset: 3198 users, 32782 items prepared. ---
+--- Initializing LightGCN ---
+  Users: 23921, Items: 32782
+  Embed Dim: 64, Layers: 3
+--- LightGCN Embeddings initialized (Xavier) ---
+Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_embeddings.pth
+--- Successfully restored model EMBEDDINGS. ---
+--- Starting GNN training loop (Max Epochs: 100, Patience: 10) ---
+Epochs:  10%|█████████▏                                                                                  | 10/100 [00:37<05:17,  3.53s/it, patience=9/10, train_bpr=0.2940, val_bce=0.5577]--- Early stopping triggered after 11 epochs. ---
+Epochs:  10%|█████████▏                                                                                  | 10/100 [00:40<06:08,  4.10s/it, patience=9/10, train_bpr=0.2940, val_bce=0.5577]
+--- Training finished for period 11. Best embeddings saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_embeddings.pth ---
+--- Loading BEST embeddings from ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_embeddings.pth for evaluation ---
+--- GNN: Running full-graph forward pass for evaluation ---
+--- GNN: Embeddings are ready ---
+
+--- Running Unified Sampled Evaluation ---
+Evaluating (GNN): 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 18/18 [00:06<00:00,  2.90it/s]
+
+--- Period 11 Evaluation Finished ---
+  - GAUC     : 0.1501
+  - AUC      : 0.1501
+  -----------------------------------------------------
+  - Recall@5  : 0.0338   |   NDCG@5  : 0.0228
+  - Recall@10 : 0.0496   |   NDCG@10 : 0.0279
+  - Recall@20 : 0.0750   |   NDCG@20 : 0.0342
+  - Recall@50 : 0.1265   |   NDCG@50 : 0.0442
+  -----------------------------------------------------
+
+========================= Period 12 =========================
+--- Building LightGCN Graph (N=56703) ---
+--- Graph built. Shape: torch.Size([56703, 56703]), Device: cpu ---
+Incrementally updating item history and seen users pool...
+--- BPRDataset: 2758 users, 32782 items prepared. ---
+--- Initializing LightGCN ---
+  Users: 23921, Items: 32782
+  Embed Dim: 64, Layers: 3
+--- LightGCN Embeddings initialized (Xavier) ---
+Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_embeddings.pth
+--- Successfully restored model EMBEDDINGS. ---
+--- Starting GNN training loop (Max Epochs: 100, Patience: 10) ---
+Epochs:  11%|██████████                                                                                  | 11/100 [01:06<06:13,  4.19s/it, patience=9/10, train_bpr=0.2977, val_bce=0.4995]--- Early stopping triggered after 12 epochs. ---
+Epochs:  11%|██████████                                                                                  | 11/100 [01:09<09:21,  6.31s/it, patience=9/10, train_bpr=0.2977, val_bce=0.4995]
+--- Training finished for period 12. Best embeddings saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_embeddings.pth ---
+--- Loading BEST embeddings from ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_embeddings.pth for evaluation ---
+--- GNN: Running full-graph forward pass for evaluation ---
+--- GNN: Embeddings are ready ---
+
+--- Running Unified Sampled Evaluation ---
+Evaluating (GNN): 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 17/17 [00:05<00:00,  3.19it/s]
+
+--- Period 12 Evaluation Finished ---
+  - GAUC     : 0.1799
+  - AUC      : 0.1799
+  -----------------------------------------------------
+  - Recall@5  : 0.0491   |   NDCG@5  : 0.0311
+  - Recall@10 : 0.0790   |   NDCG@10 : 0.0408
+  - Recall@20 : 0.1145   |   NDCG@20 : 0.0496
+  - Recall@50 : 0.1793   |   NDCG@50 : 0.0624
+  -----------------------------------------------------
+
+========================= Period 13 =========================
+--- Building LightGCN Graph (N=56703) ---
+--- Graph built. Shape: torch.Size([56703, 56703]), Device: cpu ---
+Incrementally updating item history and seen users pool...
+--- BPRDataset: 2918 users, 32782 items prepared. ---
+--- Initializing LightGCN ---
+  Users: 23921, Items: 32782
+  Embed Dim: 64, Layers: 3
+--- LightGCN Embeddings initialized (Xavier) ---
+Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_embeddings.pth
+--- Successfully restored model EMBEDDINGS. ---
+--- Starting GNN training loop (Max Epochs: 100, Patience: 10) ---
+Epochs:  10%|█████████▏                                                                                  | 10/100 [00:31<04:48,  3.20s/it, patience=9/10, train_bpr=0.3147, val_bce=0.6537]--- Early stopping triggered after 11 epochs. ---
+Epochs:  10%|█████████▏                                                                                  | 10/100 [00:34<05:12,  3.47s/it, patience=9/10, train_bpr=0.3147, val_bce=0.6537]
+--- Training finished for period 13. Best embeddings saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_13/best_embeddings.pth ---
+
+==================== [ 學習率 0.001 總結報告 ] ====================
+
+--- Evaluation Finished ---
+  - GAUC     : 0.1819
+  - AUC      : 0.1819
+-------------------------------------------------------
+  - Recall@5  : 0.0499   |   NDCG@5  : 0.0347
+  - Recall@10 : 0.0743   |   NDCG@10 : 0.0425
+  - Recall@20 : 0.1070   |   NDCG@20 : 0.0507
+  - Recall@50 : 0.1725   |   NDCG@50 : 0.0636
+-------------------------------------------------------

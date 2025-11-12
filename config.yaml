@@ -1,0 +1,34 @@
+# Data paths
+data_path: './datasets/record_movielens.parquet'
+meta_path: './datasets/content_movielens.parquet'
+
+# Experiment settings
+dir_name: 'Meta_Refactored_Experiment'
+shuffle: false
+restored_ckpt_mode: 'last'
+
+# Training loop settings
+learning_rates: [0.001]
+num_periods: 14
+train_start_period: 0
+test_start_period: 8
+max_epochs: 100         # 每個 period 最多跑 100 個 epoch
+validation_split: 0.2   # 從「當前 period」切 20% 出來當驗證集
+patience: 10            # 驗證集損失 (val_loss) 連續 10 次沒進步就停止
+
+evaluation:
+  sampling_size: 99 # 每個正樣本採樣 99 個負樣本
+
+item_vec_path: './vectors/item_vectors_kge.npy'
+cate_vec_path: './vectors/cate_vectors.npy'
+
+# Model Hyperparameters
+model:
+  batch_size: 1024
+  text_embed_dim: 384
+  user_embed_dim: 64
+  item_embed_dim: 64
+  cate_embed_dim: 20
+
+# Environment
+cuda_visible_devices: "1"
