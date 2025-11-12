@@ -1,0 +1,262 @@
+
+========================= Period 0 =========================
+--- Building LightGCN Graph (N=56377) ---
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: cpu ---
+Incrementally updating item history and seen users pool...
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+--- Starting Hybrid GNN-MLP training loop (Max Epochs: 20, Patience: 2) ---
+Epochs:  10%|███████▌                                                                    | 2/20 [00:03<00:34,  1.94s/it, patience=1/2, train_loss=5.5595, val_loss=5.5485]
+--- Training finished for period 0. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_0/best_model.pth ---
+
+========================= Period 1 =========================
+--- Building LightGCN Graph (N=56377) ---
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: cpu ---
+Incrementally updating item history and seen users pool...
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_0/best_model.pth
+--- Successfully restored FULL HYBRID model weights. ---
+--- Starting Hybrid GNN-MLP training loop (Max Epochs: 20, Patience: 2) ---
+Epochs:  10%|███████▌                                                                    | 2/20 [00:03<00:34,  1.94s/it, patience=1/2, train_loss=5.4056, val_loss=5.4653]
+--- Training finished for period 1. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_1/best_model.pth ---
+
+========================= Period 2 =========================
+--- Building LightGCN Graph (N=56377) ---
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: cpu ---
+Incrementally updating item history and seen users pool...
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_1/best_model.pth
+--- Successfully restored FULL HYBRID model weights. ---
+--- Starting Hybrid GNN-MLP training loop (Max Epochs: 20, Patience: 2) ---
+Epochs:  10%|███████▌                                                                    | 2/20 [00:03<00:35,  1.97s/it, patience=1/2, train_loss=5.0365, val_loss=5.2723]
+--- Training finished for period 2. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_2/best_model.pth ---
+
+========================= Period 3 =========================
+--- Building LightGCN Graph (N=56377) ---
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: cpu ---
+Incrementally updating item history and seen users pool...
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_2/best_model.pth
+--- Successfully restored FULL HYBRID model weights. ---
+--- Starting Hybrid GNN-MLP training loop (Max Epochs: 20, Patience: 2) ---
+Epochs:  10%|███████▌                                                                    | 2/20 [00:03<00:35,  1.97s/it, patience=1/2, train_loss=5.0540, val_loss=5.1700]
+--- Training finished for period 3. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_3/best_model.pth ---
+
+========================= Period 4 =========================
+--- Building LightGCN Graph (N=56377) ---
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: cpu ---
+Incrementally updating item history and seen users pool...
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_3/best_model.pth
+--- Successfully restored FULL HYBRID model weights. ---
+--- Starting Hybrid GNN-MLP training loop (Max Epochs: 20, Patience: 2) ---
+Epochs:  10%|███████▌                                                                    | 2/20 [00:03<00:35,  1.98s/it, patience=1/2, train_loss=4.9233, val_loss=5.3358]
+--- Training finished for period 4. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_4/best_model.pth ---
+
+========================= Period 5 =========================
+--- Building LightGCN Graph (N=56377) ---
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: cpu ---
+Incrementally updating item history and seen users pool...
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_4/best_model.pth
+--- Successfully restored FULL HYBRID model weights. ---
+--- Starting Hybrid GNN-MLP training loop (Max Epochs: 20, Patience: 2) ---
+Epochs:  10%|███████▌                                                                    | 2/20 [00:03<00:35,  1.96s/it, patience=1/2, train_loss=5.0133, val_loss=5.2166]
+--- Training finished for period 5. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_5/best_model.pth ---
+
+========================= Period 6 =========================
+--- Building LightGCN Graph (N=56377) ---
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: cpu ---
+Incrementally updating item history and seen users pool...
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_5/best_model.pth
+--- Successfully restored FULL HYBRID model weights. ---
+--- Starting Hybrid GNN-MLP training loop (Max Epochs: 20, Patience: 2) ---
+Epochs:  10%|███████▌                                                                    | 2/20 [00:03<00:35,  1.96s/it, patience=1/2, train_loss=4.9702, val_loss=5.2561]
+--- Training finished for period 6. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_6/best_model.pth ---
+
+========================= Period 7 =========================
+--- Building LightGCN Graph (N=56377) ---
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: cpu ---
+Incrementally updating item history and seen users pool...
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_6/best_model.pth
+--- Successfully restored FULL HYBRID model weights. ---
+--- Starting Hybrid GNN-MLP training loop (Max Epochs: 20, Patience: 2) ---
+Epochs:  10%|███████▌                                                                    | 2/20 [00:03<00:35,  1.99s/it, patience=1/2, train_loss=5.0756, val_loss=5.5218]
+--- Training finished for period 7. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_7/best_model.pth ---
+
+========================= Period 8 =========================
+--- Building LightGCN Graph (N=56377) ---
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: cpu ---
+Incrementally updating item history and seen users pool...
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_7/best_model.pth
+--- Successfully restored FULL HYBRID model weights. ---
+--- Starting Hybrid GNN-MLP training loop (Max Epochs: 20, Patience: 2) ---
+Epochs:  10%|███████▌                                                                    | 2/20 [00:03<00:35,  1.96s/it, patience=1/2, train_loss=5.0541, val_loss=4.9480]
+--- Training finished for period 8. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_model.pth ---
+--- Loading BEST model from ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_model.pth for evaluation ---
+
+--- Running Unified Sampled Evaluation ---
+Evaluating (Hybrid): 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:00<00:00,  2.33it/s]
+
+--- Period 8 Evaluation Finished ---
+  - GAUC     : 0.7624
+  - AUC      : 0.7624
+  -----------------------------------------------------
+  - Recall@5  : 0.2685   |   NDCG@5  : 0.1839
+  - Recall@10 : 0.3980   |   NDCG@10 : 0.2254
+  - Recall@20 : 0.5570   |   NDCG@20 : 0.2653
+  - Recall@50 : 0.8327   |   NDCG@50 : 0.3202
+  -----------------------------------------------------
+
+========================= Period 9 =========================
+--- Building LightGCN Graph (N=56377) ---
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: cpu ---
+Incrementally updating item history and seen users pool...
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_model.pth
+--- Successfully restored FULL HYBRID model weights. ---
+--- Starting Hybrid GNN-MLP training loop (Max Epochs: 20, Patience: 2) ---
+Epochs:  10%|███████▌                                                                    | 2/20 [00:03<00:35,  1.96s/it, patience=1/2, train_loss=4.8843, val_loss=5.0971]
+--- Training finished for period 9. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth ---
+--- Loading BEST model from ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth for evaluation ---
+
+--- Running Unified Sampled Evaluation ---
+Evaluating (Hybrid): 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:00<00:00,  2.25it/s]
+
+--- Period 9 Evaluation Finished ---
+  - GAUC     : 0.7654
+  - AUC      : 0.7654
+  -----------------------------------------------------
+  - Recall@5  : 0.2733   |   NDCG@5  : 0.1896
+  - Recall@10 : 0.4111   |   NDCG@10 : 0.2343
+  - Recall@20 : 0.5692   |   NDCG@20 : 0.2742
+  - Recall@50 : 0.8244   |   NDCG@50 : 0.3250
+  -----------------------------------------------------
+
+========================= Period 10 =========================
+--- Building LightGCN Graph (N=56377) ---
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: cpu ---
+Incrementally updating item history and seen users pool...
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth
+--- Successfully restored FULL HYBRID model weights. ---
+--- Starting Hybrid GNN-MLP training loop (Max Epochs: 20, Patience: 2) ---
+Epochs:  10%|███████▌                                                                    | 2/20 [00:03<00:35,  1.99s/it, patience=1/2, train_loss=4.8944, val_loss=4.9799]
+--- Training finished for period 10. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth ---
+--- Loading BEST model from ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth for evaluation ---
+
+--- Running Unified Sampled Evaluation ---
+Evaluating (Hybrid): 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:00<00:00,  2.14it/s]
+
+--- Period 10 Evaluation Finished ---
+  - GAUC     : 0.7700
+  - AUC      : 0.7700
+  -----------------------------------------------------
+  - Recall@5  : 0.2775   |   NDCG@5  : 0.1886
+  - Recall@10 : 0.4015   |   NDCG@10 : 0.2284
+  - Recall@20 : 0.5708   |   NDCG@20 : 0.2711
+  - Recall@50 : 0.8313   |   NDCG@50 : 0.3230
+  -----------------------------------------------------
+
+========================= Period 11 =========================
+--- Building LightGCN Graph (N=56377) ---
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: cpu ---
+Incrementally updating item history and seen users pool...
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth
+--- Successfully restored FULL HYBRID model weights. ---
+--- Starting Hybrid GNN-MLP training loop (Max Epochs: 20, Patience: 2) ---
+Epochs:  10%|███████▌                                                                    | 2/20 [00:03<00:35,  1.96s/it, patience=1/2, train_loss=4.8251, val_loss=5.1987]
+--- Training finished for period 11. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth ---
+--- Loading BEST model from ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth for evaluation ---
+
+--- Running Unified Sampled Evaluation ---
+Evaluating (Hybrid): 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:00<00:00,  2.19it/s]
+
+--- Period 11 Evaluation Finished ---
+  - GAUC     : 0.8023
+  - AUC      : 0.8023
+  -----------------------------------------------------
+  - Recall@5  : 0.3210   |   NDCG@5  : 0.2222
+  - Recall@10 : 0.4621   |   NDCG@10 : 0.2677
+  - Recall@20 : 0.6346   |   NDCG@20 : 0.3114
+  - Recall@50 : 0.8735   |   NDCG@50 : 0.3589
+  -----------------------------------------------------
+
+========================= Period 12 =========================
+--- Building LightGCN Graph (N=56377) ---
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: cpu ---
+Incrementally updating item history and seen users pool...
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth
+--- Successfully restored FULL HYBRID model weights. ---
+--- Starting Hybrid GNN-MLP training loop (Max Epochs: 20, Patience: 2) ---
+Epochs:  10%|███████▌                                                                    | 2/20 [00:03<00:34,  1.93s/it, patience=1/2, train_loss=4.8448, val_loss=5.2091]
+--- Training finished for period 12. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth ---
+--- Loading BEST model from ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth for evaluation ---
+
+--- Running Unified Sampled Evaluation ---
+Evaluating (Hybrid): 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:00<00:00,  2.36it/s]
+
+--- Period 12 Evaluation Finished ---
+  - GAUC     : 0.7937
+  - AUC      : 0.7937
+  -----------------------------------------------------
+  - Recall@5  : 0.3498   |   NDCG@5  : 0.2407
+  - Recall@10 : 0.4744   |   NDCG@10 : 0.2811
+  - Recall@20 : 0.6185   |   NDCG@20 : 0.3174
+  - Recall@50 : 0.8636   |   NDCG@50 : 0.3657
+  -----------------------------------------------------
+
+========================= Period 13 =========================
+--- Building LightGCN Graph (N=56377) ---
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: cpu ---
+Incrementally updating item history and seen users pool...
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth
+--- Successfully restored FULL HYBRID model weights. ---
+--- Starting Hybrid GNN-MLP training loop (Max Epochs: 20, Patience: 2) ---
+Epochs:  10%|███████▌                                                                    | 2/20 [00:04<00:36,  2.00s/it, patience=1/2, train_loss=4.6274, val_loss=4.8463]
+--- Training finished for period 13. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_13/best_model.pth ---
+
+==================== [ 學習率 0.001 總結報告 ] ====================
+
+--- Evaluation Finished ---
+  - GAUC     : 0.7788
+  - AUC      : 0.7788
+-------------------------------------------------------
+  - Recall@5  : 0.2980   |   NDCG@5  : 0.2050
+  - Recall@10 : 0.4294   |   NDCG@10 : 0.2474
+  - Recall@20 : 0.5900   |   NDCG@20 : 0.2879
+  - Recall@50 : 0.8451   |   NDCG@50 : 0.3385
+-------------------------------------------------------

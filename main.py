@@ -9,33 +9,32 @@ from tqdm import tqdm
 
 # 引入 PyTorch 相關模組
 import torch
-import torch.nn.functional as F # (NEW) 為了 Val Loss
+import torch.nn.functional as F
 from torch.utils.data import DataLoader
-# (log_loss 暫時用不到，BPR loss 在模型內)
 
 # --- (*** 核心修改 1: 匯入新工具 ***) ---
-from model import LightGCN # (NEW) 匯入 GNN
+from model import Hybrid_GNN_MLP # (NEW) 匯入你的「科學怪人」模型
+from model_mlp import EmbMLP  # (保留) 為了 MLP 模型
 from utils import (
     prepare_data_from_dfs,
-    RecommendationDataset, # (保留) 為了 Val/Test
+    RecommendationDataset, # (復活) 我們現在用這個
     sample_negative_users, # (保留) 為了 Test
-    BPRDataset,            # (NEW) 為了 Train
-    build_lightgcn_graph   # (NEW) 為了建圖
+    build_lightgcn_graph,  # (保留) 為了建圖
 )
 import random
 
 
 def run_experiment(config: Dict[str, Any]):
     """
-    主實驗執行函式 (*** GNN 重構版 ***)。
+    主實驗執行函式 (*** Hybrid GNN-MLP 重構版 ***)。
     """
     # --- 0. 設備設定 ---
-    device = torch.device("cpu") # GNN 在 CPU 上通常更穩定
+    # (MODIFIED) GNN 稀疏運算不支援 MPS。我們必須強迫使用 CPU。
+    device = torch.device("cpu")
     if torch.backends.mps.is_available():
-        device = torch.device("cpu")
-        print("--- MPS is available! Using MPS. ---")
+        print("--- MPS is available, but GNNs require CPU for sparse ops. Forcing CPU. ---")
     else:
-        print("--- MPS not found. Using CPU. ---")
+        print("--- Using CPU. ---")
 
     random.seed(42)
     # --- 1. 數據 I/O ---
@@ -44,13 +43,12 @@ def run_experiment(config: Dict[str, Any]):
     
     full_data_df = pd.read_parquet(config['data_path'])
     if config.get('debug_sample', True):
-        # full_data_df = full_data_df.iloc[::10]
+        full_data_df = full_data_df.iloc[::10]  
         full_data_df = full_data_df[full_data_df['period'] < 14]
     full_meta_df = pd.read_parquet(config['meta_path'])
 
     # --- 2. 數據轉換 ---
-    # (MODIFIED) GNN 不需要 cates, cate_lens, item_map, cate_map
-    #            但我們「保留」它們是為了舊的評估邏輯
+    # (MODIFIED) 我們的 Hybrid 模型需要 cates 和 cate_lens
     remapped_full_df, cates, cate_lens, hyperparams_updates, item_map, full_cate_map = prepare_data_from_dfs(
         full_data_df, full_meta_df, config
     )
@@ -60,9 +58,12 @@ def run_experiment(config: Dict[str, Any]):
     num_items = hyperparams['num_items']
     print(f"Global data processing finished. (Users: {num_users}, Items: {num_items})")
     
-    # --- (*** 核心修改 2: 刪除向量載入 ***) ---
+    # (NEW) 我們的 Hybrid 模型需要 cates_np
+    cates_np = np.array(cates)
+    cate_lens_np = np.array(cate_lens)
+    
     # (GNN 預設使用 Xavier 初始化，我們刪除所有 SBERT/KGE 的 .npy 載入邏輯)
-    print("--- GNN mode: Skipping pre-loading of text vectors. ---")
+    print("--- Hybrid GNN-MLP mode: Skipping pre-loading of text vectors. ---")
 
     # --- 準備評估所需的全局資訊 ---
     sampling_size = config['evaluation'].get('sampling_size', 99)
@@ -77,14 +78,14 @@ def run_experiment(config: Dict[str, Any]):
         item_history_dict = {}
         seen_users_pool = set()
         
-        # (NEW) GNN 需要一個「不斷增長」的互動 DataFrame
+        # (保留) GNN 需要一個「不斷增長」的互動 DataFrame
         incremental_interaction_df = pd.DataFrame()
 
         # --- 4. 進入增量訓練主迴圈 ---
         for period_id in range(config['train_start_period'], config['num_periods']):
             print(f"\n{'='*25} Period {period_id} {'='*25}")
             
-            # --- (*** 核心修改 3: GNN 資料準備 ***) ---
+            # --- (*** 核心修改 3: Hybrid 資料準備 ***) ---
             
             # 1. 獲取「當前時期」的資料
             current_period_df = remapped_full_df[remapped_full_df['period'] == period_id]
@@ -98,8 +99,7 @@ def run_experiment(config: Dict[str, Any]):
                 print(f"No training data for period {period_id}. Skipping.")
                 continue
                 
-            # 3. 更新「全歷史」互動 (GNN 建圖用)
-            # 我們只關心正互動 (label=1)
+            # 3. 更新「全歷史」互動 (GNN 建圖用) (邏輯不變)
             current_pos_interactions = current_period_df[current_period_df['label'] == 1]
             if incremental_interaction_df.empty:
                 incremental_interaction_df = current_pos_interactions
@@ -108,11 +108,9 @@ def run_experiment(config: Dict[str, Any]):
                     [incremental_interaction_df, current_pos_interactions],
                     ignore_index=True
                 )
-            # (去重，以防萬一)
             incremental_interaction_df = incremental_interaction_df.drop_duplicates(subset=['userId', 'itemId'])
             
-            # 4. 建立「增量圖」
-            # GNN 在每個 period 都會在「至今為止」的「全圖」上訓練
+            # 4. 建立「增量圖」 (邏輯不變)
             adj_matrix = build_lightgcn_graph(
                 incremental_interaction_df,
                 num_users,
@@ -122,18 +120,20 @@ def run_experiment(config: Dict[str, Any]):
 
             # 5. 更新評估用的 history (邏輯不變)
             print(f"Incrementally updating item history and seen users pool...")
+            # ... (item_history_dict, seen_users_pool ... 邏輯不變) ...
             current_period_interactions_dict = current_period_df.groupby('itemId')['userId'].apply(set).to_dict()
             for item_id, user_set in current_period_interactions_dict.items():
                 item_history_dict.setdefault(item_id, set()).update(user_set)
             seen_users_pool.update(current_period_df['userId'].unique())
                 
-            # --- (*** 核心修改 4: GNN DataLoaders ***) ---
+            # --- (*** 核心修改 4: MLP DataLoaders ***) ---
             
             # 1. 獲取早停參數 (邏輯不變)
             val_split_ratio = config.get('validation_split', 0.2)
             
             # 2. 切分「當前時期」的「訓練集」和「驗證集」(邏輯不變)
             if val_split_ratio > 0:
+                # ... (split_point, train_set, val_set ... 邏輯不變) ...
                 split_point = int(len(current_period_df) * (1.0 - val_split_ratio))
                 if split_point == 0 or split_point == len(current_period_df):
                     val_set = None
@@ -145,20 +145,16 @@ def run_experiment(config: Dict[str, Any]):
                 train_set = current_period_df
                 val_set = None
             
-            # 3. 建立 DataLoaders
-            # (NEW) 訓練集使用 BPRDataset
-            #   (注意: BPRDataset 只關心正樣本，所以我們傳入 train_set)
-            train_pos_set = train_set[train_set['label'] == 1]
-            train_dataset = BPRDataset(train_pos_set, num_items)
+
+            # 3. 建立 DataLoaders (*** 復活 RecommendationDataset ***)
+            train_dataset = RecommendationDataset(train_set, {}) # <-- (NEW)
             train_loader = DataLoader(
                 train_dataset, 
                 batch_size=config['model']['batch_size'], 
-                shuffle=True, # BPR 必須 shuffle
+                shuffle=False, # (你的實驗堅持用時間順序)
                 num_workers=config.get('num_workers', 0)
             )
             
-            # (MODIFIED) 驗證集使用 RecommendationDataset
-            #   (我們需要 (u, i, label) 來計算 BCE Loss)
             val_loader = None
             if val_set is not None and not val_set.empty:
                 val_dataset = RecommendationDataset(val_set, {})
@@ -169,36 +165,52 @@ def run_experiment(config: Dict[str, Any]):
                     num_workers=config.get('num_workers', 0)
                 )
 
+            # --- (*** 核心修改 5: 模型工廠 (Model Factory) ***) ---
+            model_type = config.get('model_type', 'mlp') # 預設為 'mlp'
+            print(f"--- Building model, type: {model_type} ---")
 
-            # --- (*** 核心修改 5: GNN 模型初始化 ***) ---
-            model = LightGCN(
-                num_users, 
-                num_items, 
-                hyperparams,
-                adj_matrix # 傳入「當前」的圖
-            ).to(device)
+            if model_type == 'hybrid':
+                model = Hybrid_GNN_MLP(
+                    num_users, 
+                    num_items, 
+                    hyperparams,
+                    adj_matrix, # 傳入「當前」的圖
+                    cates_np,
+                    cate_lens_np
+                ).to(device)
             
-            # (MODIFIED) GNN 只訓練 Embeddings
-            optimizer = torch.optim.Adam(model.embeddings.parameters(), lr=lr)
+            elif model_type == 'mlp':
+                model = EmbMLP(
+                    cates_np,
+                    cate_lens_np,
+                    hyperparams=hyperparams,
+                    train_config=config,
+                    item_init_vectors=None, # (傳入 SBERT/KGE)
+                    cate_init_vectors=None  # (傳入 SBERT)
+                ).to(device)
             
-            # --- (*** 核心修改 6: GNN 權重恢復 ***) ---
-            # 我們只恢復「Embeddings」，不恢復「圖」
-            best_model_path = '' # (重置)
+            else:
+                raise ValueError(f"未知的 model_type: {model_type}")
+            
+            optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+            
+            # --- (*** 核心修改 6: Hybrid 權重恢復 ***) ---
+            # 我們恢復「整個模型」
+            best_model_path = '' 
             if period_id > config['train_start_period']:
                 prev_ckpt_dir = os.path.join('./checkpoints', dir_name_with_lr, f'period_{period_id-1}')
-                ckpt_path = os.path.join(prev_ckpt_dir, 'best_embeddings.pth') # <--- 只載入 .pth
+                ckpt_path = os.path.join(prev_ckpt_dir, 'best_model.pth') # <--- 換回 .pth
                 if os.path.exists(ckpt_path):
                     print(f"Attempting to restore model weights from: {ckpt_path}")
                     try:
-                        # (MODIFIED) 只載入 embedding weight
-                        model.embeddings.weight.data = torch.load(ckpt_path, map_location=device)
-                        print("--- Successfully restored model EMBEDDINGS. ---")
+                        model.load_state_dict(torch.load(ckpt_path, map_location=device))
+                        print("--- Successfully restored FULL HYBRID model weights. ---")
                     except Exception as e:
                         print(f"Could not load embedding weights: {e}")
 
-            # --- (*** 核心修改 7: GNN 訓練迴圈 ***) ---
+            # --- (*** 核心修改 7: Hybrid 快取 GNN 訓練迴圈 ***) ---
             
-            # 1. 初始化早停參數
+            # 1. 初始化早停參數 (邏輯不變)
             max_epochs = config.get('max_epochs', 100)
             patience = config.get('patience', 10)
             patience_counter = 0
@@ -206,10 +218,10 @@ def run_experiment(config: Dict[str, Any]):
             
             period_ckpt_dir = os.path.join('./checkpoints', dir_name_with_lr, f'period_{period_id}')
             os.makedirs(period_ckpt_dir, exist_ok=True)
-            # (MODIFIED) 我們只存 Embeddings
-            best_model_path = os.path.join(period_ckpt_dir, 'best_embeddings.pth')
+            # (MODIFIED) 我們存「整個模型」
+            best_model_path = os.path.join(period_ckpt_dir, 'best_model.pth')
 
-            print(f"--- Starting GNN training loop (Max Epochs: {max_epochs}, Patience: {patience}) ---")
+            print(f"--- Starting Hybrid GNN-MLP training loop (Max Epochs: {max_epochs}, Patience: {patience}) ---")
             
             pbar_epochs = tqdm(range(1, max_epochs + 1), desc="Epochs", leave=True)
             for epoch_id in pbar_epochs:
@@ -218,94 +230,73 @@ def run_experiment(config: Dict[str, Any]):
                 # --- (a) 訓練階段 ---
                 model.train()
                 
+
                 losses = []
-                for batch_data in train_loader:
-                    # (NEW) BPRDataset 回傳的是 (u, i_pos, i_neg)
-                    user_id, pos_item_id, neg_item_id = batch_data
-                    batch_dict = {
-                        'user_id': user_id.to(device),
-                        'pos_item_id': pos_item_id.to(device),
-                        'neg_item_id': neg_item_id.to(device)
-                    }
+                for batch in train_loader:
+                    batch = {k: v.to(device) for k, v in batch.items()}
                     
                     optimizer.zero_grad()
-                    # (NEW) GNN 的 loss 是在「查找」之後算的
-                    # GNN "前向傳播" (K層)
-                    # 這必須在迴圈內，以建立一個「乾淨」的計算圖
-                    users_emb, items_emb = model.forward()
                     
-                    # BPR Loss
-                    loss = model.calculate_loss(users_emb, items_emb, batch_dict)
                     
-                    if loss.requires_grad:
-                        loss.backward()
-                        optimizer.step()
-
+                    # 計算 MLP Loss (BCE)
+                    loss = model.calculate_loss(batch)
+                    
+                    loss.backward() 
+                    optimizer.step()
+                    
                     losses.append(loss.item())
+
                 avg_train_loss = np.mean(losses)
                 
                 # --- (b) 驗證階段 ---
                 if val_loader is None:
-                    print(f"  Epoch {epoch_id} Avg Train BPR Loss: {avg_train_loss:.4f} (No validation set)")
-                    torch.save(model.embeddings.weight.data, best_model_path)
+                    # (邏輯不變)
+                    torch.save(model.state_dict(), best_model_path)
                     continue
 
                 model.eval()
                 val_losses = []
                 
-                # GNN: 驗證時，也先執行一次「全圖」前向傳播
-                # (這在 eval 模式下是 OK 的，因為 no_grad() 會關閉圖的建立)
                 with torch.no_grad():
-                    val_users_emb, val_items_emb = model.forward()
                 
                     for batch in val_loader:
                         batch = {k: v.to(device) for k, v in batch.items()}
-                        
-                        u_emb = val_users_emb[batch['users']]
-                        i_emb = val_items_emb[batch['items']]
-                        scores = torch.sum(u_emb * i_emb, dim=1)
-                        labels = batch['labels'].float()
-                        val_loss = F.binary_cross_entropy_with_logits(scores, labels).item()
-                        val_losses.append(val_loss)
-                        
+                        # 計算 MLP Loss (BCE)
+                        loss = model.calculate_loss( batch)
+                        val_losses.append(loss.item())
                         
                 avg_val_loss = np.mean(val_losses)
 
                 # --- (c) 決策階段 (Early Stopping) ---
                 if avg_val_loss < best_val_loss:
                     best_val_loss = avg_val_loss
-                    # (MODIFIED) *** 只儲存 Embeddings ***
-                    torch.save(model.embeddings.weight.data, best_model_path)
+                    # (MODIFIED) *** 儲存「整個模型」 ***
+                    torch.save(model.state_dict(), best_model_path)
                     patience_counter = 0
                 else:
                     patience_counter += 1
 
                 if patience_counter >= patience:
-                    print(f"--- Early stopping triggered after {epoch_id} epochs. ---")
                     break 
 
+                pbar_epochs.set_postfix(train_loss=f"{avg_train_loss:.4f}", val_loss=f"{avg_val_loss:.4f}", patience=f" {patience_counter}/{patience}")
             
-                pbar_epochs.set_postfix(train_bpr=f"{avg_train_loss:.4f}", val_bce=f"{avg_val_loss:.4f}", patience=f" {patience_counter}/{patience}")
-            
-            print(f"--- Training finished for period {period_id}. Best embeddings saved to {best_model_path} ---")
+            print(f"--- Training finished for period {period_id}. Best model saved to {best_model_path} ---")
 
-            # --- (*** 核心修改 8: GNN 評估迴圈 ***) ---
+            # --- (*** 核心修改 8: Hybrid GNN-MLP 評估迴圈 ***) ---
             if test_set is not None and not test_set.empty:
                 seen_users_pool.update(test_set['userId'].unique())
                 
                 if os.path.exists(best_model_path):
-                    print(f"--- Loading BEST embeddings from {best_model_path} for evaluation ---")
-                    model.embeddings.weight.data = torch.load(best_model_path, map_location=device)
+                    print(f"--- Loading BEST model from {best_model_path} for evaluation ---")
+                    model.load_state_dict(torch.load(best_model_path, map_location=device))
                 else:
-                    print(f"--- WARNING: No best embeddings found. Evaluating with last-epoch model. ---")
+                    print(f"--- WARNING: No best model found. Evaluating with last-epoch model. ---")
                 
                 model.eval() 
-                
-                # (NEW) GNN: 評估前，執行最終的「全圖」前向傳播
-                print("--- GNN: Running full-graph forward pass for evaluation ---")
-                with torch.no_grad():
-                    eval_users_emb, eval_items_emb = model.forward()
-                print("--- GNN: Embeddings are ready ---")
+                if model_type == 'hybrid':
+                    with torch.no_grad():
+                        model.update_gnn_buffer()
 
                 print(f"\n--- Running Unified Sampled Evaluation ---")
                 
@@ -327,14 +318,15 @@ def run_experiment(config: Dict[str, Any]):
                     )
 
                     with torch.no_grad():
-                        for batch in tqdm(test_loader_pos, desc="Evaluating (GNN)"):
+                        for batch in tqdm(test_loader_pos, desc="Evaluating (Hybrid)"):
                             batch_cpu = {k: v for k, v in batch.items()}
                             batch = {k: v.to(device) for k, v in batch.items()}
                             batch_size = len(batch['users'])
 
-                            # 1. 負採樣 
+                            # 1. 負採樣 (邏輯 100% 不變)
                             neg_user_ids_list = []
                             for i in range(batch_size):
+                                # ... (neg_users = sample_negative_users(...)) ...
                                 item_i_raw = batch_cpu['items_raw'][i].item()
                                 user_j_id = batch['users'][i].item()
                                 seen_users = item_history_dict.get(item_i_raw, set())
@@ -346,18 +338,11 @@ def run_experiment(config: Dict[str, Any]):
                                     device=device
                                 )
                                 neg_user_ids_list.append(neg_users)
-                            neg_user_ids_batch = torch.stack(neg_user_ids_list) 
+                            neg_user_ids_batch = torch.stack(neg_user_ids_list) # (B, M)
 
-                            # 2. (MODIFIED) 調用 GNN 的 inference
-                            #    我們不再需要 model.inference，因為 model.py 裡的新函式
-                            #    inference_for_evaluation 已經準備好了
-                            pos_logits, neg_logits = model.inference_for_evaluation(
-                                eval_users_emb, 
-                                eval_items_emb, 
-                                batch, 
-                                neg_user_ids_batch
-                            )
-                            
+                            # 2. (*** GNN-MLP 評估邏輯 ***)
+                            pos_logits, neg_logits, _ = model.inference(batch, neg_user_ids_batch)
+
                             # 3. 組合 logits (邏輯 100% 不變)
                             pos_logits = pos_logits.unsqueeze(1) 
                             all_logits = torch.cat([pos_logits, neg_logits], dim=1) 
@@ -380,6 +365,7 @@ def run_experiment(config: Dict[str, Any]):
                 # --- (後面所有指標計算、報告的邏輯 100% 不變) ---
                 metrics = {}
                 if total_positive_items > 0:
+                    # ... (gauc_df, metrics['auc'], ... 邏輯不變) ...
                     gauc_df = pd.DataFrame({'user': all_user_ids_for_gauc, 'auc': all_per_sample_aucs})
                     metrics['auc'] = np.mean(all_per_sample_aucs)
                     user_auc_mean = gauc_df.groupby('user')['auc'].mean()
@@ -405,6 +391,7 @@ def run_experiment(config: Dict[str, Any]):
             
         # (最終總結報告邏輯 100% 不變)
         if results_over_periods:
+            # ... (print 總結) ...
             print(f"\n{'='*20} [ 學習率 {lr} 總結報告 ] {'='*20}")
             avg_metrics = {}
             report_metric_keys = ['gauc', 'auc', 'recall@5', 'ndcg@5', 'recall@10', 'ndcg@10', 'recall@20', 'ndcg@20', 'recall@50', 'ndcg@50']
@@ -418,7 +405,7 @@ def run_experiment(config: Dict[str, Any]):
             
             
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Incremental GNN Learning Experiment with PyTorch")
+    parser = argparse.ArgumentParser(description="Incremental Hybrid GNN-MLP Experiment with PyTorch")
     parser.add_argument('--config', type=str, default='config.yaml', help='Path to the YAML configuration file.')
     args = parser.parse_args()
     try:
@@ -427,5 +414,5 @@ if __name__ == "__main__":
     except FileNotFoundError:
         print(f"Error: Configuration file not found at {args.config}")
         exit()
-    os.environ["CUDA_VISIBLE_DEVICES"] = config.get('cuda_visible_devices', "0")
+    os.environ["CUDA_VISIBLE_DEVICES"] = config.get('cuda_visible_DEVICES', "0")
     run_experiment(config)

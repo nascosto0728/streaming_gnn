@@ -12,9 +12,9 @@ learning_rates: [0.001]
 num_periods: 14
 train_start_period: 0
 test_start_period: 8
-max_epochs: 100         # 每個 period 最多跑 100 個 epoch
+max_epochs: 20         # 每個 period 最多跑 100 個 epoch
 validation_split: 0.2   # 從「當前 period」切 20% 出來當驗證集
-patience: 10            # 驗證集損失 (val_loss) 連續 10 次沒進步就停止
+patience: 2            # 驗證集損失 (val_loss) 連續 10 次沒進步就停止
 
 evaluation:
   sampling_size: 99 # 每個正樣本採樣 99 個負樣本
@@ -22,6 +22,8 @@ evaluation:
 item_vec_path: './vectors/item_vectors_kge.npy'
 cate_vec_path: './vectors/cate_vectors.npy'
 
+# 選項: 'hybrid' 或 'mlp'
+model_type: 'mlp'
 # Model Hyperparameters
 model:
   batch_size: 1024
