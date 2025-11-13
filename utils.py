@@ -90,7 +90,6 @@ def process_cate(cate_ls: list) -> Tuple[np.ndarray, list]:
     return cate_seqs_matrix, cate_lens
 
 def prepare_data_from_dfs(full_data_df: pd.DataFrame, full_meta_df: pd.DataFrame, config: Dict[str, Any]) -> Tuple[pd.DataFrame, np.ndarray, list, Dict, Dict, Dict]:
-    print("Backing up raw user and item IDs...")
     full_data_df['userId_raw'] = full_data_df['userId']
     full_data_df['itemId_raw'] = full_data_df['itemId']
 
@@ -134,7 +133,7 @@ def prepare_data_from_dfs(full_data_df: pd.DataFrame, full_meta_df: pd.DataFrame
     cates, cate_lens = process_cate(cate_ls)
 
     hyperparams_updates = {'num_users': len(user_map), 'num_items': len(item_map)}
-    print("Static metadata (cates, hyperparams) created.")
+
     
     return remapped_df, cates, cate_lens, hyperparams_updates, item_map, full_cate_map
 
@@ -208,7 +207,6 @@ def build_lightgcn_graph(interaction_df: pd.DataFrame, num_users: int, num_items
     Returns:
         torch.sparse.FloatTensor: 正規化後的鄰接矩陣
     """
-    print(f"--- Building LightGCN Graph (N={num_users + num_items}) ---")
     N = num_users + num_items
     
     # 1. 獲取邊 (edge)

@@ -13,8 +13,8 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
 # --- (*** 核心修改 1: 匯入新工具 ***) ---
-from model import Hybrid_GNN_MLP # (NEW) 匯入你的「科學怪人」模型
-from model_mlp import EmbMLP  # (保留) 為了 MLP 模型
+from model import Hybrid_GNN_MLP 
+from model_mlp import EmbMLP  
 from utils import (
     prepare_data_from_dfs,
     RecommendationDataset, # (復活) 我們現在用這個
@@ -29,10 +29,9 @@ def run_experiment(config: Dict[str, Any]):
     主實驗執行函式 (*** Hybrid GNN-MLP 重構版 ***)。
     """
     # --- 0. 設備設定 ---
-    # (MODIFIED) GNN 稀疏運算不支援 MPS。我們必須強迫使用 CPU。
     device = torch.device("cpu")
     if torch.backends.mps.is_available():
-        print("--- MPS is available, but GNNs require CPU for sparse ops. Forcing CPU. ---")
+        device = torch.device("mps")
     else:
         print("--- Using CPU. ---")
 
@@ -63,7 +62,6 @@ def run_experiment(config: Dict[str, Any]):
     cate_lens_np = np.array(cate_lens)
     
     # (GNN 預設使用 Xavier 初始化，我們刪除所有 SBERT/KGE 的 .npy 載入邏輯)
-    print("--- Hybrid GNN-MLP mode: Skipping pre-loading of text vectors. ---")
 
     # --- 準備評估所需的全局資訊 ---
     sampling_size = config['evaluation'].get('sampling_size', 99)
@@ -78,7 +76,7 @@ def run_experiment(config: Dict[str, Any]):
         item_history_dict = {}
         seen_users_pool = set()
         
-        # (保留) GNN 需要一個「不斷增長」的互動 DataFrame
+        # ( GNN 需要一個「不斷增長」的互動 DataFrame
         incremental_interaction_df = pd.DataFrame()
 
         # --- 4. 進入增量訓練主迴圈 ---
@@ -90,7 +88,7 @@ def run_experiment(config: Dict[str, Any]):
             # 1. 獲取「當前時期」的資料
             current_period_df = remapped_full_df[remapped_full_df['period'] == period_id]
             
-            # 2. 獲取測試集 (邏輯不變)
+            # 2. 獲取測試集 
             test_set = None
             if period_id >= config['test_start_period'] and (period_id + 1) < config['num_periods']:
                 test_set = remapped_full_df[remapped_full_df['period'] == period_id + 1].iloc[::10]
@@ -99,18 +97,12 @@ def run_experiment(config: Dict[str, Any]):
                 print(f"No training data for period {period_id}. Skipping.")
                 continue
                 
-            # 3. 更新「全歷史」互動 (GNN 建圖用) (邏輯不變)
-            current_pos_interactions = current_period_df[current_period_df['label'] == 1]
-            if incremental_interaction_df.empty:
-                incremental_interaction_df = current_pos_interactions
-            else:
-                incremental_interaction_df = pd.concat(
-                    [incremental_interaction_df, current_pos_interactions],
-                    ignore_index=True
-                )
+            # 3. 互動 (GNN 建圖用) 
+            incremental_interaction_df = current_period_df[current_period_df['label'] == 1]
+            
             incremental_interaction_df = incremental_interaction_df.drop_duplicates(subset=['userId', 'itemId'])
             
-            # 4. 建立「增量圖」 (邏輯不變)
+            # 4. 建立「增量圖」 
             adj_matrix = build_lightgcn_graph(
                 incremental_interaction_df,
                 num_users,
@@ -118,22 +110,18 @@ def run_experiment(config: Dict[str, Any]):
                 device
             )
 
-            # 5. 更新評估用的 history (邏輯不變)
-            print(f"Incrementally updating item history and seen users pool...")
-            # ... (item_history_dict, seen_users_pool ... 邏輯不變) ...
+            # 5. 更新評估用的 history 
             current_period_interactions_dict = current_period_df.groupby('itemId')['userId'].apply(set).to_dict()
             for item_id, user_set in current_period_interactions_dict.items():
                 item_history_dict.setdefault(item_id, set()).update(user_set)
             seen_users_pool.update(current_period_df['userId'].unique())
                 
-            # --- (*** 核心修改 4: MLP DataLoaders ***) ---
             
-            # 1. 獲取早停參數 (邏輯不變)
+            # 1. 獲取早停參數 
             val_split_ratio = config.get('validation_split', 0.2)
             
-            # 2. 切分「當前時期」的「訓練集」和「驗證集」(邏輯不變)
+            # 2. 切分「當前時期」的「訓練集」和「驗證集」
             if val_split_ratio > 0:
-                # ... (split_point, train_set, val_set ... 邏輯不變) ...
                 split_point = int(len(current_period_df) * (1.0 - val_split_ratio))
                 if split_point == 0 or split_point == len(current_period_df):
                     val_set = None
@@ -146,12 +134,12 @@ def run_experiment(config: Dict[str, Any]):
                 val_set = None
             
 
-            # 3. 建立 DataLoaders (*** 復活 RecommendationDataset ***)
-            train_dataset = RecommendationDataset(train_set, {}) # <-- (NEW)
+            # 3. 建立 DataLoaders 
+            train_dataset = RecommendationDataset(train_set, {}) 
             train_loader = DataLoader(
                 train_dataset, 
                 batch_size=config['model']['batch_size'], 
-                shuffle=False, # (你的實驗堅持用時間順序)
+                shuffle=False, 
                 num_workers=config.get('num_workers', 0)
             )
             
@@ -165,7 +153,6 @@ def run_experiment(config: Dict[str, Any]):
                     num_workers=config.get('num_workers', 0)
                 )
 
-            # --- (*** 核心修改 5: 模型工廠 (Model Factory) ***) ---
             model_type = config.get('model_type', 'mlp') # 預設為 'mlp'
             print(f"--- Building model, type: {model_type} ---")
 
@@ -194,23 +181,18 @@ def run_experiment(config: Dict[str, Any]):
             
             optimizer = torch.optim.Adam(model.parameters(), lr=lr)
             
-            # --- (*** 核心修改 6: Hybrid 權重恢復 ***) ---
-            # 我們恢復「整個模型」
             best_model_path = '' 
             if period_id > config['train_start_period']:
                 prev_ckpt_dir = os.path.join('./checkpoints', dir_name_with_lr, f'period_{period_id-1}')
                 ckpt_path = os.path.join(prev_ckpt_dir, 'best_model.pth') # <--- 換回 .pth
                 if os.path.exists(ckpt_path):
-                    print(f"Attempting to restore model weights from: {ckpt_path}")
                     try:
                         model.load_state_dict(torch.load(ckpt_path, map_location=device))
-                        print("--- Successfully restored FULL HYBRID model weights. ---")
                     except Exception as e:
+                        print(f"Attempting to restore model weights from: {ckpt_path}")
                         print(f"Could not load embedding weights: {e}")
 
-            # --- (*** 核心修改 7: Hybrid 快取 GNN 訓練迴圈 ***) ---
-            
-            # 1. 初始化早停參數 (邏輯不變)
+            # --- 5. 進入訓練迴圈 ---
             max_epochs = config.get('max_epochs', 100)
             patience = config.get('patience', 10)
             patience_counter = 0
@@ -220,8 +202,6 @@ def run_experiment(config: Dict[str, Any]):
             os.makedirs(period_ckpt_dir, exist_ok=True)
             # (MODIFIED) 我們存「整個模型」
             best_model_path = os.path.join(period_ckpt_dir, 'best_model.pth')
-
-            print(f"--- Starting Hybrid GNN-MLP training loop (Max Epochs: {max_epochs}, Patience: {patience}) ---")
             
             pbar_epochs = tqdm(range(1, max_epochs + 1), desc="Epochs", leave=True)
             for epoch_id in pbar_epochs:
@@ -250,7 +230,6 @@ def run_experiment(config: Dict[str, Any]):
                 
                 # --- (b) 驗證階段 ---
                 if val_loader is None:
-                    # (邏輯不變)
                     torch.save(model.state_dict(), best_model_path)
                     continue
 
@@ -283,12 +262,11 @@ def run_experiment(config: Dict[str, Any]):
             
             print(f"--- Training finished for period {period_id}. Best model saved to {best_model_path} ---")
 
-            # --- (*** 核心修改 8: Hybrid GNN-MLP 評估迴圈 ***) ---
+            # --- 6. 評估階段 ---
             if test_set is not None and not test_set.empty:
                 seen_users_pool.update(test_set['userId'].unique())
                 
                 if os.path.exists(best_model_path):
-                    print(f"--- Loading BEST model from {best_model_path} for evaluation ---")
                     model.load_state_dict(torch.load(best_model_path, map_location=device))
                 else:
                     print(f"--- WARNING: No best model found. Evaluating with last-epoch model. ---")
@@ -297,8 +275,6 @@ def run_experiment(config: Dict[str, Any]):
                 if model_type == 'hybrid':
                     with torch.no_grad():
                         model.update_gnn_buffer()
-
-                print(f"\n--- Running Unified Sampled Evaluation ---")
                 
                 test_set_pos = test_set[test_set['label'] == 1].copy()
                 total_positive_items = len(test_set_pos)
@@ -323,10 +299,9 @@ def run_experiment(config: Dict[str, Any]):
                             batch = {k: v.to(device) for k, v in batch.items()}
                             batch_size = len(batch['users'])
 
-                            # 1. 負採樣 (邏輯 100% 不變)
+                            # 1. 負採樣 
                             neg_user_ids_list = []
                             for i in range(batch_size):
-                                # ... (neg_users = sample_negative_users(...)) ...
                                 item_i_raw = batch_cpu['items_raw'][i].item()
                                 user_j_id = batch['users'][i].item()
                                 seen_users = item_history_dict.get(item_i_raw, set())
@@ -343,29 +318,27 @@ def run_experiment(config: Dict[str, Any]):
                             # 2. (*** GNN-MLP 評估邏輯 ***)
                             pos_logits, neg_logits, _ = model.inference(batch, neg_user_ids_batch)
 
-                            # 3. 組合 logits (邏輯 100% 不變)
+                            # 3. 組合 logits 
                             pos_logits = pos_logits.unsqueeze(1) 
                             all_logits = torch.cat([pos_logits, neg_logits], dim=1) 
                             
-                            # 4. 排名 (邏輯 100% 不變)
+                            # 4. 排名 
                             ranks = (all_logits > pos_logits).sum(dim=1).cpu().numpy()
 
-                            # 5. AUC (邏輯 100% 不變)
+                            # 5. AUC 
                             auc_per_sample = (pos_logits > neg_logits).float().mean(dim=1)
                             all_per_sample_aucs.extend(auc_per_sample.cpu().numpy())
                             all_user_ids_for_gauc.extend(batch_cpu['users_raw'].numpy())
 
-                            # 6. 累加 (邏輯 100% 不變)
+                            # 6. 累加 Recall/NDCG 
                             for rank in ranks:
                                 for j, k in enumerate(Ks):
                                     if rank < k:
                                         total_recalls[j] += 1
                                         total_ndcgs[j] += 1 / np.log2(rank + 2)
                 
-                # --- (後面所有指標計算、報告的邏輯 100% 不變) ---
                 metrics = {}
                 if total_positive_items > 0:
-                    # ... (gauc_df, metrics['auc'], ... 邏輯不變) ...
                     gauc_df = pd.DataFrame({'user': all_user_ids_for_gauc, 'auc': all_per_sample_aucs})
                     metrics['auc'] = np.mean(all_per_sample_aucs)
                     user_auc_mean = gauc_df.groupby('user')['auc'].mean()
@@ -389,9 +362,7 @@ def run_experiment(config: Dict[str, Any]):
                     print("  - No positive samples for Recall/NDCG in this period.")
                 print("  -----------------------------------------------------")
             
-        # (最終總結報告邏輯 100% 不變)
         if results_over_periods:
-            # ... (print 總結) ...
             print(f"\n{'='*20} [ 學習率 {lr} 總結報告 ] {'='*20}")
             avg_metrics = {}
             report_metric_keys = ['gauc', 'auc', 'recall@5', 'ndcg@5', 'recall@10', 'ndcg@10', 'recall@20', 'ndcg@20', 'recall@50', 'ndcg@50']

@@ -1,237 +1,151 @@
-==================================================
-Starting run with Learning Rate: 0.001
-==================================================
 
 ========================= Period 0 =========================
---- Building LightGCN Graph (N=56377) ---
---- Graph built. Shape: torch.Size([56377, 56377]), Device: cpu ---
-Incrementally updating item history and seen users pool...
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
 --- Building model, type: hybrid ---
---- Starting Hybrid GNN-MLP training loop (Max Epochs: 20, Patience: 2) ---
-Epochs:  25%|███████████████████                                                         | 5/20 [00:14<00:44,  2.98s/it, patience=1/2, train_loss=3.9584, val_loss=5.4080]
+Epochs:  25%|███████████████████████                                                                     | 5/20 [00:31<01:34,  6.29s/it, patience=1/2, train_loss=3.9700, val_loss=5.4444]
 --- Training finished for period 0. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_0/best_model.pth ---
 
 ========================= Period 1 =========================
---- Building LightGCN Graph (N=56377) ---
---- Graph built. Shape: torch.Size([56377, 56377]), Device: cpu ---
-Incrementally updating item history and seen users pool...
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
 --- Building model, type: hybrid ---
-Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_0/best_model.pth
---- Successfully restored FULL HYBRID model weights. ---
---- Starting Hybrid GNN-MLP training loop (Max Epochs: 20, Patience: 2) ---
-Epochs:  10%|███████▌                                                                    | 2/20 [00:07<01:07,  3.74s/it, patience=1/2, train_loss=5.2364, val_loss=5.3671]
+Epochs:  15%|█████████████▊                                                                              | 3/20 [00:20<01:58,  6.95s/it, patience=1/2, train_loss=4.3010, val_loss=5.1190]
 --- Training finished for period 1. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_1/best_model.pth ---
 
 ========================= Period 2 =========================
---- Building LightGCN Graph (N=56377) ---
---- Graph built. Shape: torch.Size([56377, 56377]), Device: cpu ---
-Incrementally updating item history and seen users pool...
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
 --- Building model, type: hybrid ---
-Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_1/best_model.pth
---- Successfully restored FULL HYBRID model weights. ---
---- Starting Hybrid GNN-MLP training loop (Max Epochs: 20, Patience: 2) ---
-Epochs:  10%|███████▌                                                                    | 2/20 [00:07<01:05,  3.64s/it, patience=1/2, train_loss=4.9187, val_loss=5.2499]
+Epochs:  15%|█████████████▊                                                                              | 3/20 [00:20<01:56,  6.86s/it, patience=1/2, train_loss=3.9743, val_loss=4.8640]
 --- Training finished for period 2. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_2/best_model.pth ---
 
 ========================= Period 3 =========================
---- Building LightGCN Graph (N=56377) ---
---- Graph built. Shape: torch.Size([56377, 56377]), Device: cpu ---
-Incrementally updating item history and seen users pool...
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
 --- Building model, type: hybrid ---
-Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_2/best_model.pth
---- Successfully restored FULL HYBRID model weights. ---
---- Starting Hybrid GNN-MLP training loop (Max Epochs: 20, Patience: 2) ---
-Epochs:  10%|███████▌                                                                    | 2/20 [00:07<01:04,  3.57s/it, patience=1/2, train_loss=4.9407, val_loss=5.1900]
+Epochs:  15%|█████████████▊                                                                              | 3/20 [00:20<01:54,  6.75s/it, patience=1/2, train_loss=3.8073, val_loss=4.7811]
 --- Training finished for period 3. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_3/best_model.pth ---
 
 ========================= Period 4 =========================
---- Building LightGCN Graph (N=56377) ---
---- Graph built. Shape: torch.Size([56377, 56377]), Device: cpu ---
-Incrementally updating item history and seen users pool...
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
 --- Building model, type: hybrid ---
-Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_3/best_model.pth
---- Successfully restored FULL HYBRID model weights. ---
---- Starting Hybrid GNN-MLP training loop (Max Epochs: 20, Patience: 2) ---
-Epochs:  10%|███████▌                                                                    | 2/20 [00:07<01:04,  3.58s/it, patience=1/2, train_loss=4.8081, val_loss=5.3157]
+Epochs:  15%|█████████████▊                                                                              | 3/20 [00:20<01:55,  6.78s/it, patience=1/2, train_loss=3.7085, val_loss=4.9119]
 --- Training finished for period 4. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_4/best_model.pth ---
 
 ========================= Period 5 =========================
---- Building LightGCN Graph (N=56377) ---
---- Graph built. Shape: torch.Size([56377, 56377]), Device: cpu ---
-Incrementally updating item history and seen users pool...
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
 --- Building model, type: hybrid ---
-Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_4/best_model.pth
---- Successfully restored FULL HYBRID model weights. ---
---- Starting Hybrid GNN-MLP training loop (Max Epochs: 20, Patience: 2) ---
-Epochs:  10%|███████▌                                                                    | 2/20 [00:07<01:04,  3.61s/it, patience=1/2, train_loss=4.9233, val_loss=5.2103]
+Epochs:  15%|█████████████▊                                                                              | 3/20 [00:20<01:56,  6.87s/it, patience=1/2, train_loss=3.6668, val_loss=4.6694]
 --- Training finished for period 5. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_5/best_model.pth ---
 
 ========================= Period 6 =========================
---- Building LightGCN Graph (N=56377) ---
---- Graph built. Shape: torch.Size([56377, 56377]), Device: cpu ---
-Incrementally updating item history and seen users pool...
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
 --- Building model, type: hybrid ---
-Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_5/best_model.pth
---- Successfully restored FULL HYBRID model weights. ---
---- Starting Hybrid GNN-MLP training loop (Max Epochs: 20, Patience: 2) ---
-Epochs:  10%|███████▌                                                                    | 2/20 [00:07<01:04,  3.60s/it, patience=1/2, train_loss=4.8803, val_loss=5.2379]
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:15<02:19,  7.75s/it, patience=1/2, train_loss=3.9722, val_loss=4.5900]
 --- Training finished for period 6. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_6/best_model.pth ---
 
 ========================= Period 7 =========================
---- Building LightGCN Graph (N=56377) ---
---- Graph built. Shape: torch.Size([56377, 56377]), Device: cpu ---
-Incrementally updating item history and seen users pool...
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
 --- Building model, type: hybrid ---
-Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_6/best_model.pth
---- Successfully restored FULL HYBRID model weights. ---
---- Starting Hybrid GNN-MLP training loop (Max Epochs: 20, Patience: 2) ---
-Epochs:  10%|███████▌                                                                    | 2/20 [00:07<01:07,  3.72s/it, patience=1/2, train_loss=4.9842, val_loss=5.5259]
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:15<02:18,  7.69s/it, patience=1/2, train_loss=4.0629, val_loss=4.9708]
 --- Training finished for period 7. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_7/best_model.pth ---
 
 ========================= Period 8 =========================
---- Building LightGCN Graph (N=56377) ---
---- Graph built. Shape: torch.Size([56377, 56377]), Device: cpu ---
-Incrementally updating item history and seen users pool...
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
 --- Building model, type: hybrid ---
-Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_7/best_model.pth
---- Successfully restored FULL HYBRID model weights. ---
---- Starting Hybrid GNN-MLP training loop (Max Epochs: 20, Patience: 2) ---
-Epochs:  10%|███████▌                                                                    | 2/20 [00:07<01:05,  3.65s/it, patience=1/2, train_loss=4.9839, val_loss=4.9604]
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:15<02:18,  7.67s/it, patience=1/2, train_loss=4.0246, val_loss=4.2831]
 --- Training finished for period 8. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_model.pth ---
---- Loading BEST model from ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_model.pth for evaluation ---
-
---- Running Unified Sampled Evaluation ---
-Evaluating (Hybrid): 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:00<00:00,  2.20it/s]
+Evaluating (Hybrid): 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:01<00:00,  1.11it/s]
 
 --- Period 8 Evaluation Finished ---
-  - GAUC     : 0.7747
-  - AUC      : 0.7747
+  - GAUC     : 0.7192
+  - AUC      : 0.7192
   -----------------------------------------------------
-  - Recall@5  : 0.2596   |   NDCG@5  : 0.1812
-  - Recall@10 : 0.4024   |   NDCG@10 : 0.2271
-  - Recall@20 : 0.5787   |   NDCG@20 : 0.2713
-  - Recall@50 : 0.8510   |   NDCG@50 : 0.3256
+  - Recall@5  : 0.1356   |   NDCG@5  : 0.0823
+  - Recall@10 : 0.2346   |   NDCG@10 : 0.1137
+  - Recall@20 : 0.4297   |   NDCG@20 : 0.1627
+  - Recall@50 : 0.8327   |   NDCG@50 : 0.2431
   -----------------------------------------------------
 
 ========================= Period 9 =========================
---- Building LightGCN Graph (N=56377) ---
---- Graph built. Shape: torch.Size([56377, 56377]), Device: cpu ---
-Incrementally updating item history and seen users pool...
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
 --- Building model, type: hybrid ---
-Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_model.pth
---- Successfully restored FULL HYBRID model weights. ---
---- Starting Hybrid GNN-MLP training loop (Max Epochs: 20, Patience: 2) ---
-Epochs:  10%|███████▌                                                                    | 2/20 [00:07<01:05,  3.63s/it, patience=1/2, train_loss=4.8183, val_loss=5.0919]
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:15<02:21,  7.87s/it, patience=1/2, train_loss=3.7413, val_loss=4.4031]
 --- Training finished for period 9. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth ---
---- Loading BEST model from ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth for evaluation ---
-
---- Running Unified Sampled Evaluation ---
-Evaluating (Hybrid): 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:00<00:00,  2.29it/s]
+Evaluating (Hybrid): 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:01<00:00,  1.08it/s]
 
 --- Period 9 Evaluation Finished ---
-  - GAUC     : 0.7788
-  - AUC      : 0.7788
+  - GAUC     : 0.6928
+  - AUC      : 0.6928
   -----------------------------------------------------
-  - Recall@5  : 0.2761   |   NDCG@5  : 0.1951
-  - Recall@10 : 0.4099   |   NDCG@10 : 0.2380
-  - Recall@20 : 0.5743   |   NDCG@20 : 0.2792
-  - Recall@50 : 0.8588   |   NDCG@50 : 0.3359
+  - Recall@5  : 0.1197   |   NDCG@5  : 0.0744
+  - Recall@10 : 0.2208   |   NDCG@10 : 0.1066
+  - Recall@20 : 0.4037   |   NDCG@20 : 0.1524
+  - Recall@50 : 0.7905   |   NDCG@50 : 0.2292
   -----------------------------------------------------
 
 ========================= Period 10 =========================
---- Building LightGCN Graph (N=56377) ---
---- Graph built. Shape: torch.Size([56377, 56377]), Device: cpu ---
-Incrementally updating item history and seen users pool...
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
 --- Building model, type: hybrid ---
-Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth
---- Successfully restored FULL HYBRID model weights. ---
---- Starting Hybrid GNN-MLP training loop (Max Epochs: 20, Patience: 2) ---
-Epochs:  10%|███████▌                                                                    | 2/20 [00:07<01:06,  3.67s/it, patience=1/2, train_loss=4.8431, val_loss=4.9604]
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:15<02:22,  7.91s/it, patience=1/2, train_loss=3.8145, val_loss=4.2328]
 --- Training finished for period 10. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth ---
---- Loading BEST model from ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth for evaluation ---
-
---- Running Unified Sampled Evaluation ---
-Evaluating (Hybrid): 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:00<00:00,  2.11it/s]
+Evaluating (Hybrid): 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:01<00:00,  1.16it/s]
 
 --- Period 10 Evaluation Finished ---
-  - GAUC     : 0.7841
-  - AUC      : 0.7841
+  - GAUC     : 0.6863
+  - AUC      : 0.6863
   -----------------------------------------------------
-  - Recall@5  : 0.2752   |   NDCG@5  : 0.1867
-  - Recall@10 : 0.4071   |   NDCG@10 : 0.2291
-  - Recall@20 : 0.5866   |   NDCG@20 : 0.2740
-  - Recall@50 : 0.8681   |   NDCG@50 : 0.3298
+  - Recall@5  : 0.1206   |   NDCG@5  : 0.0727
+  - Recall@10 : 0.2112   |   NDCG@10 : 0.1018
+  - Recall@20 : 0.4037   |   NDCG@20 : 0.1499
+  - Recall@50 : 0.7882   |   NDCG@50 : 0.2259
   -----------------------------------------------------
 
 ========================= Period 11 =========================
---- Building LightGCN Graph (N=56377) ---
---- Graph built. Shape: torch.Size([56377, 56377]), Device: cpu ---
-Incrementally updating item history and seen users pool...
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
 --- Building model, type: hybrid ---
-Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth
---- Successfully restored FULL HYBRID model weights. ---
---- Starting Hybrid GNN-MLP training loop (Max Epochs: 20, Patience: 2) ---
-Epochs:  10%|███████▌                                                                    | 2/20 [00:07<01:03,  3.55s/it, patience=1/2, train_loss=4.7849, val_loss=5.1882]
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:16<02:25,  8.06s/it, patience=1/2, train_loss=3.7548, val_loss=4.4591]
 --- Training finished for period 11. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth ---
---- Loading BEST model from ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth for evaluation ---
-
---- Running Unified Sampled Evaluation ---
-Evaluating (Hybrid): 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:00<00:00,  2.14it/s]
+Evaluating (Hybrid): 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:01<00:00,  1.14it/s]
 
 --- Period 11 Evaluation Finished ---
-  - GAUC     : 0.8005
-  - AUC      : 0.8005
+  - GAUC     : 0.6802
+  - AUC      : 0.6802
   -----------------------------------------------------
-  - Recall@5  : 0.3030   |   NDCG@5  : 0.2042
-  - Recall@10 : 0.4452   |   NDCG@10 : 0.2501
-  - Recall@20 : 0.6239   |   NDCG@20 : 0.2951
-  - Recall@50 : 0.8763   |   NDCG@50 : 0.3454
+  - Recall@5  : 0.1158   |   NDCG@5  : 0.0725
+  - Recall@10 : 0.2108   |   NDCG@10 : 0.1028
+  - Recall@20 : 0.3929   |   NDCG@20 : 0.1484
+  - Recall@50 : 0.7572   |   NDCG@50 : 0.2206
   -----------------------------------------------------
 
 ========================= Period 12 =========================
---- Building LightGCN Graph (N=56377) ---
---- Graph built. Shape: torch.Size([56377, 56377]), Device: cpu ---
-Incrementally updating item history and seen users pool...
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
 --- Building model, type: hybrid ---
-Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth
---- Successfully restored FULL HYBRID model weights. ---
---- Starting Hybrid GNN-MLP training loop (Max Epochs: 20, Patience: 2) ---
-Epochs:  10%|███████▌                                                                    | 2/20 [00:07<01:06,  3.69s/it, patience=1/2, train_loss=4.8183, val_loss=5.1880]
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:15<02:17,  7.66s/it, patience=1/2, train_loss=3.9099, val_loss=4.5094]
 --- Training finished for period 12. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth ---
---- Loading BEST model from ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth for evaluation ---
-
---- Running Unified Sampled Evaluation ---
-Evaluating (Hybrid): 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:00<00:00,  2.22it/s]
+Evaluating (Hybrid): 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:01<00:00,  1.09it/s]
 
 --- Period 12 Evaluation Finished ---
-  - GAUC     : 0.8006
-  - AUC      : 0.8006
+  - GAUC     : 0.6846
+  - AUC      : 0.6846
   -----------------------------------------------------
-  - Recall@5  : 0.3180   |   NDCG@5  : 0.2199
-  - Recall@10 : 0.4580   |   NDCG@10 : 0.2653
-  - Recall@20 : 0.6196   |   NDCG@20 : 0.3063
-  - Recall@50 : 0.8801   |   NDCG@50 : 0.3580
+  - Recall@5  : 0.1276   |   NDCG@5  : 0.0849
+  - Recall@10 : 0.2252   |   NDCG@10 : 0.1159
+  - Recall@20 : 0.4051   |   NDCG@20 : 0.1610
+  - Recall@50 : 0.7825   |   NDCG@50 : 0.2353
   -----------------------------------------------------
 
 ========================= Period 13 =========================
---- Building LightGCN Graph (N=56377) ---
---- Graph built. Shape: torch.Size([56377, 56377]), Device: cpu ---
-Incrementally updating item history and seen users pool...
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
 --- Building model, type: hybrid ---
-Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth
---- Successfully restored FULL HYBRID model weights. ---
---- Starting Hybrid GNN-MLP training loop (Max Epochs: 20, Patience: 2) ---
-Epochs:  10%|███████▌                                                                    | 2/20 [00:07<01:04,  3.57s/it, patience=1/2, train_loss=4.5917, val_loss=4.8443]
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:14<02:14,  7.49s/it, patience=1/2, train_loss=3.6162, val_loss=4.0464]
 --- Training finished for period 13. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_13/best_model.pth ---
 
 ==================== [ 學習率 0.001 總結報告 ] ====================
 
 --- Evaluation Finished ---
-  - GAUC     : 0.7877
-  - AUC      : 0.7877
+  - GAUC     : 0.6926
+  - AUC      : 0.6926
 -------------------------------------------------------
-  - Recall@5  : 0.2864   |   NDCG@5  : 0.1974
-  - Recall@10 : 0.4245   |   NDCG@10 : 0.2419
-  - Recall@20 : 0.5966   |   NDCG@20 : 0.2852
-  - Recall@50 : 0.8669   |   NDCG@50 : 0.3390
+  - Recall@5  : 0.1239   |   NDCG@5  : 0.0774
+  - Recall@10 : 0.2205   |   NDCG@10 : 0.1081
+  - Recall@20 : 0.4070   |   NDCG@20 : 0.1549
+  - Recall@50 : 0.7902   |   NDCG@50 : 0.2308
 -------------------------------------------------------

@@ -50,7 +50,7 @@ class Hybrid_GNN_MLP(nn.Module):
         self.num_users = num_users
         self.num_items = num_items
         self.hparams = hyperparams
-        self.register_buffer('adj_matrix', adj_matrix)
+        self.adj_matrix = adj_matrix
         
         # --- 1. GNN 的「種子」 (E₀) ---
         # (MODIFIED) 這是「歷史」和「GNN 傳播」的來源
@@ -78,13 +78,11 @@ class Hybrid_GNN_MLP(nn.Module):
             requires_grad=False 
         )
         
-        # (b) History 快取 (*** 與 EmbMLP 完全對齊 ***)
         # (hist_item_emb + hist_cate_emb)
         history_embed_dim = self.item_embed_dim + self.cate_embed_dim
         self.user_history_buffer = nn.Embedding(num_users, history_embed_dim)
         self.user_history_buffer.weight.requires_grad = False
 
-        # --- 4. 建立「MLP 塔」 (*** 與 EmbMLP 完全對齊 ***)
         user_concat_dim = self.user_embed_dim + self.item_embed_dim + self.cate_embed_dim
         item_concat_dim = self.item_embed_dim + self.cate_embed_dim + self.user_embed_dim
         
@@ -102,7 +100,6 @@ class Hybrid_GNN_MLP(nn.Module):
                 *[self.PreNormResidual(item_concat_dim, self._build_mlp_layers(item_concat_dim))]*layer_num,
             )
 
-    # (PreNormResidual 和 _build_mlp_layers 和 EmbMLP 一樣)
     class PreNormResidual(nn.Module):
         def __init__(self, dim, fn): super().__init__(); self.fn = fn; self.norm = nn.LayerNorm(dim)
         def forward(self, x): return self.fn(self.norm(x)) + x
@@ -110,25 +107,26 @@ class Hybrid_GNN_MLP(nn.Module):
         inner_dim = int(dim * expansion_factor); return nn.Sequential(dense(dim, inner_dim), nn.ReLU(), nn.Dropout(dropout), dense(inner_dim, dim), nn.Dropout(dropout))
         
     def _run_gnn_propagation(self) -> torch.Tensor:
-        # (GNN 傳播邏輯不變)
         e_0 = self.embeddings.weight
         embeddings_k = [e_0]
         for layer in range(self.num_layers):
-            e_k = torch.sparse.mm(self.adj_matrix, embeddings_k[-1])
+            e_k = spmm(
+                self.adj_matrix.indices(), 
+                self.adj_matrix.values(), 
+                self.adj_matrix.shape[0], 
+                self.adj_matrix.shape[1],
+                embeddings_k[-1]
+                )
             embeddings_k.append(e_k)
         final_embeddings = torch.mean(torch.stack(embeddings_k, dim=0), dim=0)
         return final_embeddings
 
     def update_gnn_buffer(self):
-        # (「慢心跳」快取更新，邏輯不變)
         with torch.no_grad():
             e_final = self._run_gnn_propagation()
             self.gnn_buffer.data.copy_(e_final)
             
     def _get_user_features(self, batch: Dict) -> torch.Tensor:
-        """
-        (*** MODIFIED: 與 EmbMLP 對齊 ***)
-        """
         # 1. 靜態 User 特徵 (*** 核心替換 ***)
         # (B, D_u)
         # static_u_emb = self.gnn_buffer[batch['users']]
@@ -158,9 +156,6 @@ class Hybrid_GNN_MLP(nn.Module):
         return user_features
 
     def _get_item_features(self, batch: Dict) -> torch.Tensor:
-        """
-        (*** MODIFIED: 與 EmbMLP 對齊 ***)
-        """
         # 1. 靜態 Item 特徵 (*** 核心替換 ***)
         # (B, D_i)
         # static_item_emb = self.gnn_buffer[batch['items'] + self.num_users]
@@ -188,7 +183,6 @@ class Hybrid_GNN_MLP(nn.Module):
         return item_features
 
     def _get_embeddings_from_features(self, user_features, item_features):
-        """ (*** 與 EmbMLP 對齊 ***) """
         user_embedding = self.user_mlp(user_features)
         user_embedding_2 = self.user_mlp_2(user_features)
         user_embedding =  user_embedding + user_embedding_2
@@ -200,14 +194,12 @@ class Hybrid_GNN_MLP(nn.Module):
         return user_embedding, item_embedding
 
     def forward(self, batch: Dict) -> Tuple[torch.Tensor, torch.Tensor]:
-        """ (*** 與 EmbMLP 對齊 ***) """
         user_features = self._get_user_features(batch)
         item_features = self._get_item_features(batch)
         user_embedding, item_embedding = self._get_embeddings_from_features(user_features, item_features)
         return user_embedding, item_embedding
     
     def _calculate_infonce_loss(self, user_embedding, item_embedding, labels):
-        """計算 InfoNCE 損失 (與 TF1 數學邏輯完全對齊的最終修正版)"""
         
         # --- 分母 (Denominator) 計算 ---
         # 1. 計算 item-user 分數矩陣 [B, B]，M[i,j] = item_i @ user_j
@@ -258,9 +250,6 @@ class Hybrid_GNN_MLP(nn.Module):
         batch: Dict[str, torch.Tensor],
         neg_user_ids_batch: torch.Tensor
     ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
-        """
-        (*** MODIFIED: 與 EmbMLP 對齊的快取推論 ***)
-        """
         # --- 1. 計算「正樣本」 (B, D) ---
         user_features, item_features = self._get_user_features(batch), self._get_item_features(batch)
         pos_user_emb, pos_item_emb = self._get_embeddings_from_features(user_features, item_features)
