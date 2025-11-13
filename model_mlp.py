@@ -75,10 +75,10 @@ class EmbMLP(nn.Module):
         self.cate_emb_w = nn.Embedding(self.hparams['num_cates'], self.hparams['cate_embed_dim'])
 
         # 這個緩存將儲存每個用戶的「最新」平均池化歷史
-        history_embed_dim = self.hparams['item_embed_dim'] + self.hparams['cate_embed_dim']
-        self.user_history_buffer = nn.Embedding(self.hparams['num_users'], history_embed_dim)
+        history_embed_dim = self.hparams['item_embed_dim'] #+ self.hparams['cate_embed_dim']
+        self.item_history_buffer = nn.Embedding(self.hparams['num_items'], history_embed_dim)
         # 將緩存設為非可訓練
-        self.user_history_buffer.weight.requires_grad = False
+        self.item_history_buffer.weight.requires_grad = False
        
 
         # --- 建立 MLP 權重 (使用 nn.Sequential) ---
@@ -123,26 +123,8 @@ class EmbMLP(nn.Module):
     def _init_weights(self):
         # 1. 初始化 User (不變)
         nn.init.xavier_uniform_(self.user_emb_w.weight)
-
-        # 2. (MODIFIED) 初始化 Item
-        if self.anchor_item_vectors is not None:  # <-- (修改) 檢查 buffer
-            print("--- Initializing item embeddings from provided text vectors. ---")
-            if self.item_emb_w.weight.shape != self.anchor_item_vectors.shape: # <-- (修改)
-                raise ValueError(f"Item embedding shape mismatch! Model expects {self.item_emb_w.weight.shape} but got {self.anchor_item_vectors.shape}")
-            self.item_emb_w.weight.data.copy_(self.anchor_item_vectors) # <-- (修改)
-        else:
-            print("--- Using default Xavier initialization for item embeddings. ---")
-            nn.init.xavier_uniform_(self.item_emb_w.weight)
-
-        # 3. (MODIFIED) 初始化 Category
-        if self.anchor_cate_vectors is not None: # <-- (修改) 
-            print("--- Initializing category embeddings from provided text vectors. ---")
-            if self.cate_emb_w.weight.shape != self.anchor_cate_vectors.shape: # <-- (修改)
-                raise ValueError(f"Category embedding shape mismatch! Model expects {self.cate_emb_w.weight.shape} but got {self.anchor_cate_vectors.shape}")
-            self.cate_emb_w.weight.data.copy_(self.anchor_cate_vectors) # <-- (修改)
-        else:
-            print("--- Using default Xavier initialization for category embeddings. ---")
-            nn.init.xavier_uniform_(self.cate_emb_w.weight)
+        nn.init.xavier_uniform_(self.item_emb_w.weight)
+        nn.init.xavier_uniform_(self.cate_emb_w.weight)
 
         # 4. 初始化 MLPs (不變)
         for mlp in [self.user_mlp, self.item_mlp, self.user_mlp_2, self.item_mlp_2]:
@@ -151,14 +133,6 @@ class EmbMLP(nn.Module):
                     nn.init.xavier_uniform_(layer.weight)
                     nn.init.zeros_(layer.bias)
                     
-        # 5. (MODIFIED) 根據 config 決定是否凍結
-        if self.hparams.get('freeze_text_embeddings', False):
-            if self.item_init_vectors is not None:
-                print("--- Freezing item embeddings (requires_grad = False). ---")
-                self.item_emb_w.weight.requires_grad = False
-            if self.cate_init_vectors is not None:
-                print("--- Freezing category embeddings (requires_grad = False). ---")
-                self.cate_emb_w.weight.requires_grad = False
 
     def _build_feature_representations(self, batch: Dict) -> Tuple[torch.Tensor, torch.Tensor]:
         """建立使用者和物品的特徵表示 (融合細粒度時間特徵)"""
@@ -176,15 +150,10 @@ class EmbMLP(nn.Module):
         avg_cate_emb_for_hist = average_pooling(hist_cates_emb, hist_cates_len)
         hist_item_emb_with_cate = torch.cat([hist_item_emb, avg_cate_emb_for_hist], dim=2)
 
-        user_history_emb = average_pooling(hist_item_emb_with_cate, batch['item_history_len'])
+        user_history_emb = average_pooling(hist_item_emb_with_cate, batch['item_history_len']).detach()
+        # user_history_emb = average_pooling(hist_item_emb, batch['item_history_len'])#.detach()
 
-        user_features = torch.cat([u_emb, user_history_emb], dim=-1)
-
-        # 在訓練時，更新緩存
-        if self.training:
-            user_ids = batch['users']
-            # 我們必須 .detach()，因為緩存更新這個操作不應該參與反向傳播
-            self.user_history_buffer.weight[user_ids] = user_history_emb.detach()
+        user_features = torch.cat([u_emb,user_history_emb], dim=-1)
 
         # === 物品表示 ===
         # 獲取靜態身份
@@ -198,9 +167,17 @@ class EmbMLP(nn.Module):
         avg_cate_emb_for_item = average_pooling(item_cates_emb, item_cates_len)
         item_emb_with_cate = torch.cat([item_emb, avg_cate_emb_for_item], dim=1)
         item_history_user_emb = self.user_emb_w(batch['user_history_matrix'])
-        item_history_emb = average_pooling(item_history_user_emb, batch['user_history_len'])
 
+        item_history_emb = average_pooling(item_history_user_emb, batch['user_history_len']).detach()
+
+        # item_features = torch.cat([item_emb, item_history_emb], dim=-1)
         item_features = torch.cat([item_emb_with_cate, item_history_emb], dim=-1)
+
+        # 在訓練時，更新緩存
+        if self.training:
+            user_ids = batch['users']
+            # 我們必須 .detach()，因為緩存更新這個操作不應該參與反向傳播
+            self.item_history_buffer.weight[user_ids] = item_history_emb.detach()
 
         return user_features, item_features
 
@@ -236,9 +213,8 @@ class EmbMLP(nn.Module):
         """計算 InfoNCE 損失 """
         
         # --- 分母 (Denominator) 計算 ---
-        # 1. 計算 item-user 分數矩陣 [B, B]，M[i,j] = item_i @ user_j
-        #    這與 TF1 的 tf.matmul(item, user, transpose_b=True) 完全等價
-        all_inner_product = torch.matmul(item_embedding, user_embedding.t())
+        # 1. 計算 user-item 分數矩陣 [B, B]，M[i,j] = user_i @ item_j
+        all_inner_product = torch.matmul(user_embedding, item_embedding.t())
         logits = all_inner_product / self.temperature
         
         # 2. 應用 Log-Sum-Exp 技巧穩定化
@@ -246,7 +222,7 @@ class EmbMLP(nn.Module):
         logits_stabilized = logits - logits_max
         exp_logits_den = torch.exp(logits_stabilized)
         
-        # 3. 分母是穩定後 exp_logits 的行和 (對每個 item，匯總所有 user 的分數)
+        # 3. 分母是穩定後 exp_logits 的行和 (對每個 user，匯總所有 item 的分數)
         denominator = exp_logits_den.sum(dim=1, keepdim=True)
 
         # --- 分子 (Numerator) 計算 ---
@@ -269,60 +245,22 @@ class EmbMLP(nn.Module):
         """
         計算訓練時的總損失。
         """
-        # # 1. 執行一次標準的前向傳播
-        # user_embedding, item_embedding = self.forward(batch)
-        
-        # # 2. 計算整個批次的 InfoNCE 損失
-        # losses = self._calculate_infonce_loss(user_embedding, item_embedding, batch['labels'])
-        
-        # # 3. 返回損失的平均值
-        # final_loss = losses.mean()
-        
-        # return final_loss
-        # 0. (NEW) 讀取錨定權重
-        anchor_lambda = self.hparams.get('semantic_anchor_lambda', 100.0)
-
         # 1. 執行一次標準的前向傳播
         user_embedding, item_embedding = self.forward(batch)
         
         # 2. 計算整個批次的 InfoNCE 損失
         losses = self._calculate_infonce_loss(user_embedding, item_embedding, batch['labels'])
-        infonce_loss = losses.mean()
         
-        # 3. (NEW) 計算語意錨定損失 (Knowledge Distillation)
-        total_loss = infonce_loss
+        # 3. 返回損失的平均值
+        final_loss = losses.mean()
         
-        # 只有在 lambda > 0 且我們有錨定向量時才計算
-        if anchor_lambda > 0 and self.anchor_item_vectors is not None:
-            
-            # --- 關鍵邏輯 ---
-            # 1. 獲取「當前」的 item embeddings (在它們進入 MLP 之前)
-            #    (注意：這是在 _build_feature_representations 中使用的原始 lookup)
-            current_item_embeddings = self.item_emb_w(batch['items'])
-            
-            # 2. 獲取「錨點」 (SBERT/PCA) embeddings
-            #    我們只取當前 batch 中 item 對應的向量
-            with torch.no_grad(): # 錨點是固定的，不需要梯度
-                anchor_item_embeddings = self.anchor_item_vectors[batch['items']]
-            
-            # 3. 計算它們之間的 MSE 損失
-            loss_distill_item = F.mse_loss(current_item_embeddings, anchor_item_embeddings)
-            
-            # (可選) 你也可以對 cate_emb_w 做同樣的事，但我們先專注在 item 上
-            
-            # 4. 將損失加入總損失
-            total_loss = infonce_loss + (anchor_lambda * loss_distill_item)
-            
-            # (Debug) 檢查損失
-            if torch.isnan(total_loss):
-                print(f"NaN detected! InfoNCE: {infonce_loss}, Distill: {loss_distill_item}")
-
-        return total_loss
+        return final_loss
+        
     
     def inference(
         self,
         batch: Dict[str, torch.Tensor],
-        neg_user_ids_batch: torch.Tensor
+        neg_item_ids_batch: torch.Tensor
     ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         """
         在 Baseline 模式下執行推論，計算正樣本和指定負樣本的分數。
@@ -336,29 +274,29 @@ class EmbMLP(nn.Module):
         )
 
         # --- 2. 計算負樣本的 Logits ---
-        num_neg_samples = neg_user_ids_batch.shape[1]
+        num_neg_samples = neg_item_ids_batch.shape[1]
         
         # a. 獲取負樣本用戶特徵 [B, M, D_user_feat]
-        neg_user_static_emb = self.user_emb_w(neg_user_ids_batch)
-        neg_user_history_emb = self.user_history_buffer(neg_user_ids_batch)
-        neg_user_features = torch.cat([
-            neg_user_static_emb , 
-            neg_user_history_emb
+        neg_item_static_emb = self.item_emb_w(neg_item_ids_batch)
+        neg_item_cate_emb = self.cate_emb_w(self.cates[neg_item_ids_batch])
+        neg_item_cates_len = self.cate_lens[neg_item_ids_batch]
+        avg_cate_emb_for_neg_item = average_pooling(neg_item_cate_emb, neg_item_cates_len)
+        neg_item_history_emb = self.item_history_buffer(neg_item_ids_batch)
+        neg_item_features = torch.cat([
+            neg_item_static_emb, 
+            avg_cate_emb_for_neg_item,
+            neg_item_history_emb
         ], dim=2)
         
-        # b. 獲取正樣本物品特徵 (擴展版) [B, M, D_item_feat]
-        item_features_expanded = item_features.unsqueeze(1).expand(-1, num_neg_samples, -1)
+        # b. 獲取正樣本特徵 (擴展版) [B, M, D_user_feat]
+        user_features_expanded = user_features.unsqueeze(1).expand(-1, num_neg_samples, -1)
 
         # c. 處理負樣本
-        # 輸入: [B, M, D_user_feat], [B, M, D_item_feat]
-        neg_user_emb_final, neg_item_emb_final = self._get_embeddings_from_features(
-            neg_user_features, 
-            item_features_expanded
-        )
         # 輸出: [B, M, D_emb], [B, M, D_emb]
+        neg_user_emb_final, neg_item_emb_final = self._get_embeddings_from_features(user_features_expanded, neg_item_features)
 
-        # d. 計算負樣本 logits: (Item 對 Negative Users)
-        neg_logits = torch.sum(neg_item_emb_final * neg_user_emb_final, dim=2)
+        # d. 計算負樣本 logits: (user 對 Negative Items)
+        neg_logits = torch.sum(neg_user_emb_final * neg_item_emb_final, dim=2)
         
         # --- 3. 返回結果 ---
         return pos_logits, neg_logits, per_sample_loss

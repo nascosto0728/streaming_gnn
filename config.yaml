@@ -12,7 +12,7 @@ learning_rates: [0.001]
 num_periods: 14
 train_start_period: 0
 test_start_period: 8
-max_epochs: 20         # 每個 period 最多跑 100 個 epoch
+max_epochs: 1         # 每個 period 最多跑 100 個 epoch
 validation_split: 0.2   # 從「當前 period」切 20% 出來當驗證集
 patience: 2            # 驗證集損失 (val_loss) 連續 10 次沒進步就停止
 

@@ -74,7 +74,6 @@ class RecommendationDataset(Dataset):
             'item_history_len': np.minimum(len(sample_row['itemSeq']), 30).astype(np.int32),
             'user_history_matrix': user_history_seq,
             'user_history_len': np.minimum(len(sample_row['userSeq']), 30).astype(np.int32),
-
             'period': sample_row['period'].astype(np.int64),
         }
         

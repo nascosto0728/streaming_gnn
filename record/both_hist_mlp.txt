@@ -1,0 +1,364 @@
+
+========================= Period 0 =========================
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:04<00:37,  2.07s/it, patience=1/2, train_loss=5.2972, val_loss=5.6887]
+--- Training finished for period 0. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_0/best_model.pth ---
+
+========================= Period 1 =========================
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:03<00:33,  1.86s/it, patience=1/2, train_loss=5.2924, val_loss=5.6358]
+--- Training finished for period 1. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_1/best_model.pth ---
+
+========================= Period 2 =========================
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:03<00:33,  1.87s/it, patience=1/2, train_loss=5.0543, val_loss=5.4419]
+--- Training finished for period 2. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_2/best_model.pth ---
+
+========================= Period 3 =========================
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:03<00:32,  1.82s/it, patience=1/2, train_loss=5.1546, val_loss=5.3810]
+--- Training finished for period 3. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_3/best_model.pth ---
+
+========================= Period 4 =========================
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:03<00:32,  1.80s/it, patience=1/2, train_loss=5.0903, val_loss=5.5622]
+--- Training finished for period 4. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_4/best_model.pth ---
+
+========================= Period 5 =========================
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:03<00:32,  1.82s/it, patience=1/2, train_loss=5.2486, val_loss=5.4016]
+--- Training finished for period 5. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_5/best_model.pth ---
+
+========================= Period 6 =========================
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:03<00:33,  1.86s/it, patience=1/2, train_loss=5.2223, val_loss=5.4584]
+--- Training finished for period 6. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_6/best_model.pth ---
+
+========================= Period 7 =========================
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:03<00:33,  1.86s/it, patience=1/2, train_loss=5.3267, val_loss=5.7487]
+--- Training finished for period 7. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_7/best_model.pth ---
+
+========================= Period 8 =========================
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:03<00:32,  1.81s/it, patience=1/2, train_loss=5.3091, val_loss=5.1540]
+--- Training finished for period 8. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_model.pth ---
+Evaluating (Hybrid): 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:01<00:00,  1.33it/s]
+
+--- Period 8 Evaluation Finished ---
+  - GAUC     : 0.6554
+  - AUC      : 0.6554
+  -----------------------------------------------------
+  - Recall@5  : 0.1634   |   NDCG@5  : 0.1099
+  - Recall@10 : 0.2557   |   NDCG@10 : 0.1398
+  - Recall@20 : 0.3824   |   NDCG@20 : 0.1716
+  - Recall@50 : 0.6971   |   NDCG@50 : 0.2335
+  -----------------------------------------------------
+
+========================= Period 9 =========================
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:03<00:33,  1.85s/it, patience=1/2, train_loss=5.1128, val_loss=5.3115]
+--- Training finished for period 9. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth ---
+Evaluating (Hybrid): 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:01<00:00,  1.45it/s]
+
+--- Period 9 Evaluation Finished ---
+  - GAUC     : 0.6887
+  - AUC      : 0.6887
+  -----------------------------------------------------
+  - Recall@5  : 0.2163   |   NDCG@5  : 0.1457
+  - Recall@10 : 0.3134   |   NDCG@10 : 0.1770
+  - Recall@20 : 0.4421   |   NDCG@20 : 0.2093
+  - Recall@50 : 0.7295   |   NDCG@50 : 0.2656
+  -----------------------------------------------------
+
+========================= Period 10 =========================
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:03<00:33,  1.87s/it, patience=1/2, train_loss=5.1432, val_loss=5.1549]
+--- Training finished for period 10. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth ---
+Evaluating (Hybrid): 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:01<00:00,  1.39it/s]
+
+--- Period 10 Evaluation Finished ---
+  - GAUC     : 0.6664
+  - AUC      : 0.6664
+  -----------------------------------------------------
+  - Recall@5  : 0.1914   |   NDCG@5  : 0.1298
+  - Recall@10 : 0.2877   |   NDCG@10 : 0.1608
+  - Recall@20 : 0.4066   |   NDCG@20 : 0.1910
+  - Recall@50 : 0.6789   |   NDCG@50 : 0.2443
+  -----------------------------------------------------
+
+========================= Period 11 =========================
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:03<00:35,  1.95s/it, patience=1/2, train_loss=5.1150, val_loss=5.4231]
+--- Training finished for period 11. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth ---
+Evaluating (Hybrid): 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:01<00:00,  1.29it/s]
+
+--- Period 11 Evaluation Finished ---
+  - GAUC     : 0.6815
+  - AUC      : 0.6815
+  -----------------------------------------------------
+  - Recall@5  : 0.1855   |   NDCG@5  : 0.1272
+  - Recall@10 : 0.2721   |   NDCG@10 : 0.1553
+  - Recall@20 : 0.4098   |   NDCG@20 : 0.1899
+  - Recall@50 : 0.7381   |   NDCG@50 : 0.2541
+  -----------------------------------------------------
+
+========================= Period 12 =========================
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:03<00:33,  1.85s/it, patience=1/2, train_loss=5.1690, val_loss=5.4282]
+--- Training finished for period 12. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth ---
+Evaluating (Hybrid): 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:01<00:00,  1.42it/s]
+
+--- Period 12 Evaluation Finished ---
+  - GAUC     : 0.6976
+  - AUC      : 0.6976
+  -----------------------------------------------------
+  - Recall@5  : 0.1928   |   NDCG@5  : 0.1234
+  - Recall@10 : 0.2939   |   NDCG@10 : 0.1559
+  - Recall@20 : 0.4321   |   NDCG@20 : 0.1906
+  - Recall@50 : 0.7554   |   NDCG@50 : 0.2543
+  -----------------------------------------------------
+
+========================= Period 13 =========================
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:03<00:33,  1.88s/it, patience=1/2, train_loss=4.9030, val_loss=5.1295]
+--- Training finished for period 13. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_13/best_model.pth ---
+
+==================== [ 學習率 0.001 總結報告 ] ====================
+
+--- Evaluation Finished ---
+  - GAUC     : 0.6779
+  - AUC      : 0.6779
+-------------------------------------------------------
+  - Recall@5  : 0.1899   |   NDCG@5  : 0.1272
+  - Recall@10 : 0.2845   |   NDCG@10 : 0.1578
+  - Recall@20 : 0.4146   |   NDCG@20 : 0.1905
+  - Recall@50 : 0.7198   |   NDCG@50 : 0.2504
+-------------------------------------------------------
+
+
+
+
+user vs neg items
+
+
+========================= Period 0 =========================
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:03<00:35,  1.99s/it, patience=1/2, train_loss=5.2673, val_loss=5.7222]
+--- Training finished for period 0. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_0/best_model.pth ---
+
+========================= Period 1 =========================
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:03<00:32,  1.79s/it, patience=1/2, train_loss=5.3156, val_loss=5.6253]
+--- Training finished for period 1. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_1/best_model.pth ---
+
+========================= Period 2 =========================
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:03<00:32,  1.79s/it, patience=1/2, train_loss=5.0702, val_loss=5.4670]
+--- Training finished for period 2. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_2/best_model.pth ---
+
+========================= Period 3 =========================
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:03<00:32,  1.82s/it, patience=1/2, train_loss=5.1804, val_loss=5.3333]
+--- Training finished for period 3. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_3/best_model.pth ---
+
+========================= Period 4 =========================
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:03<00:32,  1.83s/it, patience=1/2, train_loss=5.0613, val_loss=5.6371]
+--- Training finished for period 4. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_4/best_model.pth ---
+
+========================= Period 5 =========================
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:03<00:32,  1.81s/it, patience=1/2, train_loss=5.2330, val_loss=5.4082]
+--- Training finished for period 5. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_5/best_model.pth ---
+
+========================= Period 6 =========================
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:03<00:33,  1.84s/it, patience=1/2, train_loss=5.1849, val_loss=5.5143]
+--- Training finished for period 6. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_6/best_model.pth ---
+
+========================= Period 7 =========================
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:03<00:33,  1.86s/it, patience=1/2, train_loss=5.2952, val_loss=5.7233]
+--- Training finished for period 7. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_7/best_model.pth ---
+
+========================= Period 8 =========================
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:03<00:32,  1.83s/it, patience=1/2, train_loss=5.3053, val_loss=5.1630]
+--- Training finished for period 8. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_model.pth ---
+Evaluating (Hybrid): 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:01<00:00,  1.37it/s]
+
+--- Period 8 Evaluation Finished ---
+  - GAUC     : 0.6919
+  - AUC      : 0.6919
+  -----------------------------------------------------
+  - Recall@5  : 0.1473   |   NDCG@5  : 0.0948
+  - Recall@10 : 0.2535   |   NDCG@10 : 0.1288
+  - Recall@20 : 0.4225   |   NDCG@20 : 0.1715
+  - Recall@50 : 0.7660   |   NDCG@50 : 0.2392
+  -----------------------------------------------------
+
+========================= Period 9 =========================
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:03<00:32,  1.83s/it, patience=1/2, train_loss=5.1391, val_loss=5.3029]
+--- Training finished for period 9. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth ---
+Evaluating (Hybrid): 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:01<00:00,  1.45it/s]
+
+--- Period 9 Evaluation Finished ---
+  - GAUC     : 0.6852
+  - AUC      : 0.6852
+  -----------------------------------------------------
+  - Recall@5  : 0.1304   |   NDCG@5  : 0.0834
+  - Recall@10 : 0.2422   |   NDCG@10 : 0.1192
+  - Recall@20 : 0.4009   |   NDCG@20 : 0.1590
+  - Recall@50 : 0.7527   |   NDCG@50 : 0.2281
+  -----------------------------------------------------
+
+========================= Period 10 =========================
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:03<00:32,  1.81s/it, patience=1/2, train_loss=5.1325, val_loss=5.1705]
+--- Training finished for period 10. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth ---
+Evaluating (Hybrid): 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:01<00:00,  1.33it/s]
+
+--- Period 10 Evaluation Finished ---
+  - GAUC     : 0.6963
+  - AUC      : 0.6963
+  -----------------------------------------------------
+  - Recall@5  : 0.1336   |   NDCG@5  : 0.0816
+  - Recall@10 : 0.2282   |   NDCG@10 : 0.1117
+  - Recall@20 : 0.4003   |   NDCG@20 : 0.1548
+  - Recall@50 : 0.7701   |   NDCG@50 : 0.2282
+  -----------------------------------------------------
+
+========================= Period 11 =========================
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:03<00:35,  1.95s/it, patience=1/2, train_loss=5.0915, val_loss=5.4307]
+--- Training finished for period 11. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth ---
+Evaluating (Hybrid): 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:01<00:00,  1.36it/s]
+
+--- Period 11 Evaluation Finished ---
+  - GAUC     : 0.6448
+  - AUC      : 0.6448
+  -----------------------------------------------------
+  - Recall@5  : 0.0933   |   NDCG@5  : 0.0569
+  - Recall@10 : 0.1844   |   NDCG@10 : 0.0860
+  - Recall@20 : 0.3395   |   NDCG@20 : 0.1247
+  - Recall@50 : 0.7055   |   NDCG@50 : 0.1964
+  -----------------------------------------------------
+
+========================= Period 12 =========================
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:03<00:32,  1.83s/it, patience=1/2, train_loss=5.1369, val_loss=5.4495]
+--- Training finished for period 12. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth ---
+Evaluating (Hybrid): 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:01<00:00,  1.45it/s]
+
+--- Period 12 Evaluation Finished ---
+  - GAUC     : 0.6710
+  - AUC      : 0.6710
+  -----------------------------------------------------
+  - Recall@5  : 0.1358   |   NDCG@5  : 0.0926
+  - Recall@10 : 0.2234   |   NDCG@10 : 0.1206
+  - Recall@20 : 0.3821   |   NDCG@20 : 0.1603
+  - Recall@50 : 0.7237   |   NDCG@50 : 0.2278
+  -----------------------------------------------------
+
+========================= Period 13 =========================
+--- Graph built. Shape: torch.Size([56377, 56377]), Device: mps ---
+--- Building model, type: mlp ---
+--- Using default Xavier initialization for item embeddings. ---
+--- Using default Xavier initialization for category embeddings. ---
+Epochs:  10%|█████████▏                                                                                  | 2/20 [00:03<00:32,  1.81s/it, patience=1/2, train_loss=4.8666, val_loss=5.1225]
+--- Training finished for period 13. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_13/best_model.pth ---
+
+==================== [ 學習率 0.001 總結報告 ] ====================
+
+--- Evaluation Finished ---
+  - GAUC     : 0.6779
+  - AUC      : 0.6779
+-------------------------------------------------------
+  - Recall@5  : 0.1281   |   NDCG@5  : 0.0819
+  - Recall@10 : 0.2263   |   NDCG@10 : 0.1133
+  - Recall@20 : 0.3891   |   NDCG@20 : 0.1541
+  - Recall@50 : 0.7436   |   NDCG@50 : 0.2239
+-------------------------------------------------------

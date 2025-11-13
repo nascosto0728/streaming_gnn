@@ -42,7 +42,7 @@ def run_experiment(config: Dict[str, Any]):
     
     full_data_df = pd.read_parquet(config['data_path'])
     if config.get('debug_sample', True):
-        full_data_df = full_data_df.iloc[::10]  
+        full_data_df = full_data_df.iloc[::3]  
         full_data_df = full_data_df[full_data_df['period'] < 14]
     full_meta_df = pd.read_parquet(config['meta_path'])
 
