@@ -8,7 +8,7 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
 # 匯入你需要的所有工具
-from model import LightGCN
+from model_gcn import LightGCN
 from utils import (
     prepare_data_from_dfs,
     BPRDataset,

@@ -12,8 +12,10 @@ import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
-from model import Hybrid_GNN_MLP , LightGCN_Only
+from model_gcn import Hybrid_GNN_MLP , LightGCN_Only
+from model_srgnn import SR_GNN_Model
 from model_mlp import EmbMLP  
+
 from utils import (
     prepare_data_from_dfs,
     RecommendationDataset, # (復活) 我們現在用這個
@@ -83,7 +85,7 @@ def run_experiment(config: Dict[str, Any]):
         for period_id in range(config['train_start_period'], config['num_periods']):
             print(f"\n{'='*25} Period {period_id} {'='*25}")
             
-            # --- (*** 核心修改 3: Hybrid 資料準備 ***) ---
+            # --- (資料準備) ---
             
             # 1. 獲取「當前時期」的資料
             current_period_df = remapped_full_df[remapped_full_df['period'] == period_id]
@@ -97,30 +99,33 @@ def run_experiment(config: Dict[str, Any]):
                 print(f"No training data for period {period_id}. Skipping.")
                 continue
                 
-            # 3. 互動 (GNN 建圖用) 
-            # incremental_interaction_df = current_period_df[current_period_df['label'] == 1].drop_duplicates(subset=['userId', 'itemId'])
-            incremental_interaction_df = pd.concat([incremental_interaction_df, 
-                                                    current_period_df[current_period_df['label'] == 1]]).drop_duplicates(subset=['userId', 'itemId'])
             
-            
-            # 4. 建立「增量圖」 
-            adj_matrix = build_lightgcn_graph(
-                incremental_interaction_df,
-                num_users,
-                num_items,
-                device
-            )
-            # [*** 在此加入驗證 ***]
-            num_nodes = num_users + num_items
-            num_edges_in_period = incremental_interaction_df.shape[0]
-            num_nnz_in_adj = adj_matrix._nnz() # 包含雙向 + 自環
-            graph_density = num_nnz_in_adj / (num_nodes * num_nodes)
-            
-            print(f"--- [驗證] Period {period_id} 圖稀疏性 ---")
-            print(f"    - 總節點數 (U+I): {num_nodes}")
-            print(f"    - 當期互動邊數: {num_edges_in_period}")
-            print(f"    - Adj 矩陣非零元 (含自環): {num_nnz_in_adj}")
-            print(f"    - 圖密度 (Density): {graph_density:.8f}")
+            model_type = config.get('model_type', 'mlp') # 預設為 'mlp'
+            if model_type == 'hybrid' or model_type == 'lightgcn_only':
+                # 3. 互動 (GNN 建圖用) 
+                incremental_interaction_df = current_period_df[current_period_df['label'] == 1].drop_duplicates(subset=['userId', 'itemId'])
+                # incremental_interaction_df = pd.concat([incremental_interaction_df, 
+                #                                         current_period_df[current_period_df['label'] == 1]]).drop_duplicates(subset=['userId', 'itemId'])
+                
+                # 4. 建立「增量圖」 
+                adj_matrix = build_lightgcn_graph(
+                    incremental_interaction_df,
+                    num_users,
+                    num_items,
+                    device
+                )
+                print(f"--- Building model, type: {model_type} ---")
+                # [*** 在此加入驗證 ***]
+                num_nodes = num_users + num_items
+                num_edges_in_period = incremental_interaction_df.shape[0]
+                num_nnz_in_adj = adj_matrix._nnz() # 包含雙向 + 自環
+                graph_density = num_nnz_in_adj / (num_nodes * num_nodes)
+                
+                print(f"--- [驗證] Period {period_id} 圖稀疏性 ---")
+                print(f"    - 總節點數 (U+I): {num_nodes}")
+                print(f"    - 當期互動邊數: {num_edges_in_period}")
+                print(f"    - Adj 矩陣非零元 (含自環): {num_nnz_in_adj}")
+                print(f"    - 圖密度 (Density): {graph_density:.8f}")
             # [*** 驗證結束 ***]
 
             # 5. 更新評估用的 history 
@@ -166,8 +171,6 @@ def run_experiment(config: Dict[str, Any]):
                     num_workers=config.get('num_workers', 0)
                 )
 
-            model_type = config.get('model_type', 'mlp') # 預設為 'mlp'
-            print(f"--- Building model, type: {model_type} ---")
 
             if model_type == 'hybrid':
                 model = Hybrid_GNN_MLP(
@@ -186,7 +189,17 @@ def run_experiment(config: Dict[str, Any]):
                     hyperparams,
                     adj_matrix # 只需要傳入圖
                 ).to(device)
-            
+
+            elif model_type == 'sr_gnn':
+                model = SR_GNN_Model(
+                    cates_np,
+                    cate_lens_np,
+                    hyperparams=hyperparams,
+                    train_config=config,
+                    item_init_vectors=None,
+                    cate_init_vectors=None
+                ).to(device)
+
             elif model_type == 'mlp':
                 model = EmbMLP(
                     cates_np,

@@ -1,0 +1,174 @@
+
+========================= Period 0 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: mps ---
+Traceback (most recent call last):
+  File "/Users/enzo/code/streaming_gnn/main.py", line 423, in <module>
+    run_experiment(config)
+  File "/Users/enzo/code/streaming_gnn/main.py", line 116, in run_experiment
+    if model_type == 'hybrid' or model_type == 'lightgcn_only':
+       ^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'model_type' where it is not associated with a value
+(gnn_rec) enzo@EnzodeMacBook-Air streaming_gnn % python main.py
+--- Loading raw data files ---
+Cleaning sequence string format...
+Building full category map...
+--- Starting static global data processing ---
+Global maps created. Total users: 23921, Total items: 32689
+Full DataFrame remapped.
+Global data processing finished. (Users: 23921, Items: 32689)
+--- Evaluation setup: 1 positive vs 99 negative samples ---
+
+==================================================
+Starting run with Learning Rate: 0.001
+==================================================
+
+========================= Period 0 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: mps ---
+--- Building model, type: sr_gnn ---
+Epochs:  30%|██████████████████████▌                                                    | 3/10 [01:51<04:19, 37.03s/it, patience=1/2, train_loss=5.0733, val_loss=5.8460]
+--- Training finished for period 0. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_0/best_model.pth ---
+
+========================= Period 1 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: mps ---
+--- Building model, type: sr_gnn ---
+Epochs:  20%|███████████████                                                            | 2/10 [01:16<05:07, 38.47s/it, patience=1/2, train_loss=5.1932, val_loss=5.6174]
+--- Training finished for period 1. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_1/best_model.pth ---
+
+========================= Period 2 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: mps ---
+--- Building model, type: sr_gnn ---
+Epochs:  20%|███████████████                                                            | 2/10 [01:16<05:06, 38.29s/it, patience=1/2, train_loss=5.0260, val_loss=5.4700]
+--- Training finished for period 2. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_2/best_model.pth ---
+
+========================= Period 3 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: mps ---
+--- Building model, type: sr_gnn ---
+Epochs:  20%|███████████████                                                            | 2/10 [01:15<05:03, 37.90s/it, patience=1/2, train_loss=5.0597, val_loss=5.2345]
+--- Training finished for period 3. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_3/best_model.pth ---
+
+========================= Period 4 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: mps ---
+--- Building model, type: sr_gnn ---
+Epochs:  20%|███████████████                                                            | 2/10 [01:17<05:10, 38.76s/it, patience=1/2, train_loss=4.9329, val_loss=5.4773]
+--- Training finished for period 4. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_4/best_model.pth ---
+
+========================= Period 5 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: mps ---
+--- Building model, type: sr_gnn ---
+Epochs:  20%|███████████████                                                            | 2/10 [01:16<05:06, 38.36s/it, patience=1/2, train_loss=5.0709, val_loss=5.2637]
+--- Training finished for period 5. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_5/best_model.pth ---
+
+========================= Period 6 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: mps ---
+--- Building model, type: sr_gnn ---
+Epochs:  20%|███████████████                                                            | 2/10 [01:18<05:14, 39.28s/it, patience=1/2, train_loss=5.0304, val_loss=5.3330]
+--- Training finished for period 6. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_6/best_model.pth ---
+
+========================= Period 7 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: mps ---
+--- Building model, type: sr_gnn ---
+Epochs:  20%|███████████████                                                            | 2/10 [01:20<05:20, 40.06s/it, patience=1/2, train_loss=5.1305, val_loss=5.5729]
+--- Training finished for period 7. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_7/best_model.pth ---
+
+========================= Period 8 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: mps ---
+--- Building model, type: sr_gnn ---
+Epochs:  20%|███████████████                                                            | 2/10 [01:23<05:32, 41.58s/it, patience=1/2, train_loss=5.1180, val_loss=5.1914]
+--- Training finished for period 8. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_model.pth ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:06<00:00,  1.07s/it]
+
+--- Period 8 Evaluation Finished ---
+  - GAUC     : 0.7605
+  - AUC      : 0.7605
+  -----------------------------------------------------
+  - Recall@5  : 0.2995   |   NDCG@5  : 0.2122
+  - Recall@10 : 0.4173   |   NDCG@10 : 0.2501
+  - Recall@20 : 0.5676   |   NDCG@20 : 0.2879
+  - Recall@50 : 0.8208   |   NDCG@50 : 0.3380
+  -----------------------------------------------------
+
+========================= Period 9 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: mps ---
+--- Building model, type: sr_gnn ---
+Epochs:  20%|███████████████                                                            | 2/10 [01:17<05:11, 38.99s/it, patience=1/2, train_loss=5.0296, val_loss=5.2482]
+--- Training finished for period 9. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:06<00:00,  1.03s/it]
+
+--- Period 9 Evaluation Finished ---
+  - GAUC     : 0.7729
+  - AUC      : 0.7729
+  -----------------------------------------------------
+  - Recall@5  : 0.3100   |   NDCG@5  : 0.2150
+  - Recall@10 : 0.4294   |   NDCG@10 : 0.2533
+  - Recall@20 : 0.5841   |   NDCG@20 : 0.2923
+  - Recall@50 : 0.8367   |   NDCG@50 : 0.3425
+  -----------------------------------------------------
+
+========================= Period 10 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: mps ---
+--- Building model, type: sr_gnn ---
+Epochs:  20%|███████████████                                                            | 2/10 [01:16<05:06, 38.29s/it, patience=1/2, train_loss=5.0362, val_loss=5.1493]
+--- Training finished for period 10. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:06<00:00,  1.05s/it]
+
+--- Period 10 Evaluation Finished ---
+  - GAUC     : 0.7887
+  - AUC      : 0.7887
+  -----------------------------------------------------
+  - Recall@5  : 0.3272   |   NDCG@5  : 0.2312
+  - Recall@10 : 0.4612   |   NDCG@10 : 0.2743
+  - Recall@20 : 0.6144   |   NDCG@20 : 0.3129
+  - Recall@50 : 0.8603   |   NDCG@50 : 0.3615
+  -----------------------------------------------------
+
+========================= Period 11 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: mps ---
+--- Building model, type: sr_gnn ---
+Epochs:  20%|███████████████                                                            | 2/10 [01:16<05:07, 38.42s/it, patience=1/2, train_loss=4.9443, val_loss=5.3025]
+--- Training finished for period 11. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:06<00:00,  1.06s/it]
+
+--- Period 11 Evaluation Finished ---
+  - GAUC     : 0.7705
+  - AUC      : 0.7705
+  -----------------------------------------------------
+  - Recall@5  : 0.3147   |   NDCG@5  : 0.2230
+  - Recall@10 : 0.4440   |   NDCG@10 : 0.2647
+  - Recall@20 : 0.5911   |   NDCG@20 : 0.3017
+  - Recall@50 : 0.8317   |   NDCG@50 : 0.3493
+  -----------------------------------------------------
+
+========================= Period 12 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: mps ---
+--- Building model, type: sr_gnn ---
+Epochs:  20%|███████████████                                                            | 2/10 [01:15<05:03, 37.99s/it, patience=1/2, train_loss=5.0198, val_loss=5.2511]
+--- Training finished for period 12. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:06<00:00,  1.02s/it]
+
+--- Period 12 Evaluation Finished ---
+  - GAUC     : 0.8101
+  - AUC      : 0.8101
+  -----------------------------------------------------
+  - Recall@5  : 0.3845   |   NDCG@5  : 0.2836
+  - Recall@10 : 0.5153   |   NDCG@10 : 0.3257
+  - Recall@20 : 0.6558   |   NDCG@20 : 0.3611
+  - Recall@50 : 0.8739   |   NDCG@50 : 0.4045
+  -----------------------------------------------------
+
+========================= Period 13 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: mps ---
+--- Building model, type: sr_gnn ---
+Epochs:  20%|███████████████                                                            | 2/10 [01:20<05:23, 40.42s/it, patience=1/2, train_loss=4.7653, val_loss=4.9287]
+--- Training finished for period 13. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_13/best_model.pth ---
+
+==================== [ 學習率 0.001 總結報告 ] ====================
+
+--- Evaluation Finished ---
+  - GAUC     : 0.7805
+  - AUC      : 0.7805
+-------------------------------------------------------
+  - Recall@5  : 0.3272   |   NDCG@5  : 0.2330
+  - Recall@10 : 0.4535   |   NDCG@10 : 0.2736
+  - Recall@20 : 0.6026   |   NDCG@20 : 0.3112
+  - Recall@50 : 0.8447   |   NDCG@50 : 0.3592
+-------------------------------------------------------
