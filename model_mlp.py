@@ -173,9 +173,9 @@ class EmbMLP(nn.Module):
 
         # 在訓練時，更新緩存
         if self.training:
-            user_ids = batch['users']
+            item_ids = batch['items']
             # 我們必須 .detach()，因為緩存更新這個操作不應該參與反向傳播
-            self.item_history_buffer.weight[user_ids] = item_history_emb.detach()
+            self.item_history_buffer.weight[item_ids] = item_history_emb.detach()
 
         return user_features, item_features
 
