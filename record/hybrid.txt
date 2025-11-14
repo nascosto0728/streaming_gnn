@@ -149,3 +149,252 @@ Epochs:  10%|█████████▏                                     
   - Recall@20 : 0.4070   |   NDCG@20 : 0.1549
   - Recall@50 : 0.7902   |   NDCG@50 : 0.2308
 -------------------------------------------------------
+
+
+
+
+
+full Graph
+
+
+
+
+========================= Period 0 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 0 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 61924
+    - Adj 矩陣非零元 (含自環): 180458
+    - 圖密度 (Density): 0.00005631
+--- Building model, type: hybrid ---
+[Hybrid_GNN_MLP] Initialized with 2 GNN layers.
+Epochs:  50%|█████████████████████████████████████▌                                     | 5/10 [00:34<00:34,  6.97s/it, patience=1/2, train_loss=4.7145, val_loss=5.4016]
+--- Training finished for period 0. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_0/best_model.pth ---
+
+========================= Period 1 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 1 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 123263
+    - Adj 矩陣非零元 (含自環): 303136
+    - 圖密度 (Density): 0.00009459
+--- Building model, type: hybrid ---
+[Hybrid_GNN_MLP] Initialized with 2 GNN layers.
+Epochs:  30%|██████████████████████▌                                                    | 3/10 [00:24<00:56,  8.11s/it, patience=1/2, train_loss=4.8589, val_loss=5.2270]
+--- Training finished for period 1. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_1/best_model.pth ---
+
+========================= Period 2 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 2 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 182351
+    - Adj 矩陣非零元 (含自環): 421312
+    - 圖密度 (Density): 0.00013147
+--- Building model, type: hybrid ---
+[Hybrid_GNN_MLP] Initialized with 2 GNN layers.
+Epochs:  20%|███████████████                                                            | 2/10 [00:19<01:19,  9.91s/it, patience=1/2, train_loss=4.8739, val_loss=5.0857]
+--- Training finished for period 2. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_2/best_model.pth ---
+
+========================= Period 3 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 3 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 241715
+    - Adj 矩陣非零元 (含自環): 540040
+    - 圖密度 (Density): 0.00016852
+--- Building model, type: hybrid ---
+[Hybrid_GNN_MLP] Initialized with 2 GNN layers.
+Epochs:  20%|███████████████                                                            | 2/10 [00:21<01:24, 10.52s/it, patience=1/2, train_loss=4.8965, val_loss=5.0006]
+--- Training finished for period 3. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_3/best_model.pth ---
+
+========================= Period 4 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 4 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 300698
+    - Adj 矩陣非零元 (含自環): 658006
+    - 圖密度 (Density): 0.00020533
+--- Building model, type: hybrid ---
+[Hybrid_GNN_MLP] Initialized with 2 GNN layers.
+Epochs:  20%|███████████████                                                            | 2/10 [00:22<01:29, 11.20s/it, patience=1/2, train_loss=4.8252, val_loss=5.2141]
+--- Training finished for period 4. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_4/best_model.pth ---
+
+========================= Period 5 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 5 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 361071
+    - Adj 矩陣非零元 (含自環): 778752
+    - 圖密度 (Density): 0.00024300
+--- Building model, type: hybrid ---
+[Hybrid_GNN_MLP] Initialized with 2 GNN layers.
+Epochs:  20%|███████████████                                                            | 2/10 [00:23<01:35, 12.00s/it, patience=1/2, train_loss=4.9683, val_loss=5.0841]
+--- Training finished for period 5. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_5/best_model.pth ---
+
+========================= Period 6 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 6 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 421143
+    - Adj 矩陣非零元 (含自環): 898896
+    - 圖密度 (Density): 0.00028049
+--- Building model, type: hybrid ---
+[Hybrid_GNN_MLP] Initialized with 2 GNN layers.
+Epochs:  20%|███████████████                                                            | 2/10 [00:25<01:41, 12.66s/it, patience=1/2, train_loss=4.9024, val_loss=5.1627]
+--- Training finished for period 6. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_6/best_model.pth ---
+
+========================= Period 7 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 7 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 482469
+    - Adj 矩陣非零元 (含自環): 1021548
+    - 圖密度 (Density): 0.00031877
+--- Building model, type: hybrid ---
+[Hybrid_GNN_MLP] Initialized with 2 GNN layers.
+Epochs:  20%|███████████████                                                            | 2/10 [00:26<01:46, 13.30s/it, patience=1/2, train_loss=5.0413, val_loss=5.4106]
+--- Training finished for period 7. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_7/best_model.pth ---
+
+========================= Period 8 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 8 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 542878
+    - Adj 矩陣非零元 (含自環): 1142366
+    - 圖密度 (Density): 0.00035647
+--- Building model, type: hybrid ---
+[Hybrid_GNN_MLP] Initialized with 2 GNN layers.
+Epochs:  20%|███████████████                                                            | 2/10 [00:28<01:52, 14.08s/it, patience=1/2, train_loss=5.0141, val_loss=5.0005]
+--- Training finished for period 8. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_model.pth ---
+--- (Hybrid) Updating GNN buffer for evaluation ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:03<00:00,  1.64it/s]
+
+--- Period 8 Evaluation Finished ---
+  - GAUC     : 0.6841
+  - AUC      : 0.6841
+  -----------------------------------------------------
+  - Recall@5  : 0.2418   |   NDCG@5  : 0.1730
+  - Recall@10 : 0.3369   |   NDCG@10 : 0.2033
+  - Recall@20 : 0.4649   |   NDCG@20 : 0.2356
+  - Recall@50 : 0.7247   |   NDCG@50 : 0.2868
+  -----------------------------------------------------
+
+========================= Period 9 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 9 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 602316
+    - Adj 矩陣非零元 (含自環): 1261242
+    - 圖密度 (Density): 0.00039356
+--- Building model, type: hybrid ---
+[Hybrid_GNN_MLP] Initialized with 2 GNN layers.
+Epochs:  20%|███████████████                                                            | 2/10 [00:29<01:56, 14.56s/it, patience=1/2, train_loss=4.8977, val_loss=5.1025]
+--- Training finished for period 9. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth ---
+--- (Hybrid) Updating GNN buffer for evaluation ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:03<00:00,  1.64it/s]
+
+--- Period 9 Evaluation Finished ---
+  - GAUC     : 0.6980
+  - AUC      : 0.6980
+  -----------------------------------------------------
+  - Recall@5  : 0.2513   |   NDCG@5  : 0.1805
+  - Recall@10 : 0.3465   |   NDCG@10 : 0.2112
+  - Recall@20 : 0.4846   |   NDCG@20 : 0.2459
+  - Recall@50 : 0.7418   |   NDCG@50 : 0.2967
+  -----------------------------------------------------
+
+========================= Period 10 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 10 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 661798
+    - Adj 矩陣非零元 (含自環): 1380206
+    - 圖密度 (Density): 0.00043068
+--- Building model, type: hybrid ---
+[Hybrid_GNN_MLP] Initialized with 2 GNN layers.
+Epochs:  20%|███████████████                                                            | 2/10 [00:30<02:01, 15.22s/it, patience=1/2, train_loss=4.9334, val_loss=4.9527]
+--- Training finished for period 10. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth ---
+--- (Hybrid) Updating GNN buffer for evaluation ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:03<00:00,  1.66it/s]
+
+--- Period 10 Evaluation Finished ---
+  - GAUC     : 0.7506
+  - AUC      : 0.7506
+  -----------------------------------------------------
+  - Recall@5  : 0.3368   |   NDCG@5  : 0.2468
+  - Recall@10 : 0.4348   |   NDCG@10 : 0.2783
+  - Recall@20 : 0.5691   |   NDCG@20 : 0.3123
+  - Recall@50 : 0.8050   |   NDCG@50 : 0.3589
+  -----------------------------------------------------
+
+========================= Period 11 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 11 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 720616
+    - Adj 矩陣非零元 (含自環): 1497842
+    - 圖密度 (Density): 0.00046739
+--- Building model, type: hybrid ---
+[Hybrid_GNN_MLP] Initialized with 2 GNN layers.
+Epochs:  20%|███████████████                                                            | 2/10 [00:32<02:08, 16.05s/it, patience=1/2, train_loss=4.8399, val_loss=5.1382]
+--- Training finished for period 11. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth ---
+--- (Hybrid) Updating GNN buffer for evaluation ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:03<00:00,  1.62it/s]
+
+--- Period 11 Evaluation Finished ---
+  - GAUC     : 0.6590
+  - AUC      : 0.6590
+  -----------------------------------------------------
+  - Recall@5  : 0.2535   |   NDCG@5  : 0.1901
+  - Recall@10 : 0.3366   |   NDCG@10 : 0.2169
+  - Recall@20 : 0.4407   |   NDCG@20 : 0.2431
+  - Recall@50 : 0.6833   |   NDCG@50 : 0.2908
+  -----------------------------------------------------
+
+========================= Period 12 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 12 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 780373
+    - Adj 矩陣非零元 (含自環): 1617356
+    - 圖密度 (Density): 0.00050468
+--- Building model, type: hybrid ---
+[Hybrid_GNN_MLP] Initialized with 2 GNN layers.
+Epochs:  20%|███████████████                                                            | 2/10 [00:33<02:12, 16.56s/it, patience=1/2, train_loss=4.9347, val_loss=5.0832]
+--- Training finished for period 12. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth ---
+--- (Hybrid) Updating GNN buffer for evaluation ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:03<00:00,  1.68it/s]
+
+--- Period 12 Evaluation Finished ---
+  - GAUC     : 0.7418
+  - AUC      : 0.7418
+  -----------------------------------------------------
+  - Recall@5  : 0.3233   |   NDCG@5  : 0.2395
+  - Recall@10 : 0.4260   |   NDCG@10 : 0.2723
+  - Recall@20 : 0.5587   |   NDCG@20 : 0.3057
+  - Recall@50 : 0.7885   |   NDCG@50 : 0.3511
+  -----------------------------------------------------
+
+========================= Period 13 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 13 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 837208
+    - Adj 矩陣非零元 (含自環): 1731026
+    - 圖密度 (Density): 0.00054015
+--- Building model, type: hybrid ---
+[Hybrid_GNN_MLP] Initialized with 2 GNN layers.
+Epochs:  20%|███████████████                                                            | 2/10 [00:34<02:18, 17.31s/it, patience=1/2, train_loss=4.6632, val_loss=4.7376]
+--- Training finished for period 13. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_13/best_model.pth ---
+
+==================== [ 學習率 0.001 總結報告 ] ====================
+
+--- Evaluation Finished ---
+  - GAUC     : 0.7067
+  - AUC      : 0.7067
+-------------------------------------------------------
+  - Recall@5  : 0.2813   |   NDCG@5  : 0.2060
+  - Recall@10 : 0.3762   |   NDCG@10 : 0.2364
+  - Recall@20 : 0.5036   |   NDCG@20 : 0.2685
+  - Recall@50 : 0.7487   |   NDCG@50 : 0.3169
+-------------------------------------------------------

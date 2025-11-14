@@ -76,9 +76,9 @@ class EmbMLP(nn.Module):
 
         # 這個緩存將儲存每個用戶的「最新」平均池化歷史
         history_embed_dim = self.hparams['item_embed_dim'] 
-        self.item_history_buffer = nn.Embedding(self.hparams['num_items'], history_embed_dim)
+        self.user_history_buffer = nn.Embedding(self.hparams['num_items'], history_embed_dim)
         # 將緩存設為非可訓練
-        self.item_history_buffer.weight.requires_grad = False
+        self.user_history_buffer.weight.requires_grad = False
        
 
         # --- 建立 MLP 權重 (使用 nn.Sequential) ---
@@ -175,7 +175,7 @@ class EmbMLP(nn.Module):
         if self.training:
             item_ids = batch['items']
             # 我們必須 .detach()，因為緩存更新這個操作不應該參與反向傳播
-            self.item_history_buffer.weight[item_ids] = item_history_emb.detach()
+            self.user_history_buffer.weight[item_ids] = item_history_emb.detach()
 
         return user_features, item_features
 
@@ -278,7 +278,7 @@ class EmbMLP(nn.Module):
         neg_item_cate_emb = self.cate_emb_w(self.cates[neg_item_ids_batch])
         neg_item_cates_len = self.cate_lens[neg_item_ids_batch]
         avg_cate_emb_for_neg_item = average_pooling(neg_item_cate_emb, neg_item_cates_len)
-        neg_item_history_emb = self.item_history_buffer(neg_item_ids_batch)
+        neg_item_history_emb = self.user_history_buffer(neg_item_ids_batch)
         neg_item_features = torch.cat([
             neg_item_static_emb, 
             avg_cate_emb_for_neg_item,

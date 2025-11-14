@@ -175,3 +175,93 @@ def sample_negative_items(
 
     return torch.tensor(sampled_ids, dtype=torch.long, device=device)
 
+
+
+# ===================================================================
+# GNN (LightGCN) 專用工具 (*** 以下為新增 ***)
+# ===================================================================
+from torch.utils.data import Dataset
+# 我們需要 PyG 的稀疏工具
+try:
+    from torch_geometric.utils import to_scipy_sparse_matrix, from_scipy_sparse_matrix
+    from torch_geometric.utils.num_nodes import maybe_num_nodes
+except ImportError:
+    print("警告：未找到 PyTorch Geometric (torch_geometric)。")
+    print("請執行 `pip install torch_geometric torch_sparse`")
+import scipy.sparse as sp
+
+def build_lightgcn_graph(interaction_df: pd.DataFrame, num_users: int, num_items: int, device: torch.device) -> torch.sparse.FloatTensor:
+    """
+    建立 LightGCN 所需的「對稱正規化鄰接矩陣」。
+    D^(-1/2) * A * D^(-1/2)
+    
+    Args:
+        interaction_df (pd.DataFrame): 包含 'userId' 和 'itemId' 的 DataFrame (必須是內部 ID)
+        num_users (int): 用戶總數
+        num_items (int): 物品總數
+        device (torch.device): 目標設備
+    
+    Returns:
+        torch.sparse.FloatTensor: 正規化後的鄰接矩陣
+    """
+    N = num_users + num_items
+    
+    # 1. 獲取邊 (edge)
+    user_ids = interaction_df['userId'].values
+    item_ids = interaction_df['itemId'].values
+    
+    # 2. 偏移 Item ID (GNN 的標準作法)
+    # 節點 0~N_u-1 是 users
+    # 節點 N_u~N-1 是 items
+    item_ids_global = item_ids + num_users
+    
+    # 3. 建立 PyG 格式的 edge_index
+    # 先用 numpy.stack 把它們堆疊成一個 (2, E) 的 ndarray
+    edges_part1_np = np.stack([user_ids, item_ids_global])# (u, i) 互動
+    edges_part2_np = np.stack([item_ids_global, user_ids])# (i, u) 互動 (因為圖是無向的)
+    
+    # 3. 建立 PyG 格式的 edge_index
+    edges_part1 = torch.from_numpy(edges_part1_np).to(dtype=torch.long)
+    edges_part2 = torch.from_numpy(edges_part2_np).to(dtype=torch.long)
+    
+    edge_index = torch.cat([edges_part1, edges_part2], dim=1)
+    
+    # 4. 建立稀疏鄰接矩陣 'A' (A = A + I, 包含自環)
+    # PyG 的 from_scipy_sparse_matrix 會自動處理自環和正規化
+    
+    # 建立一個 (N, N) 的單位矩陣 (I)
+    eye_edge_index = torch.arange(N, dtype=torch.long).unsqueeze(0).repeat(2, 1)
+    
+    # A' = A + I
+    edge_index = torch.cat([edge_index, eye_edge_index], dim=1)
+    
+    # 獲取邊的權重 (全為 1)
+    edge_weight = torch.ones(edge_index.size(1), dtype=torch.float32)
+
+    # 5. 計算 LightGCN 的對稱正規化: D^(-1/2) * A' * D^(-1/2)
+    row, col = edge_index
+    
+    # 計算度 (Degree) D
+    deg = torch.zeros(N, dtype=torch.float32)
+    deg = deg.scatter_add_(0, row, edge_weight) # D = A'.sum(axis=1)
+    
+    # D^(-1/2)
+    deg_inv_sqrt = deg.pow_(-0.5)
+    # 處理 deg 為 0 的情況 (雖然 A+I 應該不會有)
+    deg_inv_sqrt.masked_fill_(deg_inv_sqrt == float('inf'), 0)
+    
+    # 建立 D^(-1/2) * A' * D^(-1/2) 的值
+    # 矩陣中 (i, j) 的值 = norm_i * A'_ij * norm_j
+    normed_edge_weight = deg_inv_sqrt[row] * edge_weight * deg_inv_sqrt[col]
+    
+    # 6. 建立最終的稀疏 Tensor
+    adj_matrix_sparse = torch.sparse_coo_tensor(
+        indices=edge_index,
+        values=normed_edge_weight,
+        size=torch.Size([N, N])
+    )
+
+    adj_matrix_sparse = adj_matrix_sparse.coalesce().to(device)
+    
+    print(f"--- Graph built. Shape: {adj_matrix_sparse.shape}, Device: {device} ---")
+    return adj_matrix_sparse

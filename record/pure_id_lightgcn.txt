@@ -1,331 +1,515 @@
 
---- MPS is available! Using MPS. ---
---- Loading raw data files ---
-Backing up raw user and item IDs...
-Cleaning sequence string format...
-Building full category map...
---- Starting static global data processing ---
-Global maps created. Total users: 23921, Total items: 32782
-Full DataFrame remapped.
-Static metadata (cates, hyperparams) created.
-Global data processing finished. (Users: 23921, Items: 32782)
---- GNN mode: Skipping pre-loading of text vectors. ---
---- Evaluation setup: 1 positive vs 99 negative samples ---
-
-==================================================
-Starting run with Learning Rate: 0.001
-==================================================
 
 ========================= Period 0 =========================
---- Building LightGCN Graph (N=56703) ---
---- Graph built. Shape: torch.Size([56703, 56703]), Device: cpu ---
-Incrementally updating item history and seen users pool...
---- BPRDataset: 3741 users, 32782 items prepared. ---
---- Initializing LightGCN ---
-  Users: 23921, Items: 32782
-  Embed Dim: 64, Layers: 3
---- LightGCN Embeddings initialized (Xavier) ---
---- Starting GNN training loop (Max Epochs: 100, Patience: 10) ---
-Epochs:  37%|██████████████████████████████████                                                          | 37/100 [01:11<02:11,  2.08s/it, patience=9/10, train_bpr=0.2671, val_bce=0.5098]--- Early stopping triggered after 38 epochs. ---
-Epochs:  37%|██████████████████████████████████                                                          | 37/100 [01:13<02:04,  1.98s/it, patience=9/10, train_bpr=0.2671, val_bce=0.5098]
---- Training finished for period 0. Best embeddings saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_0/best_embeddings.pth ---
+--- Building Graph from Sequences for Period 0 ---
+    - Graph edges collected. Total unique edges: 219700
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 0 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 0
+    - Adj 矩陣非零元 (含自環): 496010
+    - 圖密度 (Density): 0.00015478
+--- Building model, type: lightgcn_only ---
+[LightGCN_Only] Initialized with 2 GNN layers and Embed Dim 64.
+Epochs:  40%|██████████████████████████████                                             | 4/10 [00:28<00:42,  7.11s/it, patience=1/2, train_loss=0.4406, val_loss=0.5085]
+--- Training finished for period 0. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_0/best_model.pth ---
 
 ========================= Period 1 =========================
---- Building LightGCN Graph (N=56703) ---
---- Graph built. Shape: torch.Size([56703, 56703]), Device: cpu ---
-Incrementally updating item history and seen users pool...
---- BPRDataset: 3315 users, 32782 items prepared. ---
---- Initializing LightGCN ---
-  Users: 23921, Items: 32782
-  Embed Dim: 64, Layers: 3
---- LightGCN Embeddings initialized (Xavier) ---
-Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_0/best_embeddings.pth
---- Successfully restored model EMBEDDINGS. ---
---- Starting GNN training loop (Max Epochs: 100, Patience: 10) ---
-Epochs:  19%|█████████████████▍                                                                          | 19/100 [00:39<02:42,  2.01s/it, patience=9/10, train_bpr=0.2818, val_bce=0.5125]--- Early stopping triggered after 20 epochs. ---
-Epochs:  19%|█████████████████▍                                                                          | 19/100 [00:41<02:58,  2.21s/it, patience=9/10, train_bpr=0.2818, val_bce=0.5125]
---- Training finished for period 1. Best embeddings saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_1/best_embeddings.pth ---
+--- Building Graph from Sequences for Period 1 ---
+    - Graph edges collected. Total unique edges: 348062
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 1 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 0
+    - Adj 矩陣非零元 (含自環): 752734
+    - 圖密度 (Density): 0.00023488
+--- Building model, type: lightgcn_only ---
+[LightGCN_Only] Initialized with 2 GNN layers and Embed Dim 64.
+Epochs:  70%|████████████████████████████████████████████████████▌                      | 7/10 [00:54<00:23,  7.76s/it, patience=1/2, train_loss=0.4083, val_loss=0.4764]
+--- Training finished for period 1. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_1/best_model.pth ---
 
 ========================= Period 2 =========================
---- Building LightGCN Graph (N=56703) ---
---- Graph built. Shape: torch.Size([56703, 56703]), Device: cpu ---
-Incrementally updating item history and seen users pool...
---- BPRDataset: 2768 users, 32782 items prepared. ---
---- Initializing LightGCN ---
-  Users: 23921, Items: 32782
-  Embed Dim: 64, Layers: 3
---- LightGCN Embeddings initialized (Xavier) ---
-Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_1/best_embeddings.pth
---- Successfully restored model EMBEDDINGS. ---
---- Starting GNN training loop (Max Epochs: 100, Patience: 10) ---
-Epochs:  17%|███████████████▋                                                                            | 17/100 [00:33<02:46,  2.00s/it, patience=9/10, train_bpr=0.2740, val_bce=0.5131]--- Early stopping triggered after 18 epochs. ---
-Epochs:  17%|███████████████▋                                                                            | 17/100 [00:35<02:55,  2.11s/it, patience=9/10, train_bpr=0.2740, val_bce=0.5131]
---- Training finished for period 2. Best embeddings saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_2/best_embeddings.pth ---
+--- Building Graph from Sequences for Period 2 ---
+    - Graph edges collected. Total unique edges: 403408
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 2 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 0
+    - Adj 矩陣非零元 (含自環): 863426
+    - 圖密度 (Density): 0.00026943
+--- Building model, type: lightgcn_only ---
+[LightGCN_Only] Initialized with 2 GNN layers and Embed Dim 64.
+Epochs:  90%|███████████████████████████████████████████████████████████████████▌       | 9/10 [01:11<00:07,  7.96s/it, patience=1/2, train_loss=0.4331, val_loss=0.4646]
+--- Training finished for period 2. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_2/best_model.pth ---
 
 ========================= Period 3 =========================
---- Building LightGCN Graph (N=56703) ---
---- Graph built. Shape: torch.Size([56703, 56703]), Device: cpu ---
-Incrementally updating item history and seen users pool...
---- BPRDataset: 3105 users, 32782 items prepared. ---
---- Initializing LightGCN ---
-  Users: 23921, Items: 32782
-  Embed Dim: 64, Layers: 3
---- LightGCN Embeddings initialized (Xavier) ---
-Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_2/best_embeddings.pth
---- Successfully restored model EMBEDDINGS. ---
---- Starting GNN training loop (Max Epochs: 100, Patience: 10) ---
-Epochs:  10%|█████████▏                                                                                  | 10/100 [00:22<03:32,  2.36s/it, patience=9/10, train_bpr=0.2999, val_bce=0.5589]--- Early stopping triggered after 11 epochs. ---
-Epochs:  10%|█████████▏                                                                                  | 10/100 [00:25<03:46,  2.52s/it, patience=9/10, train_bpr=0.2999, val_bce=0.5589]
---- Training finished for period 3. Best embeddings saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_3/best_embeddings.pth ---
+--- Building Graph from Sequences for Period 3 ---
+    - Graph edges collected. Total unique edges: 441168
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 3 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 0
+    - Adj 矩陣非零元 (含自環): 938946
+    - 圖密度 (Density): 0.00029299
+--- Building model, type: lightgcn_only ---
+[LightGCN_Only] Initialized with 2 GNN layers and Embed Dim 64.
+Epochs:  70%|████████████████████████████████████████████████████▌                      | 7/10 [00:59<00:25,  8.44s/it, patience=1/2, train_loss=0.4309, val_loss=0.4839]
+--- Training finished for period 3. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_3/best_model.pth ---
 
 ========================= Period 4 =========================
---- Building LightGCN Graph (N=56703) ---
---- Graph built. Shape: torch.Size([56703, 56703]), Device: cpu ---
-Incrementally updating item history and seen users pool...
---- BPRDataset: 2770 users, 32782 items prepared. ---
---- Initializing LightGCN ---
-  Users: 23921, Items: 32782
-  Embed Dim: 64, Layers: 3
---- LightGCN Embeddings initialized (Xavier) ---
-Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_3/best_embeddings.pth
---- Successfully restored model EMBEDDINGS. ---
---- Starting GNN training loop (Max Epochs: 100, Patience: 10) ---
-Epochs:  16%|██████████████▋                                                                             | 16/100 [00:35<03:02,  2.17s/it, patience=9/10, train_bpr=0.2990, val_bce=0.5148]--- Early stopping triggered after 17 epochs. ---
-Epochs:  16%|██████████████▋                                                                             | 16/100 [00:37<03:15,  2.32s/it, patience=9/10, train_bpr=0.2990, val_bce=0.5148]
---- Training finished for period 4. Best embeddings saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_4/best_embeddings.pth ---
+--- Building Graph from Sequences for Period 4 ---
+    - Graph edges collected. Total unique edges: 464705
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 4 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 0
+    - Adj 矩陣非零元 (含自環): 986020
+    - 圖密度 (Density): 0.00030768
+--- Building model, type: lightgcn_only ---
+[LightGCN_Only] Initialized with 2 GNN layers and Embed Dim 64.
+Epochs:  90%|███████████████████████████████████████████████████████████████████▌       | 9/10 [01:16<00:08,  8.45s/it, patience=1/2, train_loss=0.4386, val_loss=0.4571]
+--- Training finished for period 4. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_4/best_model.pth ---
 
 ========================= Period 5 =========================
---- Building LightGCN Graph (N=56703) ---
---- Graph built. Shape: torch.Size([56703, 56703]), Device: cpu ---
-Incrementally updating item history and seen users pool...
---- BPRDataset: 2835 users, 32782 items prepared. ---
---- Initializing LightGCN ---
-  Users: 23921, Items: 32782
-  Embed Dim: 64, Layers: 3
---- LightGCN Embeddings initialized (Xavier) ---
-Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_4/best_embeddings.pth
---- Successfully restored model EMBEDDINGS. ---
---- Starting GNN training loop (Max Epochs: 100, Patience: 10) ---
-Epochs:  14%|████████████▉                                                                               | 14/100 [00:32<03:12,  2.24s/it, patience=9/10, train_bpr=0.2933, val_bce=0.5237]--- Early stopping triggered after 15 epochs. ---
-Epochs:  14%|████████████▉                                                                               | 14/100 [00:34<03:32,  2.47s/it, patience=9/10, train_bpr=0.2933, val_bce=0.5237]
---- Training finished for period 5. Best embeddings saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_5/best_embeddings.pth ---
+--- Building Graph from Sequences for Period 5 ---
+    - Graph edges collected. Total unique edges: 474551
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 5 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 0
+    - Adj 矩陣非零元 (含自環): 1005712
+    - 圖密度 (Density): 0.00031382
+--- Building model, type: lightgcn_only ---
+[LightGCN_Only] Initialized with 2 GNN layers and Embed Dim 64.
+Epochs:  50%|█████████████████████████████████████▌                                     | 5/10 [00:46<00:46,  9.24s/it, patience=1/2, train_loss=0.4228, val_loss=0.4797]
+--- Training finished for period 5. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_5/best_model.pth ---
 
 ========================= Period 6 =========================
---- Building LightGCN Graph (N=56703) ---
---- Graph built. Shape: torch.Size([56703, 56703]), Device: cpu ---
-Incrementally updating item history and seen users pool...
---- BPRDataset: 2950 users, 32782 items prepared. ---
---- Initializing LightGCN ---
-  Users: 23921, Items: 32782
-  Embed Dim: 64, Layers: 3
---- LightGCN Embeddings initialized (Xavier) ---
-Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_5/best_embeddings.pth
---- Successfully restored model EMBEDDINGS. ---
---- Starting GNN training loop (Max Epochs: 100, Patience: 10) ---
-Epochs:  10%|█████████▏                                                                                  | 10/100 [00:24<03:37,  2.41s/it, patience=9/10, train_bpr=0.3050, val_bce=0.5326]--- Early stopping triggered after 11 epochs. ---
-Epochs:  10%|█████████▏                                                                                  | 10/100 [00:26<03:59,  2.66s/it, patience=9/10, train_bpr=0.3050, val_bce=0.5326]
---- Training finished for period 6. Best embeddings saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_6/best_embeddings.pth ---
+--- Building Graph from Sequences for Period 6 ---
+    - Graph edges collected. Total unique edges: 499765
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 6 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 0
+    - Adj 矩陣非零元 (含自環): 1056140
+    - 圖密度 (Density): 0.00032956
+--- Building model, type: lightgcn_only ---
+[LightGCN_Only] Initialized with 2 GNN layers and Embed Dim 64.
+Epochs:  60%|█████████████████████████████████████████████                              | 6/10 [00:55<00:37,  9.32s/it, patience=1/2, train_loss=0.4336, val_loss=0.4619]
+--- Training finished for period 6. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_6/best_model.pth ---
 
 ========================= Period 7 =========================
---- Building LightGCN Graph (N=56703) ---
---- Graph built. Shape: torch.Size([56703, 56703]), Device: cpu ---
-Incrementally updating item history and seen users pool...
---- BPRDataset: 2853 users, 32782 items prepared. ---
---- Initializing LightGCN ---
-  Users: 23921, Items: 32782
-  Embed Dim: 64, Layers: 3
---- LightGCN Embeddings initialized (Xavier) ---
-Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_6/best_embeddings.pth
---- Successfully restored model EMBEDDINGS. ---
---- Starting GNN training loop (Max Epochs: 100, Patience: 10) ---
-Epochs:  15%|█████████████▊                                                                              | 15/100 [00:38<03:40,  2.59s/it, patience=9/10, train_bpr=0.2848, val_bce=0.4598]--- Early stopping triggered after 16 epochs. ---
-Epochs:  15%|█████████████▊                                                                              | 15/100 [00:40<03:51,  2.72s/it, patience=9/10, train_bpr=0.2848, val_bce=0.4598]
---- Training finished for period 7. Best embeddings saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_7/best_embeddings.pth ---
+--- Building Graph from Sequences for Period 7 ---
+    - Graph edges collected. Total unique edges: 497591
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 7 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 0
+    - Adj 矩陣非零元 (含自環): 1051792
+    - 圖密度 (Density): 0.00032820
+--- Building model, type: lightgcn_only ---
+[LightGCN_Only] Initialized with 2 GNN layers and Embed Dim 64.
+Epochs:  70%|████████████████████████████████████████████████████▌                      | 7/10 [01:03<00:27,  9.14s/it, patience=1/2, train_loss=0.4131, val_loss=0.3853]
+--- Training finished for period 7. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_7/best_model.pth ---
 
 ========================= Period 8 =========================
---- Building LightGCN Graph (N=56703) ---
---- Graph built. Shape: torch.Size([56703, 56703]), Device: cpu ---
-Incrementally updating item history and seen users pool...
---- BPRDataset: 2995 users, 32782 items prepared. ---
---- Initializing LightGCN ---
-  Users: 23921, Items: 32782
-  Embed Dim: 64, Layers: 3
---- LightGCN Embeddings initialized (Xavier) ---
-Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_7/best_embeddings.pth
---- Successfully restored model EMBEDDINGS. ---
---- Starting GNN training loop (Max Epochs: 100, Patience: 10) ---
-Epochs:  10%|█████████▏                                                                                  | 10/100 [00:28<04:31,  3.01s/it, patience=9/10, train_bpr=0.2866, val_bce=0.5733]--- Early stopping triggered after 11 epochs. ---
-Epochs:  10%|█████████▏                                                                                  | 10/100 [00:32<04:53,  3.26s/it, patience=9/10, train_bpr=0.2866, val_bce=0.5733]
---- Training finished for period 8. Best embeddings saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_embeddings.pth ---
---- Loading BEST embeddings from ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_embeddings.pth for evaluation ---
---- GNN: Running full-graph forward pass for evaluation ---
---- GNN: Embeddings are ready ---
-
---- Running Unified Sampled Evaluation ---
-Evaluating (GNN): 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 18/18 [00:05<00:00,  3.18it/s]
+--- Building Graph from Sequences for Period 8 ---
+    - Graph edges collected. Total unique edges: 514759
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 8 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 0
+    - Adj 矩陣非零元 (含自環): 1086128
+    - 圖密度 (Density): 0.00033892
+--- Building model, type: lightgcn_only ---
+[LightGCN_Only] Initialized with 2 GNN layers and Embed Dim 64.
+Epochs:  60%|█████████████████████████████████████████████                              | 6/10 [00:56<00:37,  9.45s/it, patience=1/2, train_loss=0.4074, val_loss=0.4879]
+--- Training finished for period 8. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_model.pth ---
+--- (LightGCN_Only) Updating GNN buffer for evaluation ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:01<00:00,  3.19it/s]
 
 --- Period 8 Evaluation Finished ---
-  - GAUC     : 0.1975
-  - AUC      : 0.1975
+  - GAUC     : 0.5642
+  - AUC      : 0.5642
   -----------------------------------------------------
-  - Recall@5  : 0.0581   |   NDCG@5  : 0.0385
-  - Recall@10 : 0.0829   |   NDCG@10 : 0.0465
-  - Recall@20 : 0.1136   |   NDCG@20 : 0.0541
-  - Recall@50 : 0.1919   |   NDCG@50 : 0.0697
+  - Recall@5  : 0.2498   |   NDCG@5  : 0.1828
+  - Recall@10 : 0.3234   |   NDCG@10 : 0.2066
+  - Recall@20 : 0.4099   |   NDCG@20 : 0.2283
+  - Recall@50 : 0.5767   |   NDCG@50 : 0.2614
   -----------------------------------------------------
 
 ========================= Period 9 =========================
---- Building LightGCN Graph (N=56703) ---
---- Graph built. Shape: torch.Size([56703, 56703]), Device: cpu ---
-Incrementally updating item history and seen users pool...
---- BPRDataset: 3276 users, 32782 items prepared. ---
---- Initializing LightGCN ---
-  Users: 23921, Items: 32782
-  Embed Dim: 64, Layers: 3
---- LightGCN Embeddings initialized (Xavier) ---
-Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_embeddings.pth
---- Successfully restored model EMBEDDINGS. ---
---- Starting GNN training loop (Max Epochs: 100, Patience: 10) ---
-Epochs:  10%|█████████▏                                                                                  | 10/100 [00:34<05:42,  3.81s/it, patience=9/10, train_bpr=0.2837, val_bce=0.5601]--- Early stopping triggered after 11 epochs. ---
-Epochs:  10%|█████████▏                                                                                  | 10/100 [00:38<05:47,  3.86s/it, patience=9/10, train_bpr=0.2837, val_bce=0.5601]
---- Training finished for period 9. Best embeddings saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_embeddings.pth ---
---- Loading BEST embeddings from ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_embeddings.pth for evaluation ---
---- GNN: Running full-graph forward pass for evaluation ---
---- GNN: Embeddings are ready ---
-
---- Running Unified Sampled Evaluation ---
-Evaluating (GNN): 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 18/18 [00:06<00:00,  2.66it/s]
+--- Building Graph from Sequences for Period 9 ---
+    - Graph edges collected. Total unique edges: 547520
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 9 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 0
+    - Adj 矩陣非零元 (含自環): 1151650
+    - 圖密度 (Density): 0.00035936
+--- Building model, type: lightgcn_only ---
+[LightGCN_Only] Initialized with 2 GNN layers and Embed Dim 64.
+Epochs:  40%|██████████████████████████████                                             | 4/10 [00:42<01:03, 10.51s/it, patience=1/2, train_loss=0.4544, val_loss=0.4820]
+--- Training finished for period 9. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth ---
+--- (LightGCN_Only) Updating GNN buffer for evaluation ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:02<00:00,  2.86it/s]
 
 --- Period 9 Evaluation Finished ---
-  - GAUC     : 0.2021
-  - AUC      : 0.2021
+  - GAUC     : 0.5599
+  - AUC      : 0.5599
   -----------------------------------------------------
-  - Recall@5  : 0.0645   |   NDCG@5  : 0.0533
-  - Recall@10 : 0.0970   |   NDCG@10 : 0.0636
-  - Recall@20 : 0.1322   |   NDCG@20 : 0.0724
-  - Recall@50 : 0.1967   |   NDCG@50 : 0.0853
+  - Recall@5  : 0.2577   |   NDCG@5  : 0.1834
+  - Recall@10 : 0.3374   |   NDCG@10 : 0.2092
+  - Recall@20 : 0.4327   |   NDCG@20 : 0.2333
+  - Recall@50 : 0.5714   |   NDCG@50 : 0.2608
   -----------------------------------------------------
 
 ========================= Period 10 =========================
---- Building LightGCN Graph (N=56703) ---
---- Graph built. Shape: torch.Size([56703, 56703]), Device: cpu ---
-Incrementally updating item history and seen users pool...
---- BPRDataset: 3158 users, 32782 items prepared. ---
---- Initializing LightGCN ---
-  Users: 23921, Items: 32782
-  Embed Dim: 64, Layers: 3
---- LightGCN Embeddings initialized (Xavier) ---
-Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_embeddings.pth
---- Successfully restored model EMBEDDINGS. ---
---- Starting GNN training loop (Max Epochs: 100, Patience: 10) ---
-Epochs:  10%|█████████▏                                                                                  | 10/100 [00:41<05:51,  3.90s/it, patience=9/10, train_bpr=0.2852, val_bce=0.5614]--- Early stopping triggered after 11 epochs. ---
-Epochs:  10%|█████████▏                                                                                  | 10/100 [00:45<06:45,  4.51s/it, patience=9/10, train_bpr=0.2852, val_bce=0.5614]
---- Training finished for period 10. Best embeddings saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_embeddings.pth ---
---- Loading BEST embeddings from ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_embeddings.pth for evaluation ---
---- GNN: Running full-graph forward pass for evaluation ---
---- GNN: Embeddings are ready ---
-
---- Running Unified Sampled Evaluation ---
-Evaluating (GNN): 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 18/18 [00:06<00:00,  2.79it/s]
+--- Building Graph from Sequences for Period 10 ---
+    - Graph edges collected. Total unique edges: 549260
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 10 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 0
+    - Adj 矩陣非零元 (含自環): 1155130
+    - 圖密度 (Density): 0.00036045
+--- Building model, type: lightgcn_only ---
+[LightGCN_Only] Initialized with 2 GNN layers and Embed Dim 64.
+Epochs: 100%|██████████████████████████████████████████████████████████████████████████| 10/10 [01:24<00:00,  8.46s/it, patience=0/2, train_loss=0.4129, val_loss=0.4863]
+--- Training finished for period 10. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth ---
+--- (LightGCN_Only) Updating GNN buffer for evaluation ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:02<00:00,  2.82it/s]
 
 --- Period 10 Evaluation Finished ---
-  - GAUC     : 0.1798
-  - AUC      : 0.1798
+  - GAUC     : 0.5680
+  - AUC      : 0.5680
   -----------------------------------------------------
-  - Recall@5  : 0.0441   |   NDCG@5  : 0.0277
-  - Recall@10 : 0.0628   |   NDCG@10 : 0.0337
-  - Recall@20 : 0.0998   |   NDCG@20 : 0.0430
-  - Recall@50 : 0.1681   |   NDCG@50 : 0.0565
+  - Recall@5  : 0.2767   |   NDCG@5  : 0.1993
+  - Recall@10 : 0.3568   |   NDCG@10 : 0.2252
+  - Recall@20 : 0.4472   |   NDCG@20 : 0.2481
+  - Recall@50 : 0.5825   |   NDCG@50 : 0.2751
   -----------------------------------------------------
 
 ========================= Period 11 =========================
---- Building LightGCN Graph (N=56703) ---
---- Graph built. Shape: torch.Size([56703, 56703]), Device: cpu ---
-Incrementally updating item history and seen users pool...
---- BPRDataset: 3198 users, 32782 items prepared. ---
---- Initializing LightGCN ---
-  Users: 23921, Items: 32782
-  Embed Dim: 64, Layers: 3
---- LightGCN Embeddings initialized (Xavier) ---
-Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_embeddings.pth
---- Successfully restored model EMBEDDINGS. ---
---- Starting GNN training loop (Max Epochs: 100, Patience: 10) ---
-Epochs:  10%|█████████▏                                                                                  | 10/100 [00:37<05:17,  3.53s/it, patience=9/10, train_bpr=0.2940, val_bce=0.5577]--- Early stopping triggered after 11 epochs. ---
-Epochs:  10%|█████████▏                                                                                  | 10/100 [00:40<06:08,  4.10s/it, patience=9/10, train_bpr=0.2940, val_bce=0.5577]
---- Training finished for period 11. Best embeddings saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_embeddings.pth ---
---- Loading BEST embeddings from ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_embeddings.pth for evaluation ---
---- GNN: Running full-graph forward pass for evaluation ---
---- GNN: Embeddings are ready ---
-
---- Running Unified Sampled Evaluation ---
-Evaluating (GNN): 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 18/18 [00:06<00:00,  2.90it/s]
+--- Building Graph from Sequences for Period 11 ---
+    - Graph edges collected. Total unique edges: 560554
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 11 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 0
+    - Adj 矩陣非零元 (含自環): 1177718
+    - 圖密度 (Density): 0.00036750
+--- Building model, type: lightgcn_only ---
+[LightGCN_Only] Initialized with 2 GNN layers and Embed Dim 64.
+Epochs:  20%|███████████████                                                            | 2/10 [00:25<01:42, 12.77s/it, patience=1/2, train_loss=0.5143, val_loss=0.4836]
+--- Training finished for period 11. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth ---
+--- (LightGCN_Only) Updating GNN buffer for evaluation ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:02<00:00,  2.80it/s]
 
 --- Period 11 Evaluation Finished ---
-  - GAUC     : 0.1501
-  - AUC      : 0.1501
+  - GAUC     : 0.5388
+  - AUC      : 0.5388
   -----------------------------------------------------
-  - Recall@5  : 0.0338   |   NDCG@5  : 0.0228
-  - Recall@10 : 0.0496   |   NDCG@10 : 0.0279
-  - Recall@20 : 0.0750   |   NDCG@20 : 0.0342
-  - Recall@50 : 0.1265   |   NDCG@50 : 0.0442
+  - Recall@5  : 0.2370   |   NDCG@5  : 0.1667
+  - Recall@10 : 0.3155   |   NDCG@10 : 0.1920
+  - Recall@20 : 0.4056   |   NDCG@20 : 0.2147
+  - Recall@50 : 0.5473   |   NDCG@50 : 0.2426
   -----------------------------------------------------
 
 ========================= Period 12 =========================
---- Building LightGCN Graph (N=56703) ---
---- Graph built. Shape: torch.Size([56703, 56703]), Device: cpu ---
-Incrementally updating item history and seen users pool...
---- BPRDataset: 2758 users, 32782 items prepared. ---
---- Initializing LightGCN ---
-  Users: 23921, Items: 32782
-  Embed Dim: 64, Layers: 3
---- LightGCN Embeddings initialized (Xavier) ---
-Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_embeddings.pth
---- Successfully restored model EMBEDDINGS. ---
---- Starting GNN training loop (Max Epochs: 100, Patience: 10) ---
-Epochs:  11%|██████████                                                                                  | 11/100 [01:06<06:13,  4.19s/it, patience=9/10, train_bpr=0.2977, val_bce=0.4995]--- Early stopping triggered after 12 epochs. ---
-Epochs:  11%|██████████                                                                                  | 11/100 [01:09<09:21,  6.31s/it, patience=9/10, train_bpr=0.2977, val_bce=0.4995]
---- Training finished for period 12. Best embeddings saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_embeddings.pth ---
---- Loading BEST embeddings from ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_embeddings.pth for evaluation ---
---- GNN: Running full-graph forward pass for evaluation ---
---- GNN: Embeddings are ready ---
-
---- Running Unified Sampled Evaluation ---
-Evaluating (GNN): 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 17/17 [00:05<00:00,  3.19it/s]
+--- Building Graph from Sequences for Period 12 ---
+    - Graph edges collected. Total unique edges: 557283
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 12 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 0
+    - Adj 矩陣非零元 (含自環): 1171176
+    - 圖密度 (Density): 0.00036546
+--- Building model, type: lightgcn_only ---
+[LightGCN_Only] Initialized with 2 GNN layers and Embed Dim 64.
+Epochs:  90%|███████████████████████████████████████████████████████████████████▌       | 9/10 [01:26<00:09,  9.57s/it, patience=1/2, train_loss=0.4310, val_loss=0.4891]
+--- Training finished for period 12. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth ---
+--- (LightGCN_Only) Updating GNN buffer for evaluation ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:02<00:00,  2.91it/s]
 
 --- Period 12 Evaluation Finished ---
-  - GAUC     : 0.1799
-  - AUC      : 0.1799
+  - GAUC     : 0.5322
+  - AUC      : 0.5322
   -----------------------------------------------------
-  - Recall@5  : 0.0491   |   NDCG@5  : 0.0311
-  - Recall@10 : 0.0790   |   NDCG@10 : 0.0408
-  - Recall@20 : 0.1145   |   NDCG@20 : 0.0496
-  - Recall@50 : 0.1793   |   NDCG@50 : 0.0624
+  - Recall@5  : 0.2360   |   NDCG@5  : 0.1693
+  - Recall@10 : 0.3004   |   NDCG@10 : 0.1901
+  - Recall@20 : 0.3879   |   NDCG@20 : 0.2122
+  - Recall@50 : 0.5382   |   NDCG@50 : 0.2419
   -----------------------------------------------------
 
 ========================= Period 13 =========================
---- Building LightGCN Graph (N=56703) ---
---- Graph built. Shape: torch.Size([56703, 56703]), Device: cpu ---
-Incrementally updating item history and seen users pool...
---- BPRDataset: 2918 users, 32782 items prepared. ---
---- Initializing LightGCN ---
-  Users: 23921, Items: 32782
-  Embed Dim: 64, Layers: 3
---- LightGCN Embeddings initialized (Xavier) ---
-Attempting to restore model weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_embeddings.pth
---- Successfully restored model EMBEDDINGS. ---
---- Starting GNN training loop (Max Epochs: 100, Patience: 10) ---
-Epochs:  10%|█████████▏                                                                                  | 10/100 [00:31<04:48,  3.20s/it, patience=9/10, train_bpr=0.3147, val_bce=0.6537]--- Early stopping triggered after 11 epochs. ---
-Epochs:  10%|█████████▏                                                                                  | 10/100 [00:34<05:12,  3.47s/it, patience=9/10, train_bpr=0.3147, val_bce=0.6537]
---- Training finished for period 13. Best embeddings saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_13/best_embeddings.pth ---
+--- Building Graph from Sequences for Period 13 ---
+    - Graph edges collected. Total unique edges: 576956
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 13 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 0
+    - Adj 矩陣非零元 (含自環): 1210522
+    - 圖密度 (Density): 0.00037773
+--- Building model, type: lightgcn_only ---
+[LightGCN_Only] Initialized with 2 GNN layers and Embed Dim 64.
+Epochs: 100%|██████████████████████████████████████████████████████████████████████████| 10/10 [01:26<00:00,  8.69s/it, patience=1/2, train_loss=0.4648, val_loss=0.5084]
+--- Training finished for period 13. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_13/best_model.pth ---
 
 ==================== [ 學習率 0.001 總結報告 ] ====================
 
 --- Evaluation Finished ---
-  - GAUC     : 0.1819
-  - AUC      : 0.1819
+  - GAUC     : 0.5526
+  - AUC      : 0.5526
 -------------------------------------------------------
-  - Recall@5  : 0.0499   |   NDCG@5  : 0.0347
-  - Recall@10 : 0.0743   |   NDCG@10 : 0.0425
-  - Recall@20 : 0.1070   |   NDCG@20 : 0.0507
-  - Recall@50 : 0.1725   |   NDCG@50 : 0.0636
+  - Recall@5  : 0.2514   |   NDCG@5  : 0.1803
+  - Recall@10 : 0.3267   |   NDCG@10 : 0.2046
+  - Recall@20 : 0.4166   |   NDCG@20 : 0.2273
+  - Recall@50 : 0.5632   |   NDCG@50 : 0.2564
+-------------------------------------------------------
+
+
+
+
+full graph
+
+
+========================= Period 0 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 0 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 61924
+    - Adj 矩陣非零元 (含自環): 180458
+    - 圖密度 (Density): 0.00005631
+--- Building model, type: lightgcn_only ---
+[LightGCN_Only] Initialized with 2 GNN layers and Embed Dim 64.
+Epochs:  40%|██████████████████████████████                                             | 4/10 [00:22<00:34,  5.73s/it, patience=1/2, train_loss=0.4211, val_loss=0.4394]
+--- Training finished for period 0. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_0/best_model.pth ---
+
+========================= Period 1 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 1 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 123263
+    - Adj 矩陣非零元 (含自環): 303136
+    - 圖密度 (Density): 0.00009459
+--- Building model, type: lightgcn_only ---
+[LightGCN_Only] Initialized with 2 GNN layers and Embed Dim 64.
+Epochs:  40%|██████████████████████████████                                             | 4/10 [00:25<00:38,  6.47s/it, patience=1/2, train_loss=0.4207, val_loss=0.4628]
+--- Training finished for period 1. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_1/best_model.pth ---
+
+========================= Period 2 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 2 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 182351
+    - Adj 矩陣非零元 (含自環): 421312
+    - 圖密度 (Density): 0.00013147
+--- Building model, type: lightgcn_only ---
+[LightGCN_Only] Initialized with 2 GNN layers and Embed Dim 64.
+Epochs:  60%|█████████████████████████████████████████████                              | 6/10 [00:38<00:25,  6.44s/it, patience=1/2, train_loss=0.4468, val_loss=0.4689]
+--- Training finished for period 2. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_2/best_model.pth ---
+
+========================= Period 3 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 3 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 241715
+    - Adj 矩陣非零元 (含自環): 540040
+    - 圖密度 (Density): 0.00016852
+--- Building model, type: lightgcn_only ---
+[LightGCN_Only] Initialized with 2 GNN layers and Embed Dim 64.
+Epochs:  70%|████████████████████████████████████████████████████▌                      | 7/10 [00:48<00:20,  6.94s/it, patience=1/2, train_loss=0.4210, val_loss=0.4790]
+--- Training finished for period 3. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_3/best_model.pth ---
+
+========================= Period 4 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 4 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 300698
+    - Adj 矩陣非零元 (含自環): 658006
+    - 圖密度 (Density): 0.00020533
+--- Building model, type: lightgcn_only ---
+[LightGCN_Only] Initialized with 2 GNN layers and Embed Dim 64.
+Epochs:  80%|████████████████████████████████████████████████████████████               | 8/10 [00:59<00:14,  7.41s/it, patience=1/2, train_loss=0.4312, val_loss=0.4543]
+--- Training finished for period 4. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_4/best_model.pth ---
+
+========================= Period 5 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 5 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 361071
+    - Adj 矩陣非零元 (含自環): 778752
+    - 圖密度 (Density): 0.00024300
+--- Building model, type: lightgcn_only ---
+[LightGCN_Only] Initialized with 2 GNN layers and Embed Dim 64.
+Epochs:  30%|██████████████████████▌                                                    | 3/10 [00:28<01:05,  9.36s/it, patience=1/2, train_loss=0.4368, val_loss=0.4796]
+--- Training finished for period 5. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_5/best_model.pth ---
+
+========================= Period 6 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 6 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 421143
+    - Adj 矩陣非零元 (含自環): 898896
+    - 圖密度 (Density): 0.00028049
+--- Building model, type: lightgcn_only ---
+[LightGCN_Only] Initialized with 2 GNN layers and Embed Dim 64.
+Epochs:  50%|█████████████████████████████████████▌                                     | 5/10 [00:44<00:44,  8.99s/it, patience=1/2, train_loss=0.4344, val_loss=0.4644]
+--- Training finished for period 6. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_6/best_model.pth ---
+
+========================= Period 7 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 7 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 482469
+    - Adj 矩陣非零元 (含自環): 1021548
+    - 圖密度 (Density): 0.00031877
+--- Building model, type: lightgcn_only ---
+[LightGCN_Only] Initialized with 2 GNN layers and Embed Dim 64.
+Epochs:  60%|█████████████████████████████████████████████                              | 6/10 [00:55<00:36,  9.21s/it, patience=1/2, train_loss=0.4135, val_loss=0.3845]
+--- Training finished for period 7. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_7/best_model.pth ---
+
+========================= Period 8 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 8 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 542878
+    - Adj 矩陣非零元 (含自環): 1142366
+    - 圖密度 (Density): 0.00035647
+--- Building model, type: lightgcn_only ---
+[LightGCN_Only] Initialized with 2 GNN layers and Embed Dim 64.
+Epochs:  50%|█████████████████████████████████████▌                                     | 5/10 [00:50<00:50, 10.06s/it, patience=1/2, train_loss=0.4033, val_loss=0.4840]
+--- Training finished for period 8. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_model.pth ---
+--- (LightGCN_Only) Updating GNN buffer for evaluation ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:01<00:00,  3.24it/s]
+
+--- Period 8 Evaluation Finished ---
+  - GAUC     : 0.5709
+  - AUC      : 0.5709
+  -----------------------------------------------------
+  - Recall@5  : 0.2811   |   NDCG@5  : 0.2094
+  - Recall@10 : 0.3481   |   NDCG@10 : 0.2310
+  - Recall@20 : 0.4373   |   NDCG@20 : 0.2535
+  - Recall@50 : 0.5855   |   NDCG@50 : 0.2828
+  -----------------------------------------------------
+
+========================= Period 9 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 9 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 602316
+    - Adj 矩陣非零元 (含自環): 1261242
+    - 圖密度 (Density): 0.00039356
+--- Building model, type: lightgcn_only ---
+[LightGCN_Only] Initialized with 2 GNN layers and Embed Dim 64.
+Epochs:  40%|██████████████████████████████                                             | 4/10 [00:44<01:06, 11.02s/it, patience=1/2, train_loss=0.4429, val_loss=0.4766]
+--- Training finished for period 9. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth ---
+--- (LightGCN_Only) Updating GNN buffer for evaluation ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:02<00:00,  2.77it/s]
+
+--- Period 9 Evaluation Finished ---
+  - GAUC     : 0.5882
+  - AUC      : 0.5882
+  -----------------------------------------------------
+  - Recall@5  : 0.2983   |   NDCG@5  : 0.2230
+  - Recall@10 : 0.3739   |   NDCG@10 : 0.2475
+  - Recall@20 : 0.4679   |   NDCG@20 : 0.2711
+  - Recall@50 : 0.6096   |   NDCG@50 : 0.2993
+  -----------------------------------------------------
+
+========================= Period 10 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 10 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 661798
+    - Adj 矩陣非零元 (含自環): 1380206
+    - 圖密度 (Density): 0.00043068
+--- Building model, type: lightgcn_only ---
+[LightGCN_Only] Initialized with 2 GNN layers and Embed Dim 64.
+Epochs:  90%|███████████████████████████████████████████████████████████████████▌       | 9/10 [01:38<00:10, 10.94s/it, patience=1/2, train_loss=0.4148, val_loss=0.4766]
+--- Training finished for period 10. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth ---
+--- (LightGCN_Only) Updating GNN buffer for evaluation ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:02<00:00,  2.87it/s]
+
+--- Period 10 Evaluation Finished ---
+  - GAUC     : 0.5684
+  - AUC      : 0.5684
+  -----------------------------------------------------
+  - Recall@5  : 0.2929   |   NDCG@5  : 0.2191
+  - Recall@10 : 0.3695   |   NDCG@10 : 0.2439
+  - Recall@20 : 0.4623   |   NDCG@20 : 0.2673
+  - Recall@50 : 0.5866   |   NDCG@50 : 0.2919
+  -----------------------------------------------------
+
+========================= Period 11 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 11 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 720616
+    - Adj 矩陣非零元 (含自環): 1497842
+    - 圖密度 (Density): 0.00046739
+--- Building model, type: lightgcn_only ---
+[LightGCN_Only] Initialized with 2 GNN layers and Embed Dim 64.
+Epochs:  60%|█████████████████████████████████████████████                              | 6/10 [01:12<00:48, 12.02s/it, patience=1/2, train_loss=0.4620, val_loss=0.4820]
+--- Training finished for period 11. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth ---
+--- (LightGCN_Only) Updating GNN buffer for evaluation ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:02<00:00,  2.76it/s]
+
+--- Period 11 Evaluation Finished ---
+  - GAUC     : 0.5724
+  - AUC      : 0.5724
+  -----------------------------------------------------
+  - Recall@5  : 0.2961   |   NDCG@5  : 0.2211
+  - Recall@10 : 0.3685   |   NDCG@10 : 0.2444
+  - Recall@20 : 0.4515   |   NDCG@20 : 0.2654
+  - Recall@50 : 0.5844   |   NDCG@50 : 0.2918
+  -----------------------------------------------------
+
+========================= Period 12 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 12 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 780373
+    - Adj 矩陣非零元 (含自環): 1617356
+    - 圖密度 (Density): 0.00050468
+--- Building model, type: lightgcn_only ---
+[LightGCN_Only] Initialized with 2 GNN layers and Embed Dim 64.
+Epochs:  60%|█████████████████████████████████████████████                              | 6/10 [01:19<00:52, 13.18s/it, patience=1/2, train_loss=0.4436, val_loss=0.4804]
+--- Training finished for period 12. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth ---
+--- (LightGCN_Only) Updating GNN buffer for evaluation ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:02<00:00,  2.90it/s]
+
+--- Period 12 Evaluation Finished ---
+  - GAUC     : 0.5720
+  - AUC      : 0.5720
+  -----------------------------------------------------
+  - Recall@5  : 0.2874   |   NDCG@5  : 0.2154
+  - Recall@10 : 0.3655   |   NDCG@10 : 0.2406
+  - Recall@20 : 0.4530   |   NDCG@20 : 0.2627
+  - Recall@50 : 0.5899   |   NDCG@50 : 0.2900
+  -----------------------------------------------------
+
+========================= Period 13 =========================
+--- Graph built. Shape: torch.Size([56610, 56610]), Device: cpu ---
+--- [驗證] Period 13 圖稀疏性 ---
+    - 總節點數 (U+I): 56610
+    - 當期互動邊數: 837208
+    - Adj 矩陣非零元 (含自環): 1731026
+    - 圖密度 (Density): 0.00054015
+--- Building model, type: lightgcn_only ---
+[LightGCN_Only] Initialized with 2 GNN layers and Embed Dim 64.
+Epochs:  70%|████████████████████████████████████████████████████▌                      | 7/10 [01:35<00:41, 13.68s/it, patience=1/2, train_loss=0.4634, val_loss=0.5103]
+--- Training finished for period 13. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_13/best_model.pth ---
+
+==================== [ 學習率 0.001 總結報告 ] ====================
+
+--- Evaluation Finished ---
+  - GAUC     : 0.5744
+  - AUC      : 0.5744
+-------------------------------------------------------
+  - Recall@5  : 0.2911   |   NDCG@5  : 0.2176
+  - Recall@10 : 0.3651   |   NDCG@10 : 0.2415
+  - Recall@20 : 0.4544   |   NDCG@20 : 0.2640
+  - Recall@50 : 0.5912   |   NDCG@50 : 0.2912
 -------------------------------------------------------

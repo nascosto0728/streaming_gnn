@@ -12,7 +12,7 @@ import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
-from model import Hybrid_GNN_MLP 
+from model import Hybrid_GNN_MLP , LightGCN_Only
 from model_mlp import EmbMLP  
 from utils import (
     prepare_data_from_dfs,
@@ -30,7 +30,8 @@ def run_experiment(config: Dict[str, Any]):
     # --- 0. 設備設定 ---
     device = torch.device("cpu")
     if torch.backends.mps.is_available():
-        device = torch.device("mps")
+        # device = torch.device("mps")
+        pass
     else:
         print("--- Using CPU. ---")
 
@@ -97,9 +98,10 @@ def run_experiment(config: Dict[str, Any]):
                 continue
                 
             # 3. 互動 (GNN 建圖用) 
-            incremental_interaction_df = current_period_df[current_period_df['label'] == 1]
+            # incremental_interaction_df = current_period_df[current_period_df['label'] == 1].drop_duplicates(subset=['userId', 'itemId'])
+            incremental_interaction_df = pd.concat([incremental_interaction_df, 
+                                                    current_period_df[current_period_df['label'] == 1]]).drop_duplicates(subset=['userId', 'itemId'])
             
-            incremental_interaction_df = incremental_interaction_df.drop_duplicates(subset=['userId', 'itemId'])
             
             # 4. 建立「增量圖」 
             adj_matrix = build_lightgcn_graph(
@@ -108,6 +110,18 @@ def run_experiment(config: Dict[str, Any]):
                 num_items,
                 device
             )
+            # [*** 在此加入驗證 ***]
+            num_nodes = num_users + num_items
+            num_edges_in_period = incremental_interaction_df.shape[0]
+            num_nnz_in_adj = adj_matrix._nnz() # 包含雙向 + 自環
+            graph_density = num_nnz_in_adj / (num_nodes * num_nodes)
+            
+            print(f"--- [驗證] Period {period_id} 圖稀疏性 ---")
+            print(f"    - 總節點數 (U+I): {num_nodes}")
+            print(f"    - 當期互動邊數: {num_edges_in_period}")
+            print(f"    - Adj 矩陣非零元 (含自環): {num_nnz_in_adj}")
+            print(f"    - 圖密度 (Density): {graph_density:.8f}")
+            # [*** 驗證結束 ***]
 
             # 5. 更新評估用的 history 
             current_period_interactions_dict = current_period_df.groupby('userId')['itemId'].apply(set).to_dict()
@@ -163,6 +177,14 @@ def run_experiment(config: Dict[str, Any]):
                     adj_matrix, # 傳入「當前」的圖
                     cates_np,
                     cate_lens_np
+                ).to(device)
+
+            elif model_type == 'lightgcn_only':
+                model = LightGCN_Only(
+                    num_users,
+                    num_items,
+                    hyperparams,
+                    adj_matrix # 只需要傳入圖
                 ).to(device)
             
             elif model_type == 'mlp':
@@ -271,7 +293,7 @@ def run_experiment(config: Dict[str, Any]):
                     print(f"--- WARNING: No best model found. Evaluating with last-epoch model. ---")
                 
                 model.eval() 
-                if model_type == 'hybrid':
+                if model_type == 'hybrid' or model_type == 'lightgcn_only':
                     with torch.no_grad():
                         model.update_gnn_buffer()
                 
