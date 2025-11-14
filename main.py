@@ -490,7 +490,7 @@ def run_experiment(config: Dict[str, Any]):
             print(f"--- Training finished for period {period_id}. Best model saved to {best_model_path} ---")
 
             # --- 6. 評估階段 (Forward & Backward Transfer) ---
-            
+
             # (檢查 T+1 的測試集是否存在)
             if test_loader_current is not None:
                 
