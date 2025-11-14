@@ -234,7 +234,7 @@ class EmbMLP(nn.Module):
         numerator = torch.exp(pred_logits_stabilized)
 
         # --- 最終計算 ---
-        infonce_pred = (numerator / (denominator + 1e-9)).squeeze()
+        infonce_pred = (numerator / (denominator + 1e-9)).squeeze(dim=1)
         infonce_pred = torch.clamp(infonce_pred, min=1e-9, max=1.0 - 1e-9)
         
         return F.binary_cross_entropy(infonce_pred, labels.float(), reduction='none')

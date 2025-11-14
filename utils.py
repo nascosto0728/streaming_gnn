@@ -103,7 +103,7 @@ def prepare_data_from_dfs(full_data_df: pd.DataFrame, full_meta_df: pd.DataFrame
     full_cate_map = {raw_name: i for i, raw_name in enumerate(sorted(list(all_cate_names)))}
     config['model']['num_cates'] = len(full_cate_map)
 
-    print("--- Starting static global data processing ---")
+    print("Starting static global data processing...")
     all_user_ids = set(full_data_df['userId_raw'].unique())
     _ = [all_user_ids.update(seq) for seq in full_data_df['userSeq']]
     all_item_ids = set(full_data_df['itemId_raw'].unique())

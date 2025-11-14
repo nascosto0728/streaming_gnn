@@ -13,7 +13,8 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
 from model_gcn import Hybrid_GNN_MLP , LightGCN_Only
-from model_srgnn import SR_GNN_Model, SR_GNN_MLP
+from model_srgnn import PURE_SR_GNN, SR_GNN_MLP
+from model_sasrec import PureSASRec, SASRec_MLP
 from model_mlp import EmbMLP  
 
 from utils import (
@@ -44,12 +45,11 @@ def run_experiment(config: Dict[str, Any]):
     
     full_data_df = pd.read_parquet(config['data_path'])
     if config.get('debug_sample', True):
-        full_data_df = full_data_df.iloc[::3]  
+        full_data_df = full_data_df.iloc[::100]  
         full_data_df = full_data_df[full_data_df['period'] < 14]
     full_meta_df = pd.read_parquet(config['meta_path'])
 
     # --- 2. 數據轉換 ---
-    # (MODIFIED) 我們的 Hybrid 模型需要 cates 和 cate_lens
     remapped_full_df, cates, cate_lens, hyperparams_updates, item_map, full_cate_map = prepare_data_from_dfs(
         full_data_df, full_meta_df, config
     )
@@ -191,7 +191,7 @@ def run_experiment(config: Dict[str, Any]):
                 ).to(device)
 
             elif model_type == 'sr_gnn':
-                model = SR_GNN_Model(
+                model = PURE_SR_GNN(
                     cates_np,
                     cate_lens_np,
                     hyperparams=hyperparams,
@@ -202,6 +202,26 @@ def run_experiment(config: Dict[str, Any]):
                 
             elif model_type == 'sr_gnn_mlp':
                 model = SR_GNN_MLP(
+                    cates_np,
+                    cate_lens_np,
+                    hyperparams=hyperparams,
+                    train_config=config,
+                    item_init_vectors=None,
+                    cate_init_vectors=None
+                ).to(device)
+
+            elif model_type == 'pure_sasrec':
+                model = PureSASRec(
+                    cates_np,       # (未使用)
+                    cate_lens_np,   # (未使用)
+                    hyperparams=hyperparams,
+                    train_config=config,
+                    item_init_vectors=None,
+                    cate_init_vectors=None
+                ).to(device)    
+
+            elif model_type == 'sasrec_mlp':
+                model = SASRec_MLP(
                     cates_np,
                     cate_lens_np,
                     hyperparams=hyperparams,
@@ -257,6 +277,7 @@ def run_experiment(config: Dict[str, Any]):
 
                 losses = []
                 for batch in train_loader:
+                    
                     batch = {k: v.to(device) for k, v in batch.items()}
                     
                     optimizer.zero_grad()
@@ -283,6 +304,7 @@ def run_experiment(config: Dict[str, Any]):
                 with torch.no_grad():
                 
                     for batch in val_loader:
+
                         batch = {k: v.to(device) for k, v in batch.items()}
                         # 計算 MLP Loss (BCE)
                         loss = model.calculate_loss( batch)
@@ -429,5 +451,6 @@ if __name__ == "__main__":
     except FileNotFoundError:
         print(f"Error: Configuration file not found at {args.config}")
         exit()
-    os.environ["CUDA_VISIBLE_DEVICES"] = config.get('cuda_visible_DEVICES', "0")
+    os.environ["CUDA_VISIBLE_DEVICES"] = config.get('cuda_visible_devices', "0")
+    os.environ["PYTORCH_ENABLE_MPS_FALLBACK"] = "1" # [!!! 在此加入這行 !!!]
     run_experiment(config)

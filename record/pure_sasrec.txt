@@ -1,0 +1,124 @@
+
+
+========================= Period 0 =========================
+Epochs:  30%|██████████████████████▌                                                    | 3/10 [01:19<03:04, 26.36s/it, patience=0/1, train_loss=5.4695, val_loss=5.7663]
+--- Training finished for period 0. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_0/best_model.pth ---
+
+========================= Period 1 =========================
+Epochs:  20%|███████████████                                                            | 2/10 [00:59<03:59, 29.97s/it, patience=0/1, train_loss=5.4772, val_loss=5.5305]
+--- Training finished for period 1. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_1/best_model.pth ---
+
+========================= Period 2 =========================
+Epochs:  20%|███████████████                                                            | 2/10 [01:00<04:00, 30.07s/it, patience=0/1, train_loss=5.2264, val_loss=5.4229]
+--- Training finished for period 2. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_2/best_model.pth ---
+
+========================= Period 3 =========================
+Epochs:  10%|███████▌                                                                   | 1/10 [00:39<05:59, 39.98s/it, patience=0/1, train_loss=5.4362, val_loss=5.2210]
+--- Training finished for period 3. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_3/best_model.pth ---
+
+========================= Period 4 =========================
+Epochs:  10%|███████▌                                                                   | 1/10 [00:39<05:56, 39.65s/it, patience=0/1, train_loss=5.2944, val_loss=5.4401]
+--- Training finished for period 4. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_4/best_model.pth ---
+
+========================= Period 5 =========================
+Epochs:  10%|███████▌                                                                   | 1/10 [00:40<06:01, 40.20s/it, patience=0/1, train_loss=5.4046, val_loss=5.2842]
+--- Training finished for period 5. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_5/best_model.pth ---
+
+========================= Period 6 =========================
+Epochs:  10%|███████▌                                                                   | 1/10 [00:40<06:00, 40.03s/it, patience=0/1, train_loss=5.3454, val_loss=5.3348]
+--- Training finished for period 6. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_6/best_model.pth ---
+
+========================= Period 7 =========================
+Epochs:  10%|███████▌                                                                   | 1/10 [00:39<05:58, 39.81s/it, patience=0/1, train_loss=5.4407, val_loss=5.5518]
+--- Training finished for period 7. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_7/best_model.pth ---
+
+========================= Period 8 =========================
+Epochs:  10%|███████▌                                                                   | 1/10 [00:39<05:57, 39.74s/it, patience=0/1, train_loss=5.3938, val_loss=5.1799]
+--- Training finished for period 8. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_model.pth ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:02<00:00,  2.41it/s]
+
+--- Period 8 Evaluation Finished ---
+  - GAUC     : 0.7506
+  - AUC      : 0.7506
+  -----------------------------------------------------
+  - Recall@5  : 0.2845   |   NDCG@5  : 0.2021
+  - Recall@10 : 0.3991   |   NDCG@10 : 0.2387
+  - Recall@20 : 0.5578   |   NDCG@20 : 0.2786
+  - Recall@50 : 0.8232   |   NDCG@50 : 0.3310
+  -----------------------------------------------------
+
+========================= Period 9 =========================
+Epochs:  10%|███████▌                                                                   | 1/10 [00:40<06:00, 40.09s/it, patience=0/1, train_loss=5.3338, val_loss=5.2358]
+--- Training finished for period 9. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:02<00:00,  2.21it/s]
+
+--- Period 9 Evaluation Finished ---
+  - GAUC     : 0.7722
+  - AUC      : 0.7722
+  -----------------------------------------------------
+  - Recall@5  : 0.3178   |   NDCG@5  : 0.2246
+  - Recall@10 : 0.4394   |   NDCG@10 : 0.2637
+  - Recall@20 : 0.6076   |   NDCG@20 : 0.3061
+  - Recall@50 : 0.8452   |   NDCG@50 : 0.3532
+  -----------------------------------------------------
+
+========================= Period 10 =========================
+Epochs:  10%|███████▌                                                                   | 1/10 [00:39<05:57, 39.78s/it, patience=0/1, train_loss=5.3348, val_loss=5.1367]
+--- Training finished for period 10. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:02<00:00,  2.28it/s]
+
+--- Period 10 Evaluation Finished ---
+  - GAUC     : 0.7930
+  - AUC      : 0.7930
+  -----------------------------------------------------
+  - Recall@5  : 0.3410   |   NDCG@5  : 0.2404
+  - Recall@10 : 0.4703   |   NDCG@10 : 0.2819
+  - Recall@20 : 0.6289   |   NDCG@20 : 0.3217
+  - Recall@50 : 0.8781   |   NDCG@50 : 0.3712
+  -----------------------------------------------------
+
+========================= Period 11 =========================
+Epochs:  10%|███████▌                                                                   | 1/10 [00:39<05:55, 39.53s/it, patience=0/1, train_loss=5.2038, val_loss=5.2901]
+--- Training finished for period 11. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:02<00:00,  2.23it/s]
+
+--- Period 11 Evaluation Finished ---
+  - GAUC     : 0.7547
+  - AUC      : 0.7547
+  -----------------------------------------------------
+  - Recall@5  : 0.3056   |   NDCG@5  : 0.2224
+  - Recall@10 : 0.4236   |   NDCG@10 : 0.2604
+  - Recall@20 : 0.5638   |   NDCG@20 : 0.2957
+  - Recall@50 : 0.8254   |   NDCG@50 : 0.3475
+  -----------------------------------------------------
+
+========================= Period 12 =========================
+Epochs:  10%|███████▌                                                                   | 1/10 [00:39<05:58, 39.86s/it, patience=0/1, train_loss=5.2977, val_loss=5.2357]
+--- Training finished for period 12. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:02<00:00,  2.19it/s]
+
+--- Period 12 Evaluation Finished ---
+  - GAUC     : 0.7909
+  - AUC      : 0.7909
+  -----------------------------------------------------
+  - Recall@5  : 0.3561   |   NDCG@5  : 0.2621
+  - Recall@10 : 0.4766   |   NDCG@10 : 0.3010
+  - Recall@20 : 0.6292   |   NDCG@20 : 0.3394
+  - Recall@50 : 0.8703   |   NDCG@50 : 0.3874
+  -----------------------------------------------------
+
+========================= Period 13 =========================
+Epochs:  10%|███████▌                                                                   | 1/10 [00:40<06:06, 40.72s/it, patience=0/1, train_loss=5.0235, val_loss=4.9342]
+--- Training finished for period 13. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_13/best_model.pth ---
+
+==================== [ 學習率 0.001 總結報告 ] ====================
+
+--- Evaluation Finished ---
+  - GAUC     : 0.7723
+  - AUC      : 0.7723
+-------------------------------------------------------
+  - Recall@5  : 0.3210   |   NDCG@5  : 0.2303
+  - Recall@10 : 0.4418   |   NDCG@10 : 0.2691
+  - Recall@20 : 0.5975   |   NDCG@20 : 0.3083
+  - Recall@50 : 0.8484   |   NDCG@50 : 0.3581
+-------------------------------------------------------

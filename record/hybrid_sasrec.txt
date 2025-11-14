@@ -1,0 +1,493 @@
+
+========================= Period 0 =========================
+[EmbSASRec_Model] Initialized. Replacing AvgPool with Transformer Encoder.
+Epochs:  30%|██████████████████████▌                                                    | 3/10 [01:49<04:15, 36.57s/it, patience=0/1, train_loss=5.5474, val_loss=5.6252]
+--- Training finished for period 0. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_0/best_model.pth ---
+
+========================= Period 1 =========================
+[EmbSASRec_Model] Initialized. Replacing AvgPool with Transformer Encoder.
+Epochs:  20%|███████████████                                                            | 2/10 [01:24<05:36, 42.04s/it, patience=0/1, train_loss=5.5312, val_loss=5.4334]
+--- Training finished for period 1. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_1/best_model.pth ---
+
+========================= Period 2 =========================
+[EmbSASRec_Model] Initialized. Replacing AvgPool with Transformer Encoder.
+Epochs:  20%|███████████████                                                            | 2/10 [01:24<05:37, 42.13s/it, patience=0/1, train_loss=5.2183, val_loss=5.3138]
+--- Training finished for period 2. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_2/best_model.pth ---
+
+========================= Period 3 =========================
+[EmbSASRec_Model] Initialized. Replacing AvgPool with Transformer Encoder.
+Epochs:  20%|███████████████                                                            | 2/10 [01:23<05:35, 41.97s/it, patience=0/1, train_loss=5.2160, val_loss=5.1938]
+--- Training finished for period 3. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_3/best_model.pth ---
+
+========================= Period 4 =========================
+[EmbSASRec_Model] Initialized. Replacing AvgPool with Transformer Encoder.
+Epochs:  10%|███████▌                                                                   | 1/10 [00:56<08:30, 56.69s/it, patience=0/1, train_loss=5.2453, val_loss=5.4145]
+--- Training finished for period 4. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_4/best_model.pth ---
+
+========================= Period 5 =========================
+[EmbSASRec_Model] Initialized. Replacing AvgPool with Transformer Encoder.
+Epochs:  10%|███████▌                                                                   | 1/10 [00:56<08:28, 56.53s/it, patience=0/1, train_loss=5.3927, val_loss=5.2758]
+--- Training finished for period 5. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_5/best_model.pth ---
+
+========================= Period 6 =========================
+[EmbSASRec_Model] Initialized. Replacing AvgPool with Transformer Encoder.
+Epochs:  10%|███████▌                                                                   | 1/10 [00:55<08:22, 55.83s/it, patience=0/1, train_loss=5.3394, val_loss=5.2914]
+--- Training finished for period 6. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_6/best_model.pth ---
+
+========================= Period 7 =========================
+[EmbSASRec_Model] Initialized. Replacing AvgPool with Transformer Encoder.
+Epochs:  10%|███████▌                                                                   | 1/10 [00:56<08:25, 56.14s/it, patience=0/1, train_loss=5.4429, val_loss=5.5745]
+--- Training finished for period 7. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_7/best_model.pth ---
+
+========================= Period 8 =========================
+[EmbSASRec_Model] Initialized. Replacing AvgPool with Transformer Encoder.
+Epochs:  10%|███████▌                                                                   | 1/10 [00:55<08:18, 55.40s/it, patience=0/1, train_loss=5.4161, val_loss=5.1643]
+--- Training finished for period 8. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_model.pth ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:04<00:00,  1.23it/s]
+
+--- Period 8 Evaluation Finished ---
+  - GAUC     : 0.7651
+  - AUC      : 0.7651
+  -----------------------------------------------------
+  - Recall@5  : 0.4011   |   NDCG@5  : 0.2941
+  - Recall@10 : 0.5214   |   NDCG@10 : 0.3329
+  - Recall@20 : 0.6510   |   NDCG@20 : 0.3658
+  - Recall@50 : 0.8018   |   NDCG@50 : 0.3958
+  -----------------------------------------------------
+
+========================= Period 9 =========================
+[EmbSASRec_Model] Initialized. Replacing AvgPool with Transformer Encoder.
+Epochs:  10%|███████▌                                                                   | 1/10 [00:55<08:22, 55.79s/it, patience=0/1, train_loss=5.3101, val_loss=5.2300]
+--- Training finished for period 9. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:04<00:00,  1.21it/s]
+
+--- Period 9 Evaluation Finished ---
+  - GAUC     : 0.8049
+  - AUC      : 0.8049
+  -----------------------------------------------------
+  - Recall@5  : 0.4291   |   NDCG@5  : 0.3109
+  - Recall@10 : 0.5538   |   NDCG@10 : 0.3511
+  - Recall@20 : 0.6934   |   NDCG@20 : 0.3865
+  - Recall@50 : 0.8503   |   NDCG@50 : 0.4178
+  -----------------------------------------------------
+
+========================= Period 10 =========================
+[EmbSASRec_Model] Initialized. Replacing AvgPool with Transformer Encoder.
+Epochs:  10%|███████▌                                                                   | 1/10 [00:55<08:21, 55.71s/it, patience=0/1, train_loss=5.3306, val_loss=5.1317]
+--- Training finished for period 10. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:05<00:00,  1.19it/s]
+
+--- Period 10 Evaluation Finished ---
+  - GAUC     : 0.8728
+  - AUC      : 0.8728
+  -----------------------------------------------------
+  - Recall@5  : 0.5247   |   NDCG@5  : 0.3838
+  - Recall@10 : 0.6658   |   NDCG@10 : 0.4293
+  - Recall@20 : 0.7994   |   NDCG@20 : 0.4630
+  - Recall@50 : 0.9297   |   NDCG@50 : 0.4893
+  -----------------------------------------------------
+
+========================= Period 11 =========================
+[EmbSASRec_Model] Initialized. Replacing AvgPool with Transformer Encoder.
+Epochs:  10%|███████▌                                                                   | 1/10 [00:56<08:25, 56.13s/it, patience=0/1, train_loss=5.1985, val_loss=5.2959]
+--- Training finished for period 11. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:05<00:00,  1.11it/s]
+
+--- Period 11 Evaluation Finished ---
+  - GAUC     : 0.8113
+  - AUC      : 0.8113
+  -----------------------------------------------------
+  - Recall@5  : 0.4779   |   NDCG@5  : 0.3552
+  - Recall@10 : 0.5922   |   NDCG@10 : 0.3920
+  - Recall@20 : 0.7193   |   NDCG@20 : 0.4242
+  - Recall@50 : 0.8538   |   NDCG@50 : 0.4511
+  -----------------------------------------------------
+
+========================= Period 12 =========================
+[EmbSASRec_Model] Initialized. Replacing AvgPool with Transformer Encoder.
+Epochs:  10%|███████▌                                                                   | 1/10 [00:56<08:25, 56.21s/it, patience=0/1, train_loss=5.2912, val_loss=5.2257]
+--- Training finished for period 12. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:04<00:00,  1.21it/s]
+
+--- Period 12 Evaluation Finished ---
+  - GAUC     : 0.8408
+  - AUC      : 0.8408
+  -----------------------------------------------------
+  - Recall@5  : 0.4937   |   NDCG@5  : 0.3750
+  - Recall@10 : 0.6167   |   NDCG@10 : 0.4147
+  - Recall@20 : 0.7455   |   NDCG@20 : 0.4473
+  - Recall@50 : 0.8859   |   NDCG@50 : 0.4755
+  -----------------------------------------------------
+
+========================= Period 13 =========================
+[EmbSASRec_Model] Initialized. Replacing AvgPool with Transformer Encoder.
+Epochs:  10%|███████▌                                                                   | 1/10 [00:55<08:20, 55.58s/it, patience=0/1, train_loss=5.0326, val_loss=4.9209]
+--- Training finished for period 13. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_13/best_model.pth ---
+
+==================== [ 學習率 0.001 總結報告 ] ====================
+
+--- Evaluation Finished ---
+  - GAUC     : 0.8190
+  - AUC      : 0.8190
+-------------------------------------------------------
+  - Recall@5  : 0.4653   |   NDCG@5  : 0.3438
+  - Recall@10 : 0.5900   |   NDCG@10 : 0.3840
+  - Recall@20 : 0.7217   |   NDCG@20 : 0.4174
+  - Recall@50 : 0.8643   |   NDCG@50 : 0.4459
+-------------------------------------------------------'
+
+
+
+
+no detach
+
+
+
+
+========================= Period 0 =========================
+[EmbSASRec_Model] Initialized. Replacing AvgPool with Transformer Encoder.
+Epochs:   0%|                                                                                                                                     | 0/10 [00:00<?, ?it/s]/opt/homebrew/Caskroom/miniforge/base/envs/gnn_rec/lib/python3.12/site-packages/torch/nn/modules/transformer.py:515: UserWarning: The PyTorch API of nested tensors is in prototype stage and will change in the near future. We recommend specifying layout=torch.jagged when constructing a nested tensor, as this layout receives active development, has better operator coverage, and works with torch.compile. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/aten/src/ATen/NestedTensorImpl.cpp:182.)
+  output = torch._nested_tensor_from_mask(
+Epochs:  70%|████████████████████████████████████████████████████▌                      | 7/10 [05:56<02:32, 50.99s/it, patience=0/1, train_loss=5.1692, val_loss=5.5505]
+--- Training finished for period 0. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_0/best_model.pth ---
+
+========================= Period 1 =========================
+[EmbSASRec_Model] Initialized. Replacing AvgPool with Transformer Encoder.
+Epochs:  20%|███████████████                                                            | 2/10 [02:25<09:42, 72.87s/it, patience=0/1, train_loss=5.3663, val_loss=5.3642]
+--- Training finished for period 1. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_1/best_model.pth ---
+
+========================= Period 2 =========================
+[EmbSASRec_Model] Initialized. Replacing AvgPool with Transformer Encoder.
+Epochs:  20%|███████████████                                                            | 2/10 [02:28<09:53, 74.24s/it, patience=0/1, train_loss=5.1389, val_loss=5.2362]
+--- Training finished for period 2. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_2/best_model.pth ---
+
+========================= Period 3 =========================
+[EmbSASRec_Model] Initialized. Replacing AvgPool with Transformer Encoder.
+Epochs:  20%|███████████████                                                            | 2/10 [02:15<09:02, 67.76s/it, patience=0/1, train_loss=5.1446, val_loss=5.1023]
+--- Training finished for period 3. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_3/best_model.pth ---
+
+========================= Period 4 =========================
+[EmbSASRec_Model] Initialized. Replacing AvgPool with Transformer Encoder.
+Epochs:  10%|███████▌                                                                   | 1/10 [01:27<13:09, 87.70s/it, patience=0/1, train_loss=5.1664, val_loss=5.3060]
+--- Training finished for period 4. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_4/best_model.pth ---
+
+========================= Period 5 =========================
+[EmbSASRec_Model] Initialized. Replacing AvgPool with Transformer Encoder.
+Epochs:  10%|███████▌                                                                   | 1/10 [01:31<13:42, 91.37s/it, patience=0/1, train_loss=5.2951, val_loss=5.1859]
+--- Training finished for period 5. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_5/best_model.pth ---
+
+========================= Period 6 =========================
+[EmbSASRec_Model] Initialized. Replacing AvgPool with Transformer Encoder.
+Epochs:  10%|███████▌                                                                   | 1/10 [01:27<13:09, 87.76s/it, patience=0/1, train_loss=5.2394, val_loss=5.2059]
+--- Training finished for period 6. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_6/best_model.pth ---
+
+========================= Period 7 =========================
+[EmbSASRec_Model] Initialized. Replacing AvgPool with Transformer Encoder.
+Epochs:  10%|███████▌                                                                   | 1/10 [01:30<13:36, 90.72s/it, patience=0/1, train_loss=5.3454, val_loss=5.4826]
+--- Training finished for period 7. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_7/best_model.pth ---
+
+========================= Period 8 =========================
+[EmbSASRec_Model] Initialized. Replacing AvgPool with Transformer Encoder.
+Epochs:  10%|███████▌                                                                   | 1/10 [01:32<13:56, 92.92s/it, patience=0/1, train_loss=5.3186, val_loss=5.0763]
+--- Training finished for period 8. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_model.pth ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:05<00:00,  1.18it/s]
+
+--- Period 8 Evaluation Finished ---
+  - GAUC     : 0.7742
+  - AUC      : 0.7742
+  -----------------------------------------------------
+  - Recall@5  : 0.4535   |   NDCG@5  : 0.3479
+  - Recall@10 : 0.5571   |   NDCG@10 : 0.3815
+  - Recall@20 : 0.6575   |   NDCG@20 : 0.4069
+  - Recall@50 : 0.8062   |   NDCG@50 : 0.4363
+  -----------------------------------------------------
+
+========================= Period 9 =========================
+[EmbSASRec_Model] Initialized. Replacing AvgPool with Transformer Encoder.
+Epochs:  10%|███████▌                                                                   | 1/10 [01:28<13:16, 88.46s/it, patience=0/1, train_loss=5.2014, val_loss=5.1194]
+--- Training finished for period 9. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:05<00:00,  1.15it/s]
+
+--- Period 9 Evaluation Finished ---
+  - GAUC     : 0.8101
+  - AUC      : 0.8101
+  -----------------------------------------------------
+  - Recall@5  : 0.4685   |   NDCG@5  : 0.3434
+  - Recall@10 : 0.5964   |   NDCG@10 : 0.3847
+  - Recall@20 : 0.7056   |   NDCG@20 : 0.4123
+  - Recall@50 : 0.8486   |   NDCG@50 : 0.4406
+  -----------------------------------------------------
+
+========================= Period 10 =========================
+[EmbSASRec_Model] Initialized. Replacing AvgPool with Transformer Encoder.
+Epochs:  10%|███████▌                                                                   | 1/10 [01:37<14:37, 97.54s/it, patience=0/1, train_loss=5.2185, val_loss=5.0098]
+--- Training finished for period 10. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:06<00:00,  1.04s/it]
+
+--- Period 10 Evaluation Finished ---
+  - GAUC     : 0.8491
+  - AUC      : 0.8491
+  -----------------------------------------------------
+  - Recall@5  : 0.5394   |   NDCG@5  : 0.4126
+  - Recall@10 : 0.6634   |   NDCG@10 : 0.4528
+  - Recall@20 : 0.7711   |   NDCG@20 : 0.4800
+  - Recall@50 : 0.8904   |   NDCG@50 : 0.5039
+  -----------------------------------------------------
+
+========================= Period 11 =========================
+[EmbSASRec_Model] Initialized. Replacing AvgPool with Transformer Encoder.
+Epochs:  10%|███████▍                                                                  | 1/10 [01:41<15:11, 101.24s/it, patience=0/1, train_loss=5.1048, val_loss=5.2238]
+--- Training finished for period 11. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:06<00:00,  1.02s/it]
+
+--- Period 11 Evaluation Finished ---
+  - GAUC     : 0.8223
+  - AUC      : 0.8223
+  -----------------------------------------------------
+  - Recall@5  : 0.5033   |   NDCG@5  : 0.3792
+  - Recall@10 : 0.6222   |   NDCG@10 : 0.4179
+  - Recall@20 : 0.7343   |   NDCG@20 : 0.4463
+  - Recall@50 : 0.8636   |   NDCG@50 : 0.4721
+  -----------------------------------------------------
+
+========================= Period 12 =========================
+[EmbSASRec_Model] Initialized. Replacing AvgPool with Transformer Encoder.
+Epochs:  20%|███████████████                                                            | 2/10 [02:36<10:26, 78.29s/it, patience=0/1, train_loss=5.0778, val_loss=5.1522]
+--- Training finished for period 12. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:05<00:00,  1.07it/s]
+
+--- Period 12 Evaluation Finished ---
+  - GAUC     : 0.8326
+  - AUC      : 0.8326
+  -----------------------------------------------------
+  - Recall@5  : 0.5006   |   NDCG@5  : 0.3640
+  - Recall@10 : 0.6356   |   NDCG@10 : 0.4078
+  - Recall@20 : 0.7481   |   NDCG@20 : 0.4363
+  - Recall@50 : 0.8725   |   NDCG@50 : 0.4611
+  -----------------------------------------------------
+
+========================= Period 13 =========================
+[EmbSASRec_Model] Initialized. Replacing AvgPool with Transformer Encoder.
+Epochs:  10%|███████▍                                                                  | 1/10 [01:48<16:16, 108.50s/it, patience=0/1, train_loss=4.9157, val_loss=4.8095]
+--- Training finished for period 13. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_13/best_model.pth ---
+
+==================== [ 學習率 0.001 總結報告 ] ====================
+
+--- Evaluation Finished ---
+  - GAUC     : 0.8177
+  - AUC      : 0.8177
+-------------------------------------------------------
+  - Recall@5  : 0.4931   |   NDCG@5  : 0.3694
+  - Recall@10 : 0.6149   |   NDCG@10 : 0.4089
+  - Recall@20 : 0.7233   |   NDCG@20 : 0.4364
+  - Recall@50 : 0.8563   |   NDCG@50 : 0.4628
+-------------------------------------------------------
+
+
+
+
+
+
+
+shuffle
+
+
+========================= Period 0 =========================
+--- [Data] Period 0 loaded. Total rows: 73564, Positive samples: 61924
+--- Building model, type: sasrec_mlp ---
+Epochs:   0%|                                                                                                                                     | 0/10 [00:00<?, ?it/s]/opt/homebrew/Caskroom/miniforge/base/envs/gnn_rec/lib/python3.12/site-packages/torch/nn/modules/transformer.py:515: UserWarning: The PyTorch API of nested tensors is in prototype stage and will change in the near future. We recommend specifying layout=torch.jagged when constructing a nested tensor, as this layout receives active development, has better operator coverage, and works with torch.compile. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/aten/src/ATen/NestedTensorImpl.cpp:182.)
+  output = torch._nested_tensor_from_mask(
+Epochs:  20%|███████████████                                                            | 2/10 [01:26<05:46, 43.31s/it, patience=0/1, train_loss=5.5972, val_loss=5.7123]
+--- Training finished for period 0. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_0/best_model.pth ---
+
+========================= Period 1 =========================
+--- [Data] Period 1 loaded. Total rows: 73563, Positive samples: 61339
+--- Building model, type: sasrec_mlp ---
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_0/best_model.pth ---
+Epochs:  20%|███████████████                                                            | 2/10 [01:25<05:43, 42.91s/it, patience=0/1, train_loss=5.4080, val_loss=5.4430]
+--- Training finished for period 1. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_1/best_model.pth ---
+
+========================= Period 2 =========================
+--- [Data] Period 2 loaded. Total rows: 73563, Positive samples: 59088
+--- Building model, type: sasrec_mlp ---
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_1/best_model.pth ---
+Epochs:  10%|███████▌                                                                   | 1/10 [00:57<08:34, 57.21s/it, patience=0/1, train_loss=5.2934, val_loss=5.3100]
+--- Training finished for period 2. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_2/best_model.pth ---
+
+========================= Period 3 =========================
+--- [Data] Period 3 loaded. Total rows: 73563, Positive samples: 59364
+--- Building model, type: sasrec_mlp ---
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_2/best_model.pth ---
+Epochs:  10%|███████▌                                                                   | 1/10 [00:57<08:33, 57.09s/it, patience=0/1, train_loss=5.3073, val_loss=5.1738]
+--- Training finished for period 3. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_3/best_model.pth ---
+
+========================= Period 4 =========================
+--- [Data] Period 4 loaded. Total rows: 73563, Positive samples: 58983
+--- Building model, type: sasrec_mlp ---
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_3/best_model.pth ---
+Epochs:  10%|███████▌                                                                   | 1/10 [00:57<08:37, 57.54s/it, patience=0/1, train_loss=5.1684, val_loss=5.4062]
+--- Training finished for period 4. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_4/best_model.pth ---
+
+========================= Period 5 =========================
+--- [Data] Period 5 loaded. Total rows: 73564, Positive samples: 60373
+--- Building model, type: sasrec_mlp ---
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_4/best_model.pth ---
+Epochs:  10%|███████▌                                                                   | 1/10 [00:56<08:30, 56.73s/it, patience=0/1, train_loss=5.3295, val_loss=5.2732]
+--- Training finished for period 5. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_5/best_model.pth ---
+
+========================= Period 6 =========================
+--- [Data] Period 6 loaded. Total rows: 73564, Positive samples: 60072
+--- Building model, type: sasrec_mlp ---
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_5/best_model.pth ---
+Epochs:  10%|███████▌                                                                   | 1/10 [00:59<08:54, 59.43s/it, patience=0/1, train_loss=5.2798, val_loss=5.3041]
+--- Training finished for period 6. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_6/best_model.pth ---
+
+========================= Period 7 =========================
+--- [Data] Period 7 loaded. Total rows: 73562, Positive samples: 61326
+--- Building model, type: sasrec_mlp ---
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_6/best_model.pth ---
+Epochs:  10%|███████▌                                                                   | 1/10 [00:57<08:40, 57.87s/it, patience=0/1, train_loss=5.3363, val_loss=5.5684]
+--- Training finished for period 7. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_7/best_model.pth ---
+
+========================= Period 8 =========================
+--- [Data] Period 8 loaded. Total rows: 73563, Positive samples: 60409
+--- [Eval] Test set for T+1 (Period 9) prepared. Positive samples: 5909
+--- Building model, type: sasrec_mlp ---
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_7/best_model.pth ---
+Epochs:  10%|███████▌                                                                   | 1/10 [00:56<08:31, 56.85s/it, patience=0/1, train_loss=5.3424, val_loss=5.1580]
+--- Training finished for period 8. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(8) ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(8) on TestSet(Period 9) ---
+                                                                                                                                                                         
+--- Period 8 (Model) -> Period 9 (Test) Evaluation Finished ---
+  - GAUC     : 0.8309
+  - AUC      : 0.8309
+  -----------------------------------------------------
+  - Recall@5  : 0.4525   |   NDCG@5  : 0.3322
+  - Recall@10 : 0.5857   |   NDCG@10 : 0.3751
+  - Recall@20 : 0.7255   |   NDCG@20 : 0.4105
+  - Recall@50 : 0.8819   |   NDCG@50 : 0.4420
+  -----------------------------------------------------
+
+========================= Period 9 =========================
+--- [Data] Period 9 loaded. Total rows: 73563, Positive samples: 59438
+--- [Eval] Test set for T+1 (Period 10) prepared. Positive samples: 5910
+--- Building model, type: sasrec_mlp ---
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_model.pth ---
+Epochs:  10%|███████▌                                                                   | 1/10 [00:56<08:30, 56.70s/it, patience=0/1, train_loss=5.1895, val_loss=5.2277]
+--- Training finished for period 9. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(9) ---
+    - Evaluating Model(9) on TestSet(Period 9)...
+    - TestSet(Period 9) GAUC: 0.8822                                                                                                                                     
+--- [CL] Average BWT GAUC for Model(9): 0.8822 ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(9) on TestSet(Period 10) ---
+                                                                                                                                                                         
+--- Period 9 (Model) -> Period 10 (Test) Evaluation Finished ---
+  - GAUC     : 0.8634
+  - AUC      : 0.8634
+  -----------------------------------------------------
+  - Recall@5  : 0.5125   |   NDCG@5  : 0.3751
+  - Recall@10 : 0.6533   |   NDCG@10 : 0.4206
+  - Recall@20 : 0.7800   |   NDCG@20 : 0.4527
+  - Recall@50 : 0.9159   |   NDCG@50 : 0.4799
+  -----------------------------------------------------
+
+========================= Period 10 =========================
+--- [Data] Period 10 loaded. Total rows: 73564, Positive samples: 59482
+--- [Eval] Test set for T+1 (Period 11) prepared. Positive samples: 5832
+--- Building model, type: sasrec_mlp ---
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth ---
+Epochs:  10%|███████▌                                                                   | 1/10 [00:56<08:31, 56.88s/it, patience=0/1, train_loss=5.2193, val_loss=5.0918]
+--- Training finished for period 10. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(10) ---
+    - Evaluating Model(10) on TestSet(Period 9)...
+    - TestSet(Period 9) GAUC: 0.8634                                                                                                                                     
+    - Evaluating Model(10) on TestSet(Period 10)...
+    - TestSet(Period 10) GAUC: 0.8806                                                                                                                                    
+--- [CL] Average BWT GAUC for Model(10): 0.8720 ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(10) on TestSet(Period 11) ---
+                                                                                                                                                                         
+--- Period 10 (Model) -> Period 11 (Test) Evaluation Finished ---
+  - GAUC     : 0.8652
+  - AUC      : 0.8652
+  -----------------------------------------------------
+  - Recall@5  : 0.5105   |   NDCG@5  : 0.3833
+  - Recall@10 : 0.6435   |   NDCG@10 : 0.4261
+  - Recall@20 : 0.7743   |   NDCG@20 : 0.4592
+  - Recall@50 : 0.9252   |   NDCG@50 : 0.4895
+  -----------------------------------------------------
+
+========================= Period 11 =========================
+--- [Data] Period 11 loaded. Total rows: 73563, Positive samples: 58818
+--- [Eval] Test set for T+1 (Period 12) prepared. Positive samples: 5984
+--- Building model, type: sasrec_mlp ---
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth ---
+Epochs:  10%|███████▌                                                                   | 1/10 [00:56<08:30, 56.69s/it, patience=0/1, train_loss=5.0980, val_loss=5.2804]
+--- Training finished for period 11. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(11) ---
+    - Evaluating Model(11) on TestSet(Period 9)...
+    - TestSet(Period 9) GAUC: 0.8563                                                                                                                                     
+    - Evaluating Model(11) on TestSet(Period 10)...
+    - TestSet(Period 10) GAUC: 0.8632                                                                                                                                    
+    - Evaluating Model(11) on TestSet(Period 11)...
+    - TestSet(Period 11) GAUC: 0.8778                                                                                                                                    
+--- [CL] Average BWT GAUC for Model(11): 0.8658 ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(11) on TestSet(Period 12) ---
+                                                                                                                                                                         
+--- Period 11 (Model) -> Period 12 (Test) Evaluation Finished ---
+  - GAUC     : 0.8758
+  - AUC      : 0.8758
+  -----------------------------------------------------
+  - Recall@5  : 0.5369   |   NDCG@5  : 0.4034
+  - Recall@10 : 0.6715   |   NDCG@10 : 0.4469
+  - Recall@20 : 0.8083   |   NDCG@20 : 0.4818
+  - Recall@50 : 0.9276   |   NDCG@50 : 0.5058
+  -----------------------------------------------------
+
+========================= Period 12 =========================
+--- [Data] Period 12 loaded. Total rows: 73563, Positive samples: 59757
+--- [Eval] Test set for T+1 (Period 13) prepared. Positive samples: 5669
+--- Building model, type: sasrec_mlp ---
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth ---
+Epochs:  10%|███████▌                                                                   | 1/10 [00:56<08:31, 56.78s/it, patience=0/1, train_loss=5.1645, val_loss=5.2112]
+--- Training finished for period 12. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(12) ---
+    - Evaluating Model(12) on TestSet(Period 9)...
+    - TestSet(Period 9) GAUC: 0.8446                                                                                                                                     
+    - Evaluating Model(12) on TestSet(Period 10)...
+    - TestSet(Period 10) GAUC: 0.8502                                                                                                                                    
+    - Evaluating Model(12) on TestSet(Period 11)...
+    - TestSet(Period 11) GAUC: 0.8569                                                                                                                                    
+    - Evaluating Model(12) on TestSet(Period 12)...
+    - TestSet(Period 12) GAUC: 0.8754                                                                                                                                    
+--- [CL] Average BWT GAUC for Model(12): 0.8568 ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(12) on TestSet(Period 13) ---
+                                                                                                                                                                         
+--- Period 12 (Model) -> Period 13 (Test) Evaluation Finished ---
+  - GAUC     : 0.8574
+  - AUC      : 0.8574
+  -----------------------------------------------------
+  - Recall@5  : 0.5357   |   NDCG@5  : 0.4052
+  - Recall@10 : 0.6645   |   NDCG@10 : 0.4469
+  - Recall@20 : 0.7721   |   NDCG@20 : 0.4743
+  - Recall@50 : 0.9030   |   NDCG@50 : 0.5005
+  -----------------------------------------------------
+
+========================= Period 13 =========================
+--- [Data] Period 13 loaded. Total rows: 73563, Positive samples: 56835
+--- Building model, type: sasrec_mlp ---
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth ---
+Epochs:  10%|███████▌                                                                   | 1/10 [00:56<08:29, 56.65s/it, patience=0/1, train_loss=4.9276, val_loss=4.8884]
+--- Training finished for period 13. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_13/best_model.pth ---
+
+==================== [ 學習率 0.001 總結報告 (FWT) ] ====================
+
+--- Average Forward Transfer Metrics ---
+  - GAUC     : 0.8585
+  - AUC      : 0.8585
+-------------------------------------------------------
+  - Recall@5  : 0.5096   |   NDCG@5  : 0.3798
+  - Recall@10 : 0.6437   |   NDCG@10 : 0.4231
+  - Recall@20 : 0.7721   |   NDCG@20 : 0.4557
+  - Recall@50 : 0.9107   |   NDCG@50 : 0.4836
+-------------------------------------------------------

@@ -41,7 +41,7 @@ def average_pooling(embeddings: torch.Tensor, seq_lens: torch.Tensor) -> torch.T
 # ===================================================================
 # (*** NEW ***) SR-GNN (Session-based Rec GNN)
 # ===================================================================
-class SR_GNN_Model(nn.Module):
+class PURE_SR_GNN(nn.Module):
     """
     SR-GNN 論文的 "純粹" 實作。
     

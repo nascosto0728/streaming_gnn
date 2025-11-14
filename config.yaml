@@ -16,14 +16,23 @@ max_epochs: 10         # 每個 period 最多跑 100 個 epoch
 validation_split: 0.2   # 從「當前 period」切 20% 出來當驗證集
 patience: 1            # 驗證集損失 (val_loss) 連續 10 次沒進步就停止
 
+debug_sample: 3
+
 evaluation:
-  sampling_size: 99 # 每個正樣本採樣 99 個負樣本
+  sampling_size: 99
+  Ks: [5, 10, 20, 50]
 
 item_vec_path: './vectors/item_vectors_kge.npy'
 cate_vec_path: './vectors/cate_vectors.npy'
 
-# 選項: 'hybrid'  'mlp'  'lightgcn_only'  'sr_gnn' 'sr_gnn_mlp'
-model_type: 'sr_gnn_mlp'
+continual_learning:
+  replay_enabled: true             # 設為 true 來啟用經驗回放
+  replay_buffer_size: 500000        # 緩衝區最大容量 (例如 5 萬筆)
+  replay_add_size_per_period: 50000   # 每期結束後，從當期資料隨機存 50000 筆
+  replay_sample_size_per_period: 30000 # 每期訓練時，從緩衝區取出 30000 筆
+
+# 選項: 'hybrid'  'mlp'  'lightgcn_only'  'sr_gnn' 'sr_gnn_mlp' 'pure_sasrec' 'sasrec_mlp'
+model_type: 'sasrec_mlp'
 # Model Hyperparameters
 model:
   batch_size: 1024
