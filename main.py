@@ -13,7 +13,7 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
 from model_gcn import Hybrid_GNN_MLP , LightGCN_Only
-from model_srgnn import SR_GNN_Model
+from model_srgnn import SR_GNN_Model, SR_GNN_MLP
 from model_mlp import EmbMLP  
 
 from utils import (
@@ -177,7 +177,7 @@ def run_experiment(config: Dict[str, Any]):
                     num_users, 
                     num_items, 
                     hyperparams,
-                    adj_matrix, # 傳入「當前」的圖
+                    adj_matrix, # 傳入圖
                     cates_np,
                     cate_lens_np
                 ).to(device)
@@ -192,6 +192,16 @@ def run_experiment(config: Dict[str, Any]):
 
             elif model_type == 'sr_gnn':
                 model = SR_GNN_Model(
+                    cates_np,
+                    cate_lens_np,
+                    hyperparams=hyperparams,
+                    train_config=config,
+                    item_init_vectors=None,
+                    cate_init_vectors=None
+                ).to(device)
+                
+            elif model_type == 'sr_gnn_mlp':
+                model = SR_GNN_MLP(
                     cates_np,
                     cate_lens_np,
                     hyperparams=hyperparams,

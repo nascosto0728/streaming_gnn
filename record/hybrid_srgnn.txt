@@ -1,0 +1,137 @@
+
+========================= Period 0 =========================
+[SR_GNN_Model v2.0] Initialized. Fixing dimension mismatches.
+Epochs:  20%|███████████████                                                            | 2/10 [00:27<01:48, 13.59s/it, patience=0/1, train_loss=5.6600, val_loss=5.6230]
+--- Training finished for period 0. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_0/best_model.pth ---
+
+========================= Period 1 =========================
+[SR_GNN_Model v2.0] Initialized. Fixing dimension mismatches.
+Epochs:  10%|███████▌                                                                   | 1/10 [00:18<02:48, 18.68s/it, patience=0/1, train_loss=5.6481, val_loss=5.4318]
+--- Training finished for period 1. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_1/best_model.pth ---
+
+========================= Period 2 =========================
+[SR_GNN_Model v2.0] Initialized. Fixing dimension mismatches.
+Epochs:  10%|███████▌                                                                   | 1/10 [00:18<02:42, 18.03s/it, patience=0/1, train_loss=5.3376, val_loss=5.2963]
+--- Training finished for period 2. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_2/best_model.pth ---
+
+========================= Period 3 =========================
+[SR_GNN_Model v2.0] Initialized. Fixing dimension mismatches.
+Epochs:  10%|███████▌                                                                   | 1/10 [00:18<02:44, 18.28s/it, patience=0/1, train_loss=5.3247, val_loss=5.1416]
+--- Training finished for period 3. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_3/best_model.pth ---
+
+========================= Period 4 =========================
+[SR_GNN_Model v2.0] Initialized. Fixing dimension mismatches.
+Epochs:  10%|███████▌                                                                   | 1/10 [00:17<02:40, 17.81s/it, patience=0/1, train_loss=5.2094, val_loss=5.3663]
+--- Training finished for period 4. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_4/best_model.pth ---
+
+========================= Period 5 =========================
+[SR_GNN_Model v2.0] Initialized. Fixing dimension mismatches.
+Epochs:  10%|███████▌                                                                   | 1/10 [00:17<02:39, 17.74s/it, patience=0/1, train_loss=5.3400, val_loss=5.2437]
+--- Training finished for period 5. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_5/best_model.pth ---
+
+========================= Period 6 =========================
+[SR_GNN_Model v2.0] Initialized. Fixing dimension mismatches.
+Epochs:  10%|███████▌                                                                   | 1/10 [00:17<02:40, 17.79s/it, patience=0/1, train_loss=5.2905, val_loss=5.2761]
+--- Training finished for period 6. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_6/best_model.pth ---
+
+========================= Period 7 =========================
+[SR_GNN_Model v2.0] Initialized. Fixing dimension mismatches.
+Epochs:  10%|███████▌                                                                   | 1/10 [00:17<02:39, 17.70s/it, patience=0/1, train_loss=5.3883, val_loss=5.5512]
+--- Training finished for period 7. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_7/best_model.pth ---
+
+========================= Period 8 =========================
+[SR_GNN_Model v2.0] Initialized. Fixing dimension mismatches.
+Epochs:  10%|███████▌                                                                   | 1/10 [00:17<02:39, 17.68s/it, patience=0/1, train_loss=5.3663, val_loss=5.1400]
+--- Training finished for period 8. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_model.pth ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:03<00:00,  1.58it/s]
+
+--- Period 8 Evaluation Finished ---
+  - GAUC     : 0.7049
+  - AUC      : 0.7049
+  -----------------------------------------------------
+  - Recall@5  : 0.3833   |   NDCG@5  : 0.2947
+  - Recall@10 : 0.4673   |   NDCG@10 : 0.3220
+  - Recall@20 : 0.5564   |   NDCG@20 : 0.3445
+  - Recall@50 : 0.7211   |   NDCG@50 : 0.3771
+  -----------------------------------------------------
+
+========================= Period 9 =========================
+[SR_GNN_Model v2.0] Initialized. Fixing dimension mismatches.
+Epochs:  10%|███████▌                                                                   | 1/10 [00:17<02:40, 17.79s/it, patience=0/1, train_loss=5.2599, val_loss=5.1970]
+--- Training finished for period 9. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:03<00:00,  1.53it/s]
+
+--- Period 9 Evaluation Finished ---
+  - GAUC     : 0.7032
+  - AUC      : 0.7032
+  -----------------------------------------------------
+  - Recall@5  : 0.3660   |   NDCG@5  : 0.2788
+  - Recall@10 : 0.4535   |   NDCG@10 : 0.3071
+  - Recall@20 : 0.5533   |   NDCG@20 : 0.3323
+  - Recall@50 : 0.7279   |   NDCG@50 : 0.3667
+  -----------------------------------------------------
+
+========================= Period 10 =========================
+[SR_GNN_Model v2.0] Initialized. Fixing dimension mismatches.
+Epochs:  10%|███████▌                                                                   | 1/10 [00:18<02:44, 18.32s/it, patience=0/1, train_loss=5.2840, val_loss=5.0774]
+--- Training finished for period 10. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:04<00:00,  1.48it/s]
+
+--- Period 10 Evaluation Finished ---
+  - GAUC     : 0.7704
+  - AUC      : 0.7704
+  -----------------------------------------------------
+  - Recall@5  : 0.4611   |   NDCG@5  : 0.3513
+  - Recall@10 : 0.5487   |   NDCG@10 : 0.3796
+  - Recall@20 : 0.6480   |   NDCG@20 : 0.4047
+  - Recall@50 : 0.8021   |   NDCG@50 : 0.4352
+  -----------------------------------------------------
+
+========================= Period 11 =========================
+[SR_GNN_Model v2.0] Initialized. Fixing dimension mismatches.
+Epochs:  10%|███████▌                                                                   | 1/10 [00:17<02:41, 17.94s/it, patience=0/1, train_loss=5.1581, val_loss=5.2707]
+--- Training finished for period 11. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:03<00:00,  1.50it/s]
+
+--- Period 11 Evaluation Finished ---
+  - GAUC     : 0.7595
+  - AUC      : 0.7595
+  -----------------------------------------------------
+  - Recall@5  : 0.4641   |   NDCG@5  : 0.3587
+  - Recall@10 : 0.5511   |   NDCG@10 : 0.3869
+  - Recall@20 : 0.6479   |   NDCG@20 : 0.4114
+  - Recall@50 : 0.7831   |   NDCG@50 : 0.4381
+  -----------------------------------------------------
+
+========================= Period 12 =========================
+[SR_GNN_Model v2.0] Initialized. Fixing dimension mismatches.
+Epochs:  10%|███████▌                                                                   | 1/10 [00:18<02:44, 18.27s/it, patience=0/1, train_loss=5.2451, val_loss=5.1895]
+--- Training finished for period 12. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth ---
+Evaluating: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [00:03<00:00,  1.55it/s]
+
+--- Period 12 Evaluation Finished ---
+  - GAUC     : 0.7497
+  - AUC      : 0.7497
+  -----------------------------------------------------
+  - Recall@5  : 0.4611   |   NDCG@5  : 0.3674
+  - Recall@10 : 0.5479   |   NDCG@10 : 0.3953
+  - Recall@20 : 0.6310   |   NDCG@20 : 0.4163
+  - Recall@50 : 0.7679   |   NDCG@50 : 0.4435
+  -----------------------------------------------------
+
+========================= Period 13 =========================
+[SR_GNN_Model v2.0] Initialized. Fixing dimension mismatches.
+Epochs:  10%|███████▌                                                                   | 1/10 [00:18<02:49, 18.87s/it, patience=0/1, train_loss=4.9829, val_loss=4.8813]
+--- Training finished for period 13. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_13/best_model.pth ---
+
+==================== [ 學習率 0.001 總結報告 ] ====================
+
+--- Evaluation Finished ---
+  - GAUC     : 0.7375
+  - AUC      : 0.7375
+-------------------------------------------------------
+  - Recall@5  : 0.4271   |   NDCG@5  : 0.3302
+  - Recall@10 : 0.5137   |   NDCG@10 : 0.3582
+  - Recall@20 : 0.6073   |   NDCG@20 : 0.3818
+  - Recall@50 : 0.7604   |   NDCG@50 : 0.4121
+-------------------------------------------------------

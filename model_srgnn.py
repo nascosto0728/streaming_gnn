@@ -315,3 +315,257 @@ class SR_GNN_Model(nn.Module):
         
         # --- 7. 返回結果 (返回 L2 歸一化後的 logits，用於排名) ---
         return pos_logits, neg_logits, per_sample_loss
+    
+
+
+class SR_GNN_MLP(EmbMLP):
+    """
+    SR-GNN 實作 (v2.0)。
+    
+    繼承 EmbMLP 以重用 MLP 層和 InfoNCE Loss。
+    
+    核心修正：
+    1. 建立兩套 GNN/Attention 模組，分別處理維度不同的 itemSeq 和 userSeq。
+    2. itemSeq GNN 現在會正確地接收 "item_emb + cate_emb" 作為輸入。
+    """
+    
+    def __init__(self, cates: np.ndarray, cate_lens: np.ndarray, hyperparams: Dict, train_config: Dict,
+                 item_init_vectors: torch.Tensor = None,  
+                 cate_init_vectors: torch.Tensor = None): 
+        
+        # 1. 初始化父類 (EmbMLP)
+        super().__init__(cates, cate_lens, hyperparams, train_config, 
+                         item_init_vectors, cate_init_vectors)
+
+        print("[SR_GNN_Model v2.0] Initialized. Fixing dimension mismatches.")
+        
+        # 2. 獲取所有相關維度
+        self.item_dim = self.hparams['item_embed_dim']
+        self.user_dim = self.hparams['user_embed_dim']
+        self.cate_dim = self.hparams['cate_embed_dim']
+        
+        # 3. 定義兩個路徑的輸入維度 (!!! 關鍵修正 !!!)
+        self.item_seq_input_dim = self.item_dim + self.cate_dim
+        self.user_seq_input_dim = self.user_dim
+
+        # === 模組 A: 用於 itemSeq (User Tower 的歷史) ===
+        dim = self.item_seq_input_dim
+        self.item_seq_gnn_gru = nn.GRUCell(dim, dim)
+        self.item_seq_W_in = nn.Linear(dim, dim, bias=True)
+        self.item_seq_W_out = nn.Linear(dim, dim, bias=True)
+        self.item_seq_W_q = nn.Linear(dim, dim, bias=False) # Query
+        self.item_seq_W_k = nn.Linear(dim, dim, bias=False) # Key
+
+        # === 模組 B: 用於 userSeq (Item Tower 的歷史) ===
+        dim = self.user_seq_input_dim
+        self.user_seq_gnn_gru = nn.GRUCell(dim, dim)
+        self.user_seq_W_in = nn.Linear(dim, dim, bias=True)
+        self.user_seq_W_out = nn.Linear(dim, dim, bias=True)
+        self.user_seq_W_q = nn.Linear(dim, dim, bias=False) # Query
+        self.user_seq_W_k = nn.Linear(dim, dim, bias=False) # Key
+
+
+    def _build_batched_adj(self, seq_lens: torch.Tensor, max_len: int, device: torch.device) -> Tuple[torch.Tensor, torch.Tensor]:
+        """ (輔助函式，保持不變) """
+        B = seq_lens.size(0)
+        A_in = torch.zeros(B, max_len, max_len, device=device, dtype=torch.float32)
+        A_out = torch.zeros(B, max_len, max_len, device=device, dtype=torch.float32)
+        for i in range(B):
+            l = seq_lens[i].item()
+            if l <= 1: continue
+            idx_in_row = torch.arange(1, l, device=device)
+            idx_in_col = torch.arange(0, l-1, device=device)
+            A_in[i, idx_in_row, idx_in_col] = 1.0
+            idx_out_row = torch.arange(0, l-1, device=device)
+            idx_out_col = torch.arange(1, l, device=device)
+            A_out[i, idx_out_row, idx_out_col] = 1.0
+        return A_in, A_out
+
+
+    def _run_ggnn(self, seq_emb: torch.Tensor, seq_lens: torch.Tensor, 
+                  gnn_gru: nn.GRUCell, W_in: nn.Linear, W_out: nn.Linear) -> torch.Tensor:
+        """ 
+        通用的 GGNN 執行器
+        seq_emb: [B, T, D_in]
+        """
+        B, T, D = seq_emb.shape
+        device = seq_emb.device
+        
+        A_in, A_out = self._build_batched_adj(seq_lens, T, device)
+        
+        h = seq_emb # (B, T, D)
+        
+        m_in = torch.bmm(A_in, h)
+        m_out = torch.bmm(A_out, h)
+        
+        h_flat = h.view(-1, D)
+        m_in_flat = W_in(m_in).view(-1, D)
+        m_out_flat = W_out(m_out).view(-1, D)
+        m_agg_flat = m_in_flat + m_out_flat
+        
+        h_new_flat = gnn_gru(m_agg_flat, h_flat)
+        h_new = h_new_flat.view(B, T, D)
+        
+        mask = (torch.arange(T, device=device)[None, :] < seq_lens[:, None]).unsqueeze(-1)
+        h_final = torch.where(mask, h_new, h)
+        
+        return h_final
+
+
+    def _run_sr_aggregation(self, gnn_out: torch.Tensor, seq_lens: torch.Tensor, 
+                            W_q: nn.Linear, W_k: nn.Linear) -> torch.Tensor:
+        """
+        通用的 SR-GNN Attention 聚合器
+        gnn_out: [B, T, D_in]
+        """
+        B, T, D = gnn_out.shape
+        device = gnn_out.device
+
+        last_indices = (seq_lens - 1).clamp(min=0).view(B, 1, 1).expand(-1, 1, D)
+        h_last = torch.gather(gnn_out, 1, last_indices).squeeze(1) 
+        
+        q = W_q(h_last).unsqueeze(1) # (B, 1, D)
+        k = W_k(gnn_out)             # (B, T, D)
+        
+        attn_scores = torch.bmm(q, k.transpose(1, 2)).squeeze(1)
+        
+        mask = torch.arange(T, device=device)[None, :] < seq_lens[:, None]
+        attn_scores.masked_fill_(~mask, -1e9)
+        
+        attn_weights = F.softmax(attn_scores, dim=1).unsqueeze(1) # (B, 1, T)
+        
+        h_global = torch.bmm(attn_weights, gnn_out).squeeze(1)
+        
+        final_seq_emb = h_last + h_global
+        
+        return final_seq_emb
+
+
+    def _build_feature_representations(self, batch: Dict) -> Tuple[torch.Tensor, torch.Tensor]:
+        """
+        (*** 覆寫 EmbMLP ***)
+        使用 v2.0 的 GNN 模組取代 AvgPool
+        """
+        
+        # === 使用者表示 (User Tower) ===
+        static_u_emb = self.user_emb_w(batch['users']) # [B, user_dim]
+        
+        # [!!! 關鍵修正 1 !!!]
+        # 準備 itemSeq (GNN 的輸入)
+        hist_item_emb = self.item_emb_w(batch['item_history_matrix']) # [B, T, item_dim]
+        # (獲取類別)
+        hist_cates = self.cates[batch['item_history_matrix']]
+        hist_cates_len = self.cate_lens[batch['item_history_matrix']]
+        hist_cates_emb = self.cate_emb_w(hist_cates)
+        avg_cate_emb_for_hist = average_pooling(hist_cates_emb, hist_cates_len) # [B, T, cate_dim]
+        
+        # (Concat)
+        hist_item_emb_with_cate = torch.cat([hist_item_emb, avg_cate_emb_for_hist], dim=2) # [B, T, item_seq_input_dim]
+
+        # 呼叫「模組 A」
+        ggnn_out_user = self._run_ggnn(
+            hist_item_emb_with_cate, batch['item_history_len'],
+            self.item_seq_gnn_gru, self.item_seq_W_in, self.item_seq_W_out
+        )
+        user_history_emb = self._run_sr_aggregation(
+            ggnn_out_user, batch['item_history_len'],
+            self.item_seq_W_q, self.item_seq_W_k
+        ) # [B, item_seq_input_dim]
+        
+        user_features = torch.cat([static_u_emb, user_history_emb.detach()], dim=-1)
+        # [!!! 最終維度: user_dim + (item_dim + cate_dim) !!!]
+
+
+        # === 物品表示 (Item Tower) ===
+        static_item_emb = self.item_emb_w(batch['items']) # [B, item_dim]
+        item_cates = self.cates[batch['items']]
+        item_cates_len = self.cate_lens[batch['items']]
+        item_cates_emb = self.cate_emb_w(item_cates)
+        avg_cate_emb_for_item = average_pooling(item_cates_emb, item_cates_len) # [B, cate_dim]
+        
+        # 物品的靜態部分
+        item_emb_with_cate = torch.cat([static_item_emb, avg_cate_emb_for_item], dim=1) # [B, item_dim + cate_dim]
+        
+        # [!!! 關鍵修正 2 !!!]
+        # 準備 userSeq (GNN 的輸入)
+        item_history_user_emb = self.user_emb_w(batch['user_history_matrix']) # [B, T, user_seq_input_dim]
+
+        # 呼叫「模組 B」
+        ggnn_out_item = self._run_ggnn(
+            item_history_user_emb, batch['user_history_len'],
+            self.user_seq_gnn_gru, self.user_seq_W_in, self.user_seq_W_out
+        )
+        item_history_emb = self._run_sr_aggregation(
+            ggnn_out_item, batch['user_history_len'],
+            self.user_seq_W_q, self.user_seq_W_k
+        ) # [B, user_seq_input_dim]
+        
+        item_features = torch.cat([item_emb_with_cate, item_history_emb.detach()], dim=-1)
+        # [!!! 最終維度: (item_dim + cate_dim) + user_dim !!!]
+        
+        # 兩個塔的最終維度一致，MLP 可以處理
+
+        return user_features, item_features
+
+
+    def inference(
+        self,
+        batch: Dict[str, torch.Tensor],
+        neg_item_ids_batch: torch.Tensor
+    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        """
+        (*** 覆寫 EmbMLP ***)
+        在推論時也使用 v2.0 的 GNN 邏輯。
+        """
+        # --- 1. 計算正樣本的 Embedding 和 Logits ---
+        user_features, item_features = self._build_feature_representations(batch)
+        pos_user_emb, pos_item_emb = self._get_embeddings_from_features(user_features, item_features)
+        pos_logits = torch.sum(pos_user_emb * pos_item_emb, dim=1)
+        
+        per_sample_loss = F.binary_cross_entropy_with_logits(
+            pos_logits, batch['labels'].float(), reduction='none'
+        )
+
+        # --- 2. 計算負樣本的 Logits ---
+        # (這部分與 EmbMLP 的推論邏輯相同，因為我們繼承了它)
+        # (我們需要的是 item_history_emb，它來自 userSeq，在 user_features 中被計算)
+        
+        num_neg_samples = neg_item_ids_batch.shape[1]
+        
+        # [!!! 關鍵修正 !!!]
+        # 負樣本的靜態部分
+        neg_item_static_emb = self.item_emb_w(neg_item_ids_batch) # [B, M, item_dim]
+        neg_item_cate_emb = self.cate_emb_w(self.cates[neg_item_ids_batch])
+        neg_item_cates_len = self.cate_lens[neg_item_ids_batch]
+        avg_cate_emb_for_neg_item = average_pooling(neg_item_cate_emb, neg_item_cates_len) # [B, M, cate_dim]
+        
+        neg_item_emb_with_cate = torch.cat([neg_item_static_emb, avg_cate_emb_for_neg_item], dim=2) # [B, M, item_dim + cate_dim]
+        
+        # 負樣本的歷史部分 (userSeq)
+        # 我們必須重用 "正樣本" 的 userSeq GNN 結果
+        
+        # 從 user_features 中分離出 item_history_emb (userSeq GNN 的結果)
+        # user_features = [static_u_emb, user_history_emb]
+        # item_features = [item_emb_with_cate, item_history_emb]
+        # 我們從 item_features 中分離它，因為它的維度是 user_dim
+        item_history_emb_dim = self.user_seq_input_dim
+        item_history_emb = item_features[:, -item_history_emb_dim:] # [B, user_dim]
+        
+        # (B, D_hist) -> (B, 1, D_hist) -> (B, M, D_hist)
+        item_history_emb_expanded = item_history_emb.unsqueeze(1).expand(-1, num_neg_samples, -1)
+        
+        # 組合負樣本特徵
+        neg_item_features = torch.cat([
+            neg_item_emb_with_cate, 
+            item_history_emb_expanded.detach()
+        ], dim=2)
+        
+        # 擴展 User 特徵
+        user_features_expanded = user_features.unsqueeze(1).expand(-1, num_neg_samples, -1)
+
+        # 執行 MLP
+        neg_user_emb_final, neg_item_emb_final = self._get_embeddings_from_features(user_features_expanded, neg_item_features)
+
+        neg_logits = torch.sum(neg_user_emb_final * neg_item_emb_final, dim=2)
+        
+        return pos_logits, neg_logits, per_sample_loss
