@@ -43,8 +43,8 @@ class EmbMLP(nn.Module):
     PAM 模型的 PyTorch 實現版本。
     """
     def __init__(self, cates: np.ndarray, cate_lens: np.ndarray, hyperparams: Dict, train_config: Dict,
-                 item_init_vectors: torch.Tensor = None,  # <-- 新增
-                 cate_init_vectors: torch.Tensor = None): # <-- 新增
+                 item_init_vectors: torch.Tensor = None,  
+                 cate_init_vectors: torch.Tensor = None): 
         super().__init__()
         self.hparams = hyperparams
         self.train_config = train_config
@@ -75,7 +75,7 @@ class EmbMLP(nn.Module):
         self.cate_emb_w = nn.Embedding(self.hparams['num_cates'], self.hparams['cate_embed_dim'])
 
         # 這個緩存將儲存每個用戶的「最新」平均池化歷史
-        history_embed_dim = self.hparams['item_embed_dim'] #+ self.hparams['cate_embed_dim']
+        history_embed_dim = self.hparams['item_embed_dim'] 
         self.item_history_buffer = nn.Embedding(self.hparams['num_items'], history_embed_dim)
         # 將緩存設為非可訓練
         self.item_history_buffer.weight.requires_grad = False
@@ -121,12 +121,12 @@ class EmbMLP(nn.Module):
         )
     
     def _init_weights(self):
-        # 1. 初始化 User (不變)
+        # 1. 初始化 User 
         nn.init.xavier_uniform_(self.user_emb_w.weight)
         nn.init.xavier_uniform_(self.item_emb_w.weight)
         nn.init.xavier_uniform_(self.cate_emb_w.weight)
 
-        # 4. 初始化 MLPs (不變)
+        # 4. 初始化 MLPs 
         for mlp in [self.user_mlp, self.item_mlp, self.user_mlp_2, self.item_mlp_2]:
             for layer in mlp:
                 if isinstance(layer, nn.Linear):
@@ -151,7 +151,6 @@ class EmbMLP(nn.Module):
         hist_item_emb_with_cate = torch.cat([hist_item_emb, avg_cate_emb_for_hist], dim=2)
 
         user_history_emb = average_pooling(hist_item_emb_with_cate, batch['item_history_len']).detach()
-        # user_history_emb = average_pooling(hist_item_emb, batch['item_history_len'])#.detach()
 
         user_features = torch.cat([u_emb,user_history_emb], dim=-1)
 
@@ -170,7 +169,6 @@ class EmbMLP(nn.Module):
 
         item_history_emb = average_pooling(item_history_user_emb, batch['user_history_len']).detach()
 
-        # item_features = torch.cat([item_emb, item_history_emb], dim=-1)
         item_features = torch.cat([item_emb_with_cate, item_history_emb], dim=-1)
 
         # 在訓練時，更新緩存
@@ -276,7 +274,6 @@ class EmbMLP(nn.Module):
         # --- 2. 計算負樣本的 Logits ---
         num_neg_samples = neg_item_ids_batch.shape[1]
         
-        # a. 獲取負樣本用戶特徵 [B, M, D_user_feat]
         neg_item_static_emb = self.item_emb_w(neg_item_ids_batch)
         neg_item_cate_emb = self.cate_emb_w(self.cates[neg_item_ids_batch])
         neg_item_cates_len = self.cate_lens[neg_item_ids_batch]
@@ -288,14 +285,10 @@ class EmbMLP(nn.Module):
             neg_item_history_emb
         ], dim=2)
         
-        # b. 獲取正樣本特徵 (擴展版) [B, M, D_user_feat]
         user_features_expanded = user_features.unsqueeze(1).expand(-1, num_neg_samples, -1)
 
-        # c. 處理負樣本
-        # 輸出: [B, M, D_emb], [B, M, D_emb]
         neg_user_emb_final, neg_item_emb_final = self._get_embeddings_from_features(user_features_expanded, neg_item_features)
 
-        # d. 計算負樣本 logits: (user 對 Negative Items)
         neg_logits = torch.sum(neg_user_emb_final * neg_item_emb_final, dim=2)
         
         # --- 3. 返回結果 ---

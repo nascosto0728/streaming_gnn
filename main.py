@@ -12,13 +12,12 @@ import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
-# --- (*** 核心修改 1: 匯入新工具 ***) ---
 from model import Hybrid_GNN_MLP 
 from model_mlp import EmbMLP  
 from utils import (
     prepare_data_from_dfs,
     RecommendationDataset, # (復活) 我們現在用這個
-    sample_negative_users, # (保留) 為了 Test
+    sample_negative_items, # (保留) 為了 Test
     build_lightgcn_graph,  # (保留) 為了建圖
 )
 import random
@@ -74,7 +73,7 @@ def run_experiment(config: Dict[str, Any]):
         dir_name_with_lr = f"{config['dir_name']}_lr{lr}"
         results_over_periods = []
         item_history_dict = {}
-        seen_users_pool = set()
+        seen_items_pool = set()
         
         # ( GNN 需要一個「不斷增長」的互動 DataFrame
         incremental_interaction_df = pd.DataFrame()
@@ -111,10 +110,10 @@ def run_experiment(config: Dict[str, Any]):
             )
 
             # 5. 更新評估用的 history 
-            current_period_interactions_dict = current_period_df.groupby('itemId')['userId'].apply(set).to_dict()
-            for item_id, user_set in current_period_interactions_dict.items():
-                item_history_dict.setdefault(item_id, set()).update(user_set)
-            seen_users_pool.update(current_period_df['userId'].unique())
+            current_period_interactions_dict = current_period_df.groupby('userId')['itemId'].apply(set).to_dict()
+            for user_id, item_set in current_period_interactions_dict.items():
+                item_history_dict.setdefault(user_id, set()).update(item_set)
+            seen_items_pool.update(current_period_df['itemId'].unique())
                 
             
             # 1. 獲取早停參數 
@@ -264,7 +263,7 @@ def run_experiment(config: Dict[str, Any]):
 
             # --- 6. 評估階段 ---
             if test_set is not None and not test_set.empty:
-                seen_users_pool.update(test_set['userId'].unique())
+                seen_items_pool.update(test_set['itemId'].unique())
                 
                 if os.path.exists(best_model_path):
                     model.load_state_dict(torch.load(best_model_path, map_location=device))
@@ -294,29 +293,29 @@ def run_experiment(config: Dict[str, Any]):
                     )
 
                     with torch.no_grad():
-                        for batch in tqdm(test_loader_pos, desc="Evaluating (Hybrid)"):
+                        for batch in tqdm(test_loader_pos, desc="Evaluating"):
                             batch_cpu = {k: v for k, v in batch.items()}
                             batch = {k: v.to(device) for k, v in batch.items()}
                             batch_size = len(batch['users'])
 
                             # 1. 負採樣 
-                            neg_user_ids_list = []
+                            neg_item_ids_list = []
                             for i in range(batch_size):
-                                item_i_raw = batch_cpu['items_raw'][i].item()
-                                user_j_id = batch['users'][i].item()
-                                seen_users = item_history_dict.get(item_i_raw, set())
-                                neg_users = sample_negative_users(
-                                    user_pool=seen_users_pool,
-                                    seen_users_set=seen_users,
-                                    positive_user_id=user_j_id,
+                                item_j_id = batch['items'][i].item()
+                                user_i_id = batch_cpu['users'][i].item()
+                                seen_items = item_history_dict.get(user_i_id, set())
+                                neg_items = sample_negative_items(
+                                    item_pool=seen_items_pool,
+                                    seen_items_set=seen_items,
+                                    positive_item_id=item_j_id,
                                     num_samples=sampling_size,
                                     device=device
                                 )
-                                neg_user_ids_list.append(neg_users)
-                            neg_user_ids_batch = torch.stack(neg_user_ids_list) # (B, M)
+                                neg_item_ids_list.append(neg_items)
+                            neg_item_ids_batch = torch.stack(neg_item_ids_list) # (B, M)
 
                             # 2. (*** GNN-MLP 評估邏輯 ***)
-                            pos_logits, neg_logits, _ = model.inference(batch, neg_user_ids_batch)
+                            pos_logits, neg_logits, _ = model.inference(batch, neg_item_ids_batch)
 
                             # 3. 組合 logits 
                             pos_logits = pos_logits.unsqueeze(1) 

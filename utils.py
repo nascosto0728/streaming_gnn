@@ -137,35 +137,33 @@ def prepare_data_from_dfs(full_data_df: pd.DataFrame, full_meta_df: pd.DataFrame
     return remapped_df, cates, cate_lens, hyperparams_updates, item_map, full_cate_map
 
 
-def sample_negative_users(
-    user_pool: set,
-    seen_users_set: set,
-    positive_user_id: int,
+def sample_negative_items(
+    item_pool: set,
+    seen_items_set: set,
+    positive_item_id: int,
     num_samples: int,
     device: torch.device
 ) -> torch.Tensor:
     """
     Args:
-        seen_users_set (set): 已經與目標物品互動過的用戶 ID 集合。
-        positive_user_id (int): 當前正樣本的用戶 ID。
+        seen_items_set (set): 已經與目標物品互動過的物品 ID 集合。
+        positive_item_id (int): 當前正樣本的物品 ID。
         num_samples (int): 需要抽取的負樣本數量 (M)。
         device (torch.device): 目標設備 (用於創建最終的 Tensor)。
 
     Returns:
-        torch.Tensor: 包含 num_samples 個負樣本用戶 ID 的 LongTensor。
+        torch.Tensor: 包含 num_samples 個負樣本item ID 的 LongTensor。
     """
 
-    random.seed(42)
     
-    # *** 核心修改：從 user_pool 而不是 range(num_users) 開始 ***
-    candidate_negatives = user_pool - seen_users_set - {positive_user_id}
+    candidate_negatives = item_pool - seen_items_set - {positive_item_id}
     n_candidates = len(candidate_negatives)
 
     if n_candidates == 0:
-        # 極端情況：所有用戶都互動過或就是正樣本，隨機選 M 個非正樣本用戶
-        candidate_negatives = set(range(user_pool)) - {positive_user_id}
-        if not candidate_negatives: # 如果只有一個用戶，只能重複選自己（理論上不應發生）
-             return torch.tensor([positive_user_id] * num_samples, dtype=torch.long, device=device)
+        # 極端情況：所有items都互動過或就是正樣本，隨機選 M 個非正樣本items
+        candidate_negatives = item_pool - {positive_item_id}
+        if not candidate_negatives: # 如果只有一個item，只能重複選自己（理論上不應發生）
+             return torch.tensor([positive_item_id] * num_samples, dtype=torch.long, device=device)
         sampled_ids = random.choices(list(candidate_negatives), k=num_samples)
 
     elif n_candidates < num_samples:
