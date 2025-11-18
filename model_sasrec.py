@@ -706,3 +706,194 @@ class CausalSASRec_MLP(SASRec_MLP):
         )
 
         return pos_logits_final, neg_logits_final, per_sample_loss
+    
+
+
+
+    
+# model_sasrec.py
+
+class ContextSASRec_MLP(SASRec_MLP):
+    """
+    全域上下文調變 SASRec (Global Context Modulation).
+    
+    核心機制:
+    1. 計算當前 Batch 的 Global Context (平均 Item Embedding)。
+    2. 使用 EMA (指數移動平均) 維護一個穩定的 Context Vector。
+    3. 使用 FiLM (Feature-wise Linear Modulation) 機制，
+       根據 Context 動態調整 User Embedding。
+    """
+    def __init__(self, cates: np.ndarray, cate_lens: np.ndarray, hyperparams: Dict, train_config: Dict,
+                 item_init_vectors: torch.Tensor = None,  
+                 cate_init_vectors: torch.Tensor = None): 
+        
+        super().__init__(cates, cate_lens, hyperparams, train_config, 
+                         item_init_vectors, cate_init_vectors)
+        
+        print("[ContextSASRec_MLP] Initialized. Using FiLM for Global Context Modulation.")
+        
+        self.context_dim = self.hparams['item_embed_dim']
+        # EmbMLP 的 User Tower 輸出是拼接了 [Static_User, History(Item+Cate)]
+        # 所以維度是: user_dim + item_dim + cate_dim
+        self.user_rep_dim = (
+            self.hparams['user_embed_dim'] + 
+            self.hparams['item_embed_dim'] + 
+            self.hparams['cate_embed_dim']
+        )
+        
+        # 1. FiLM 網路
+        # 輸入: Context Vector (context_dim)
+        # 輸出: Gamma (user_rep_dim) 和 Beta (user_rep_dim)
+        self.context_film_net = nn.Sequential(
+            nn.Linear(self.context_dim, self.user_rep_dim),
+            nn.ReLU(),
+            nn.Linear(self.user_rep_dim, self.user_rep_dim * 2) # 輸出 [gamma, beta]
+        )
+        
+        # 初始化 FiLM: 讓 Gamma 接近 1, Beta 接近 0
+        with torch.no_grad():
+            self.context_film_net[2].weight.fill_(0.0)
+            self.context_film_net[2].bias[:self.user_rep_dim].fill_(1.0) # Gamma -> 1
+            self.context_film_net[2].bias[self.user_rep_dim:].fill_(0.0) # Beta -> 0
+
+        # 2. 全域環境向量快取 (Buffer)
+        # 不參與梯度更新，但會隨 state_dict 儲存
+        # 這裡存的是 Context，所以維度是 context_dim
+        self.register_buffer('global_context_ema', torch.zeros(self.context_dim))
+        
+        # EMA 衰減率 (Alpha)
+        # 0.99 代表非常平滑，0.1 代表變化很快
+        self.ema_alpha = 0.99 
+
+    def _update_context_ema(self, current_batch_context: torch.Tensor):
+        """
+        更新全域 EMA 環境向量
+        EMA_new = Alpha * EMA_old + (1-Alpha) * Current
+        """
+        if self.global_context_ema.abs().sum() == 0:
+            # 初始化
+            self.global_context_ema.data.copy_(current_batch_context.detach())
+        else:
+            self.global_context_ema.data.mul_(self.ema_alpha).add_(
+                current_batch_context.detach(), alpha=(1.0 - self.ema_alpha)
+            )
+
+    def _apply_film(self, user_emb: torch.Tensor, context_vector: torch.Tensor) -> torch.Tensor:
+        """
+        應用 FiLM 調變
+        User_New = Gamma(Context) * User + Beta(Context)
+        """
+        # context_vector: (D,) 或 (B, D)
+        if context_vector.dim() == 1:
+            context_vector = context_vector.unsqueeze(0) # (1, D)
+            
+        # 計算 Gamma, Beta
+        film_out = self.context_film_net(context_vector) # (..., 2D)
+        gamma, beta = torch.split(film_out, self.user_rep_dim, dim=-1)
+        
+        # 調變
+        # Gamma * User + Beta
+        return gamma * user_emb + beta
+
+    def forward(self, batch: Dict) -> Tuple[torch.Tensor, torch.Tensor]:
+        """
+        訓練前向傳播
+        """
+        # 1. 獲取原始 Main Branch 輸出 (User, Item)
+        # 這裡 user_emb 已經經過 MLP 融合了
+        user_emb, item_emb = super().forward(batch)
+        
+        # 2. 計算當前 Batch 的 Context (環境向量)
+        # 這裡我們定義環境為: "當前這批 Item Embedding 的平均值"
+        # 注意: 這裡用 item_emb (Main Branch 的輸出) 還是 靜態 Embedding?
+        # 建議用靜態 Embedding，因為它比較穩定，代表 Item 的本質屬性
+        current_items_static = self.item_emb_w(batch['items'])
+        
+        # (B, D) -> (D,)
+        batch_context = current_items_static.mean(dim=0)
+        
+        # 3. 更新全域 EMA (只在訓練時)
+        if self.training:
+            self._update_context_ema(batch_context)
+            
+            # 訓練時，我們可以使用 "當前 Batch Context" 來做強調變 (更適應當下)
+            # 或者使用 EMA Context (更穩定)
+            # 建議: 使用 Batch Context，讓模型學會適應"當下"的變化
+            # context_to_use = batch_context
+            context_to_use = self.global_context_ema
+        else:
+            # 驗證時使用 EMA
+            context_to_use = self.global_context_ema
+            
+        # 4. 對 User Embedding 進行 FiLM 調變
+        # 這一步是關鍵：User Embedding 根據環境進行了"變形"
+        user_emb_modulated = self._apply_film(user_emb, context_to_use)
+        
+        # 5. 再次歸一化 (因為 FiLM 可能改變了長度)
+        user_emb_final = F.normalize(user_emb_modulated, p=2, dim=-1, eps=1e-8)
+        
+        return user_emb_final, item_emb
+
+    def inference(
+        self,
+        batch: Dict[str, torch.Tensor],
+        neg_item_ids_batch: torch.Tensor
+    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        """
+        推論
+        """
+        # 1. 獲取原始特徵 (為了避免重複計算，我們不能直接呼叫 super().inference)
+        # 我們需要手動執行 super().inference 的前半部分
+        
+        # --- 計算正樣本 (邏輯同 EmbSASRec) ---
+        user_features, item_features = self._build_feature_representations(batch)
+        pos_user_emb, pos_item_emb = self._get_embeddings_from_features(user_features, item_features)
+        
+        # [!!! NEW !!!] 在這裡插入調變
+        # 推論時，使用 EMA (全域環境向量)
+        context_to_use = self.global_context_ema
+        pos_user_emb = self._apply_film(pos_user_emb, context_to_use)
+        pos_user_emb = F.normalize(pos_user_emb, p=2, dim=-1, eps=1e-8)
+        
+        # 計算正樣本 Logits
+        pos_logits = torch.sum(pos_user_emb * pos_item_emb, dim=1)
+        
+        per_sample_loss = F.binary_cross_entropy_with_logits(
+            pos_logits, batch['labels'].float(), reduction='none'
+        )
+
+        # --- 計算負樣本 (邏輯同 EmbSASRec) ---
+        num_neg_samples = neg_item_ids_batch.shape[1]
+        
+        # ... (複製 EmbSASRec 的負樣本特徵建構邏輯) ...
+        neg_item_static_emb = self.item_emb_w(neg_item_ids_batch)
+        neg_item_cate_emb = self.cate_emb_w(self.cates[neg_item_ids_batch])
+        neg_item_cates_len = self.cate_lens[neg_item_ids_batch]
+        avg_cate_emb_for_neg_item = average_pooling(neg_item_cate_emb, neg_item_cates_len)
+        neg_item_emb_with_cate = torch.cat([neg_item_static_emb, avg_cate_emb_for_neg_item], dim=2)
+        
+        item_history_emb_dim = self.user_seq_input_dim
+        item_history_emb = item_features[:, -item_history_emb_dim:]
+        item_history_emb_expanded = item_history_emb.unsqueeze(1).expand(-1, num_neg_samples, -1) # (B, M, D)
+
+        # 這裡需要從快取讀取嗎？EmbSASRec v2.1 是從快取讀取的
+        # 讓我們保持一致，使用 self.user_history_buffer
+        if hasattr(self, 'user_history_buffer'):
+             item_history_emb_expanded = self.user_history_buffer(neg_item_ids_batch)
+        
+        neg_item_features = torch.cat([neg_item_emb_with_cate, item_history_emb_expanded.detach()], dim=2)
+        
+        user_features_expanded = user_features.unsqueeze(1).expand(-1, num_neg_samples, -1)
+        neg_user_emb_final, neg_item_emb_final = self._get_embeddings_from_features(user_features_expanded, neg_item_features)
+        
+        # [!!! NEW !!!] 對負樣本計算時的 User Emb 也要調變
+        # 注意: neg_user_emb_final 其实就是 pos_user_emb 的 expanded 版 (如果 MLP 沒有互動)
+        # 但如果 MLP 有 User/Item 交叉，則需要重新計算。
+        # 您的 _get_embeddings_from_features 是雙塔結構，User Emb 不受 Item 影響。
+        # 所以我们可以直接用调变后的 pos_user_emb 扩展。
+        
+        pos_user_emb_expanded = pos_user_emb.unsqueeze(1).expand(-1, num_neg_samples, -1)
+        
+        neg_logits = torch.sum(pos_user_emb_expanded * neg_item_emb_final, dim=2)
+        
+        return pos_logits, neg_logits, per_sample_loss
