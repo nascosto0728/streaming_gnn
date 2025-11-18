@@ -462,6 +462,34 @@ class SASRec_MLP(EmbMLP):
             self.user_history_buffer.weight[batch['items']] = item_history_emb.detach()
         
         return user_features, item_features
+    
+    def calculate_loss(self, batch: Dict, teacher_model: torch.nn.Module = None, kd_weight: float = 0.0) -> torch.Tensor:
+        """
+        (*** MODIFIED ***) 加入 Teacher Model 和 kd_weight 參數
+        """
+        # 1. Student (當前模型) 的輸出 (已 L2 歸一化)
+        student_session_emb, student_item_emb = self.forward(batch)
+        
+        # 2. 基礎推薦 Loss (InfoNCE)
+        loss_infonce = self._calculate_infonce_loss(student_session_emb, student_item_emb, batch['labels'])
+        loss_main = loss_infonce.mean()
+        
+        # 3. [!!! NEW !!!] 自我蒸餾 (Self-Distillation)
+        loss_kd = 0.0
+        if teacher_model is not None and kd_weight > 0:
+            with torch.no_grad():
+                # 獲取 Teacher 對「同一批資料」的 Embedding
+                # 注意：Teacher 是凍結的，不需要梯度
+                teacher_session_emb, teacher_item_emb = teacher_model.forward(batch)
+            
+            # 計算 MSE Loss (Feature-based Distillation)
+            # 強迫 Student 的 Embedding 空間不要偏離 Teacher 太遠
+            loss_user_kd = F.mse_loss(student_session_emb, teacher_session_emb)
+            loss_item_kd = F.mse_loss(student_item_emb, teacher_item_emb)
+            
+            loss_kd = (loss_user_kd + loss_item_kd) * kd_weight
+
+        return loss_main + loss_kd
 
     def inference(
         self,

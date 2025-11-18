@@ -295,8 +295,6 @@ shuffle
 ========================= Period 0 =========================
 --- [Data] Period 0 loaded. Total rows: 73564, Positive samples: 61924
 --- Building model, type: sasrec_mlp ---
-Epochs:   0%|                                                                                                                                     | 0/10 [00:00<?, ?it/s]/opt/homebrew/Caskroom/miniforge/base/envs/gnn_rec/lib/python3.12/site-packages/torch/nn/modules/transformer.py:515: UserWarning: The PyTorch API of nested tensors is in prototype stage and will change in the near future. We recommend specifying layout=torch.jagged when constructing a nested tensor, as this layout receives active development, has better operator coverage, and works with torch.compile. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/aten/src/ATen/NestedTensorImpl.cpp:182.)
-  output = torch._nested_tensor_from_mask(
 Epochs:  20%|███████████████                                                            | 2/10 [01:26<05:46, 43.31s/it, patience=0/1, train_loss=5.5972, val_loss=5.7123]
 --- Training finished for period 0. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_0/best_model.pth ---
 
@@ -490,4 +488,139 @@ Epochs:  10%|███████▌                                           
   - Recall@10 : 0.6437   |   NDCG@10 : 0.4231
   - Recall@20 : 0.7721   |   NDCG@20 : 0.4557
   - Recall@50 : 0.9107   |   NDCG@50 : 0.4836
+-------------------------------------------------------
+
+
+
+
+
+
+
+
+replay.  58850 (current) + 30000 (replay)
+
+
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(9) ---
+    - Evaluating Model(9) on TestSet(Period 9)...
+    - TestSet(Period 9) GAUC: 0.8928                                                                                                                                     
+--- [CL] Average BWT GAUC for Model(9): 0.8928 ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(9) on TestSet(Period 10) ---
+                                                                                                                                                                         
+--- Period 9 (Model) -> Period 10 (Test) Evaluation Finished ---
+  - GAUC     : 0.8760
+  - AUC      : 0.8760
+  -----------------------------------------------------
+  - Recall@5  : 0.5501   |   NDCG@5  : 0.4146
+  - Recall@10 : 0.6794   |   NDCG@10 : 0.4566
+  - Recall@20 : 0.8049   |   NDCG@20 : 0.4885
+  - Recall@50 : 0.9240   |   NDCG@50 : 0.5122
+  -----------------------------------------------------
+--- [CL] Replay buffer updated. New size: 500000 / 500000 ---
+
+========================= Period 10 =========================
+--- [Data] Period 10 loaded. Total rows: 73564, Positive samples: 59482
+--- [Eval] Test set for T+1 (Period 11) prepared. Positive samples: 5832
+--- [CL] Training with Experience Replay: 58851 (current) + 30000 (replay) = 88851 samples ---
+--- Building model, type: sasrec_mlp ---
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth ---
+Epochs:  10%|███████▌                                                                   | 1/10 [01:22<12:21, 82.41s/it, patience=0/1, train_loss=4.9929, val_loss=5.0994]
+--- Training finished for period 10. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(10) ---
+    - Evaluating Model(10) on TestSet(Period 9)...
+    - TestSet(Period 9) GAUC: 0.8772                                                                                                                                     
+    - Evaluating Model(10) on TestSet(Period 10)...
+    - TestSet(Period 10) GAUC: 0.8979                                                                                                                                    
+--- [CL] Average BWT GAUC for Model(10): 0.8876 ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(10) on TestSet(Period 11) ---
+                                                                                                                                                                         
+--- Period 10 (Model) -> Period 11 (Test) Evaluation Finished ---
+  - GAUC     : 0.8867
+  - AUC      : 0.8867
+  -----------------------------------------------------
+  - Recall@5  : 0.5808   |   NDCG@5  : 0.4412
+  - Recall@10 : 0.6999   |   NDCG@10 : 0.4800
+  - Recall@20 : 0.8227   |   NDCG@20 : 0.5111
+  - Recall@50 : 0.9354   |   NDCG@50 : 0.5336
+  -----------------------------------------------------
+--- [CL] Replay buffer updated. New size: 500000 / 500000 ---
+
+========================= Period 11 =========================
+--- [Data] Period 11 loaded. Total rows: 73563, Positive samples: 58818
+--- [Eval] Test set for T+1 (Period 12) prepared. Positive samples: 5984
+--- [CL] Training with Experience Replay: 58850 (current) + 30000 (replay) = 88850 samples ---
+--- Building model, type: sasrec_mlp ---
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth ---
+Epochs:  10%|███████▌                                                                   | 1/10 [01:21<12:15, 81.68s/it, patience=0/1, train_loss=4.9314, val_loss=5.2995]
+--- Training finished for period 11. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(11) ---
+    - Evaluating Model(11) on TestSet(Period 9)...
+    - TestSet(Period 9) GAUC: 0.8887                                                                                                                                     
+    - Evaluating Model(11) on TestSet(Period 10)...
+    - TestSet(Period 10) GAUC: 0.8942                                                                                                                                    
+    - Evaluating Model(11) on TestSet(Period 11)...
+    - TestSet(Period 11) GAUC: 0.9141                                                                                                                                    
+--- [CL] Average BWT GAUC for Model(11): 0.8990 ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(11) on TestSet(Period 12) ---
+                                                                                                                                                                         
+--- Period 11 (Model) -> Period 12 (Test) Evaluation Finished ---
+  - GAUC     : 0.9075
+  - AUC      : 0.9075
+  -----------------------------------------------------
+  - Recall@5  : 0.6153   |   NDCG@5  : 0.4669
+  - Recall@10 : 0.7418   |   NDCG@10 : 0.5080
+  - Recall@20 : 0.8636   |   NDCG@20 : 0.5390
+  - Recall@50 : 0.9539   |   NDCG@50 : 0.5572
+  -----------------------------------------------------
+--- [CL] Replay buffer updated. New size: 500000 / 500000 ---
+
+========================= Period 12 =========================
+--- [Data] Period 12 loaded. Total rows: 73563, Positive samples: 59757
+--- [Eval] Test set for T+1 (Period 13) prepared. Positive samples: 5669
+--- [CL] Training with Experience Replay: 58850 (current) + 30000 (replay) = 88850 samples ---
+--- Building model, type: sasrec_mlp ---
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth ---
+Epochs:  10%|███████▌                                                                   | 1/10 [00:40<06:08, 40.99s/it, patience=0/1, train_loss=4.9496, val_loss=5.2412]Epochs:  10%|███████▌                                                                   | 1/10 [01:21<12:10, 81.14s/it, patience=0/1, train_loss=4.9496, val_loss=5.2412]
+--- Training finished for period 12. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(12) ---
+    - Evaluating Model(12) on TestSet(Period 9)...
+    - TestSet(Period 9) GAUC: 0.8826                                                                                                                                     
+    - Evaluating Model(12) on TestSet(Period 10)...
+    - TestSet(Period 10) GAUC: 0.8980                                                                                                                                    
+    - Evaluating Model(12) on TestSet(Period 11)...
+    - TestSet(Period 11) GAUC: 0.9055                                                                                                                                    
+    - Evaluating Model(12) on TestSet(Period 12)...
+    - TestSet(Period 12) GAUC: 0.9232                                                                                                                                    
+--- [CL] Average BWT GAUC for Model(12): 0.9023 ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(12) on TestSet(Period 13) ---
+                                                                                                                                                                         
+--- Period 12 (Model) -> Period 13 (Test) Evaluation Finished ---
+  - GAUC     : 0.9105
+  - AUC      : 0.9105
+  -----------------------------------------------------
+  - Recall@5  : 0.6285   |   NDCG@5  : 0.4880
+  - Recall@10 : 0.7483   |   NDCG@10 : 0.5269
+  - Recall@20 : 0.8621   |   NDCG@20 : 0.5556
+  - Recall@50 : 0.9561   |   NDCG@50 : 0.5747
+  -----------------------------------------------------
+--- [CL] Replay buffer updated. New size: 500000 / 500000 ---
+
+========================= Period 13 =========================
+--- [Data] Period 13 loaded. Total rows: 73563, Positive samples: 56835
+--- [CL] Training with Experience Replay: 58850 (current) + 30000 (replay) = 88850 samples ---
+--- Building model, type: sasrec_mlp ---
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth ---
+Epochs:  10%|███████▌                                                                   | 1/10 [01:21<12:10, 81.17s/it, patience=0/1, train_loss=4.7938, val_loss=4.9026]
+--- Training finished for period 13. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_13/best_model.pth ---
+--- [CL] Replay buffer updated. New size: 500000 / 500000 ---
+
+==================== [ 學習率 0.001 總結報告 (FWT) ] ====================
+
+--- Average Forward Transfer Metrics ---
+  - GAUC     : 0.8868
+  - AUC      : 0.8868
+-------------------------------------------------------
+  - Recall@5  : 0.5774   |   NDCG@5  : 0.4374
+  - Recall@10 : 0.7023   |   NDCG@10 : 0.4779
+  - Recall@20 : 0.8241   |   NDCG@20 : 0.5088
+  - Recall@50 : 0.9338   |   NDCG@50 : 0.5308
 -------------------------------------------------------

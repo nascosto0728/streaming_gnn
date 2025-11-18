@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 from typing import Dict, Any, List, Tuple
 from tqdm import tqdm
+import copy
 
 # 引入 PyTorch 相關模組
 import torch
@@ -228,6 +229,15 @@ def run_experiment(config: Dict[str, Any]):
         if replay_enabled:
             print(f"--- [CL] Experience Replay enabled. Buffer size: {replay_buffer_max_size}, Sample size: {replay_sample_size} ---")
 
+        # [!!! NEW: 讀取蒸餾設定 !!!]
+        distill_config = config.get('distillation', {})
+        distill_enabled = distill_config.get('enabled', False)
+        kd_weight = distill_config.get('weight', 0.1)
+        teacher_model = None # 初始化 Teacher
+
+        if distill_enabled:
+            print(f"--- [Distill] Self-Distillation Enabled. Weight (lambda): {kd_weight} ---")
+
         # 2. 回溯評估 (BWT) 儲存區
         # 我們儲存「測試集」的 DataLoader，以便未來回溯評估
         past_test_loaders = {} # Key: period_id, Value: DataLoader
@@ -246,6 +256,18 @@ def run_experiment(config: Dict[str, Any]):
         for period_id in range(config['train_start_period'], config['num_periods']):
             print(f"\n{'='*25} Period {period_id} {'='*25}")
             
+            # [!!! NEW: 在訓練新 Period 之前，將當前模型備份為 Teacher !!!]
+            # 只有從第 2 個訓練週期開始才有 Teacher (Period > start)
+            if distill_enabled and period_id > config['train_start_period']:
+                print("--- [Distill] Updating Teacher Model from previous period... ---")
+                # 深拷貝當前模型 (此時 model 還是上個 period 的狀態)
+                teacher_model = copy.deepcopy(model)
+                teacher_model.eval() # Teacher 永遠是 eval 模式
+                for param in teacher_model.parameters():
+                    param.requires_grad = False # 凍結 Teacher
+                teacher_model = teacher_model.to(device)
+                print("--- [Distill] Teacher Model updated and frozen. ---")
+                
             # --- 4.1 資料準備 ---
             
             # 1. 獲取「當前時期」的資料
@@ -429,7 +451,12 @@ def run_experiment(config: Dict[str, Any]):
                     
                     batch = {k: v.to(device) for k, v in batch.items()}
                     optimizer.zero_grad()
-                    loss = model.calculate_loss(batch)
+                    # loss = model.calculate_loss(batch)
+                    loss = model.calculate_loss(
+                        batch, 
+                        teacher_model=teacher_model if distill_enabled else None, 
+                        kd_weight=kd_weight
+                    )
                     
                     # 檢查 NaN
                     if torch.isnan(loss):
