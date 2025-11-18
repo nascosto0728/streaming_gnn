@@ -291,7 +291,6 @@ Epochs:  10%|███████▍                                           
 
 shuffle
 
-
 ========================= Period 0 =========================
 --- [Data] Period 0 loaded. Total rows: 73564, Positive samples: 61924
 --- Building model, type: sasrec_mlp ---
@@ -624,3 +623,9 @@ Epochs:  10%|███████▌                                           
   - Recall@20 : 0.8241   |   NDCG@20 : 0.5088
   - Recall@50 : 0.9338   |   NDCG@50 : 0.5308
 -------------------------------------------------------
+
+
+
+
+
+

@@ -532,3 +532,177 @@ class SASRec_MLP(EmbMLP):
         neg_logits = torch.sum(neg_user_emb_final * neg_item_emb_final, dim=2)
         
         return pos_logits, neg_logits, per_sample_loss
+    
+
+
+class CausalSASRec_MLP(SASRec_MLP):
+    """
+    因果去偏版 SASRec (Causal Debiasing).
+    
+    架構:
+    1. Main Branch: 繼承 SASRec_MLP (Transformer + MLP)，學習 User-Item 匹配。
+    2. Bias Branch: 一個簡單的 Item Bias Embedding，學習物品的流行度偏差。
+    
+    訓練時: Score = Main_Score + Item_Bias
+    推論時: Score = Main_Score (直接去除偏差)
+    """
+    def __init__(self, cates: np.ndarray, cate_lens: np.ndarray, hyperparams: Dict, train_config: Dict,
+                 item_init_vectors: torch.Tensor = None,  
+                 cate_init_vectors: torch.Tensor = None): 
+        
+        # 1. 初始化主分支 (EmbSASRec)
+        super().__init__(cates, cate_lens, hyperparams, train_config, 
+                         item_init_vectors, cate_init_vectors)
+        
+        print("[CausalSASRec_MLP] Initialized. Adding Bias Branch for Causal Debiasing.")
+        
+        # 2. 建立偏差分支 (Bias Tower)
+        # 這只是一個純量 (Scalar)，代表物品的固有吸引力 (流行度)
+        # 初始化為 0，讓模型從頭學起
+        self.item_bias_emb = nn.Embedding(self.hparams['num_items'], 1)
+        nn.init.zeros_(self.item_bias_emb.weight)
+        
+    def forward(self, batch: Dict) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        """
+        (*** 覆寫 ***) 訓練前向傳播
+        Returns:
+            user_emb, item_emb (來自 Main Branch)
+            item_bias (來自 Bias Branch)
+        """
+        # 1. 執行主分支 (Main Branch) - 繼承自 EmbSASRec
+        # 這包含了 Transformer 編碼和 MLP 交互
+        user_emb, item_emb = super().forward(batch)
+        
+        # 2. 執行偏差分支 (Bias Branch)
+        # 獲取當前 Batch 內所有物品的 Bias 值
+        # (B,) -> (B, 1)
+        item_bias = self.item_bias_emb(batch['items'])
+        
+        return user_emb, item_emb, item_bias
+
+    def calculate_loss(self, batch: Dict) -> torch.Tensor:
+        """
+        計算因果去偏的 InfoNCE Loss
+        """
+        # 1. 獲取輸出
+        user_emb, item_emb, pos_item_bias = self.forward(batch)
+        
+        # 2. 計算 Loss (加入 Bias)
+        # 我們需要重寫 InfoNCE 的邏輯來加入 Bias
+        loss = self._calculate_causal_infonce_loss(user_emb, item_emb, pos_item_bias, batch)
+        
+        return loss
+
+    def _calculate_causal_infonce_loss(self, user_embedding, item_embedding, pos_item_bias, batch):
+        """
+        因果 InfoNCE Loss:
+        Logits = (User @ Item.T) / temp + Bias.T
+        """
+        # --- Main Branch Logits ---
+        # (B, D) @ (D, B) -> (B, B)
+        # main_logits[i, j] = User_i 對 Item_j 的興趣分數
+        main_logits = torch.matmul(user_embedding, item_embedding.t()) / self.temperature
+        
+        # --- Bias Branch Logits ---
+        # 我們需要 Batch 內「所有」物品的 Bias
+        # pos_item_bias 是 (B, 1)，對應 batch['items'] 的 bias
+        
+        # 關鍵：對於 InfoNCE 的每一對 (User_i, Item_j)，
+        # 我們都要加上 Item_j 的 bias。
+        # 所以我們將 (B, 1) 的 bias 轉置為 (1, B)，然後廣播加到 (B, B) 上
+        all_item_biases = pos_item_bias.t() # (1, B)
+        
+        # --- 融合 (Fusion) ---
+        # Final_Logits[i, j] = Main_Score(u_i, i_j) + Bias(i_j)
+        # 這樣，如果 Item_j 很熱門 (Bias 高)，Main_Score 就可以小一點
+        # Main_Score 被迫學習 "扣除熱門度後" 的殘差
+        final_logits = main_logits + all_item_biases
+        
+        # --- 標準 InfoNCE 計算 (使用 final_logits) ---
+        logits_max, _ = torch.max(final_logits, dim=1, keepdim=True)
+        logits_stabilized = final_logits - logits_max
+        exp_logits_den = torch.exp(logits_stabilized)
+        denominator = exp_logits_den.sum(dim=1, keepdim=True)
+        
+        # 分子 (正樣本對)
+        # Pos[i] = Final_Logits[i, i] = Main[i,i] + Bias[i]
+        pred_logits = torch.diag(final_logits).unsqueeze(1) # (B, 1)
+        
+        pred_logits_stabilized = pred_logits - logits_max
+        numerator = torch.exp(pred_logits_stabilized)
+
+        # .squeeze(dim=1) 修復 batch_size=1 的 bug
+        infonce_pred = (numerator / (denominator + 1e-9)).squeeze(dim=1)
+        infonce_pred = torch.clamp(infonce_pred, min=1e-9, max=1.0 - 1e-9)
+        
+        return F.binary_cross_entropy(infonce_pred, batch['labels'].float(), reduction='none').mean()
+
+
+    def inference(
+        self,
+        batch: Dict[str, torch.Tensor],
+        neg_item_ids_batch: torch.Tensor,
+        bias_strategy: str = 'mainstream', # 'weighted' or 'mainstream'
+        bias_weight: float = 0.3         # 用於 weighted 策略的 lambda
+    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        
+        # 1. 獲取 Main Branch 的 logits (User-Item 匹配分)
+        # 呼叫父類 (EmbSASRec) 的 inference 邏輯，這會給出純粹的 Score_main
+        pos_logits_main, neg_logits_main, _ = super().inference(batch, neg_item_ids_batch)
+        
+        # 2. 獲取 Bias Branch 的 logits (物品流行度分)
+        # 正樣本 Bias
+        pos_item_bias = self.item_bias_emb(batch['items']).squeeze() # (B,)
+        # 負樣本 Bias
+        neg_item_bias = self.item_bias_emb(neg_item_ids_batch).squeeze() # (B, M)
+        
+        # 3. 策略選擇與組合
+        
+        if bias_strategy == 'weighted':
+            # --- 策略一：靜態加權 (Soft Intervention) ---
+            # Score = Main + lambda * Bias
+            # bias_weight 建議 0.1 ~ 0.5
+            pos_logits_final = pos_logits_main + bias_weight * pos_item_bias
+            neg_logits_final = neg_logits_main + bias_weight * neg_item_bias
+            
+        elif bias_strategy == 'mainstream':
+            # --- 策略二：用戶主流度感知 (User Mainstreaminess) ---
+            # w_u = mean(Bias(History))
+            
+            # 1. 取出用戶歷史物品的 ID
+            # batch['item_history_matrix']: (B, T)
+            hist_ids = batch['item_history_matrix']
+            
+            # 2. 查表獲取歷史物品的 Bias
+            # (B, T) -> (B, T, 1) -> (B, T)
+            hist_bias = self.item_bias_emb(hist_ids).squeeze(-1)
+            
+            # 3. 計算平均 Bias (忽略 padding 0)
+            mask = (hist_ids != 0).float()
+            sum_bias = (hist_bias * mask).sum(dim=1)
+            count = mask.sum(dim=1) + 1e-9
+            avg_bias = sum_bias / count # (B,) 代表用戶的平均主流度
+            
+            # 4. 將 avg_bias 歸一化或通過 Sigmoid 作為權重
+            # 這裡假設 Bias 可能是負無窮到正無窮，用 Sigmoid 壓到 (0, 1)
+            # * 2.0 是一個 scaling factor，讓權重更有彈性
+            user_weights = torch.sigmoid(avg_bias).unsqueeze(1) # (B, 1)
+            
+            # 5. 組合
+            # Score = Main + w_u * Bias
+            pos_logits_final = pos_logits_main + user_weights.squeeze() * pos_item_bias
+            neg_logits_final = neg_logits_main + user_weights * neg_item_bias
+
+        else:
+            # 預設：不使用 Bias (即 lambda=0)
+            pos_logits_final = pos_logits_main
+            neg_logits_final = neg_logits_main
+
+        
+        # 4. 計算用於指標的 Loss (這裡只是一個參考，不影響排名)
+        # 為了計算方便，這裡還是用 Main Logits 算 Loss，或者您也可以用 Final Logits
+        per_sample_loss = F.binary_cross_entropy_with_logits(
+            pos_logits_final, batch['labels'].float(), reduction='none'
+        )
+
+        return pos_logits_final, neg_logits_final, per_sample_loss

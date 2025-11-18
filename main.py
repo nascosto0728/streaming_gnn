@@ -17,7 +17,7 @@ from torch.utils.data import DataLoader
 # (假設您的模型都已正確分離到這些檔案中)
 from model_gcn import Hybrid_GNN_MLP , LightGCN_Only
 from model_srgnn import PURE_SR_GNN, SR_GNN_MLP
-from model_sasrec import PureSASRec, SASRec_MLP
+from model_sasrec import PureSASRec, SASRec_MLP, CausalSASRec_MLP
 from model_mlp import EmbMLP  
 
 from utils import (
@@ -334,10 +334,9 @@ def run_experiment(config: Dict[str, Any]):
                 )
                 print(f"--- [GNN] Graph built for Period {period_id}. Strategy: {graph_build_strategy}. Edges: {len(interaction_df_for_graph)} ---")
             
-            elif model_type in ['sr_gnn_mlp', 'sasrec_mlp', 'mlp']:
-                # GNN 建圖策略 (從 Seq 建立圖)
-                # (如您之前的實驗，這裡也可以加入從 Seq 建立圖的邏輯)
-                pass
+            # elif model_type in ['sr_gnn_mlp', 'sasrec_mlp', 'mlp']:
+            #     # GNN 建圖策略 (從 Seq 建立圖)
+            #     pass
 
             # 4. 更新評估用的 history (使用 T 期的所有資料)
             current_period_interactions_dict = current_period_df.groupby('userId')['itemId'].apply(set).to_dict()
@@ -412,6 +411,8 @@ def run_experiment(config: Dict[str, Any]):
                 model = SASRec_MLP(cates_np, cate_lens_np, hyperparams, config).to(device)
             elif model_type == 'mlp':
                 model = EmbMLP(cates_np, cate_lens_np, hyperparams, config).to(device)
+            elif model_type == 'causal_sasrec_mlp':
+                model = CausalSASRec_MLP(cates_np, cate_lens_np, hyperparams=hyperparams, train_config=config).to(device)
             else:
                 raise ValueError(f"未知的 model_type: {model_type}")
             
@@ -451,12 +452,12 @@ def run_experiment(config: Dict[str, Any]):
                     
                     batch = {k: v.to(device) for k, v in batch.items()}
                     optimizer.zero_grad()
-                    # loss = model.calculate_loss(batch)
-                    loss = model.calculate_loss(
-                        batch, 
-                        teacher_model=teacher_model if distill_enabled else None, 
-                        kd_weight=kd_weight
-                    )
+                    loss = model.calculate_loss(batch)
+                    # loss = model.calculate_loss(
+                    #     batch, 
+                    #     teacher_model=teacher_model if distill_enabled else None, 
+                    #     kd_weight=kd_weight
+                    # )
                     
                     # 檢查 NaN
                     if torch.isnan(loss):
