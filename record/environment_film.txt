@@ -1,0 +1,428 @@
+                                                                                                                                
+--- Period 8 (Model) -> Period 9 (Test) Evaluation Finished ---
+  - GAUC     : 0.8200
+  - AUC      : 0.8200
+  -----------------------------------------------------
+  - Recall@5  : 0.4485   |   NDCG@5  : 0.3262
+  - Recall@10 : 0.5803   |   NDCG@10 : 0.3687
+  - Recall@20 : 0.7157   |   NDCG@20 : 0.4030
+  - Recall@50 : 0.8616   |   NDCG@50 : 0.4322
+  -----------------------------------------------------
+
+========================= Period 9 =========================
+--- [Data] Period 9 loaded. Total rows: 73563, Positive samples: 59438
+--- [Eval] Test set for T+1 (Period 10) prepared. Positive samples: 5910
+--- Building model, type: context_sasrec_mlp ---
+[ContextSASRec_MLP] Initialized. Using FiLM for Global Context Modulation.
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_model.pth ---
+Epochs:  10%|███████▌                                                                   | 1/10 [00:41<06:09, 41.07s/it, patience=0/1, train_loss=5.1901, val_loss=5.2268]
+--- Training finished for period 9. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(9) ---
+    - Evaluating Model(9) on TestSet(Period 9)...
+    - TestSet(Period 9) GAUC: 0.8745                                                                                                                                     
+--- [CL] Average BWT GAUC for Model(9): 0.8745 ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(9) on TestSet(Period 10) ---
+                                                                                                                                                                         
+--- Period 9 (Model) -> Period 10 (Test) Evaluation Finished ---
+  - GAUC     : 0.8534
+  - AUC      : 0.8534
+  -----------------------------------------------------
+  - Recall@5  : 0.4797   |   NDCG@5  : 0.3486
+  - Recall@10 : 0.6196   |   NDCG@10 : 0.3937
+  - Recall@20 : 0.7582   |   NDCG@20 : 0.4289
+  - Recall@50 : 0.9095   |   NDCG@50 : 0.4594
+  -----------------------------------------------------
+
+========================= Period 10 =========================
+--- [Data] Period 10 loaded. Total rows: 73564, Positive samples: 59482
+--- [Eval] Test set for T+1 (Period 11) prepared. Positive samples: 5832
+--- Building model, type: context_sasrec_mlp ---
+[ContextSASRec_MLP] Initialized. Using FiLM for Global Context Modulation.
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth ---
+Epochs:  10%|███████▌                                                                   | 1/10 [00:39<05:59, 39.94s/it, patience=0/1, train_loss=5.2167, val_loss=5.1040]
+--- Training finished for period 10. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(10) ---
+    - Evaluating Model(10) on TestSet(Period 9)...
+    - TestSet(Period 9) GAUC: 0.8809                                                                                                                                     
+    - Evaluating Model(10) on TestSet(Period 10)...
+    - TestSet(Period 10) GAUC: 0.8973                                                                                                                                    
+--- [CL] Average BWT GAUC for Model(10): 0.8891 ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(10) on TestSet(Period 11) ---
+                                                                                                                                                                         
+--- Period 10 (Model) -> Period 11 (Test) Evaluation Finished ---
+  - GAUC     : 0.8866
+  - AUC      : 0.8866
+  -----------------------------------------------------
+  - Recall@5  : 0.5365   |   NDCG@5  : 0.3964
+  - Recall@10 : 0.6626   |   NDCG@10 : 0.4370
+  - Recall@20 : 0.8114   |   NDCG@20 : 0.4748
+  - Recall@50 : 0.9489   |   NDCG@50 : 0.5026
+  -----------------------------------------------------
+
+========================= Period 11 =========================
+--- [Data] Period 11 loaded. Total rows: 73563, Positive samples: 58818
+--- [Eval] Test set for T+1 (Period 12) prepared. Positive samples: 5984
+--- Building model, type: context_sasrec_mlp ---
+[ContextSASRec_MLP] Initialized. Using FiLM for Global Context Modulation.
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth ---
+Epochs:  10%|███████▌                                                                   | 1/10 [00:39<05:58, 39.83s/it, patience=0/1, train_loss=5.0983, val_loss=5.2893]
+--- Training finished for period 11. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(11) ---
+    - Evaluating Model(11) on TestSet(Period 9)...
+    - TestSet(Period 9) GAUC: 0.8443                                                                                                                                     
+    - Evaluating Model(11) on TestSet(Period 10)...
+    - TestSet(Period 10) GAUC: 0.8551                                                                                                                                    
+    - Evaluating Model(11) on TestSet(Period 11)...
+    - TestSet(Period 11) GAUC: 0.8794                                                                                                                                    
+--- [CL] Average BWT GAUC for Model(11): 0.8596 ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(11) on TestSet(Period 12) ---
+                                                                                                                                                                         
+--- Period 11 (Model) -> Period 12 (Test) Evaluation Finished ---
+  - GAUC     : 0.8607
+  - AUC      : 0.8607
+  -----------------------------------------------------
+  - Recall@5  : 0.5297   |   NDCG@5  : 0.3997
+  - Recall@10 : 0.6584   |   NDCG@10 : 0.4414
+  - Recall@20 : 0.7774   |   NDCG@20 : 0.4714
+  - Recall@50 : 0.9088   |   NDCG@50 : 0.4978
+  -----------------------------------------------------
+
+========================= Period 12 =========================
+--- [Data] Period 12 loaded. Total rows: 73563, Positive samples: 59757
+--- [Eval] Test set for T+1 (Period 13) prepared. Positive samples: 5669
+--- Building model, type: context_sasrec_mlp ---
+[ContextSASRec_MLP] Initialized. Using FiLM for Global Context Modulation.
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth ---
+Epochs:  10%|███████▌                                                                   | 1/10 [00:41<06:11, 41.30s/it, patience=0/1, train_loss=5.1676, val_loss=5.2140]
+--- Training finished for period 12. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(12) ---
+    - Evaluating Model(12) on TestSet(Period 9)...
+    - TestSet(Period 9) GAUC: 0.8454                                                                                                                                     
+    - Evaluating Model(12) on TestSet(Period 10)...
+    - TestSet(Period 10) GAUC: 0.8524                                                                                                                                    
+    - Evaluating Model(12) on TestSet(Period 11)...
+    - TestSet(Period 11) GAUC: 0.8678                                                                                                                                    
+    - Evaluating Model(12) on TestSet(Period 12)...
+    - TestSet(Period 12) GAUC: 0.8801                                                                                                                                    
+--- [CL] Average BWT GAUC for Model(12): 0.8614 ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(12) on TestSet(Period 13) ---
+                                                                                                                                                                         
+--- Period 12 (Model) -> Period 13 (Test) Evaluation Finished ---
+  - GAUC     : 0.8607
+  - AUC      : 0.8607
+  -----------------------------------------------------
+  - Recall@5  : 0.5126   |   NDCG@5  : 0.3839
+  - Recall@10 : 0.6430   |   NDCG@10 : 0.4262
+  - Recall@20 : 0.7737   |   NDCG@20 : 0.4593
+  - Recall@50 : 0.9139   |   NDCG@50 : 0.4875
+  -----------------------------------------------------
+
+========================= Period 13 =========================
+--- [Data] Period 13 loaded. Total rows: 73563, Positive samples: 56835
+--- Building model, type: context_sasrec_mlp ---
+[ContextSASRec_MLP] Initialized. Using FiLM for Global Context Modulation.
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth ---
+Epochs:  10%|███████▌                                                                   | 1/10 [00:40<06:00, 40.11s/it, patience=0/1, train_loss=4.9353, val_loss=4.8937]
+--- Training finished for period 13. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_13/best_model.pth ---
+
+==================== [ 學習率 0.001 總結報告 (FWT) ] ====================
+
+--- Average Forward Transfer Metrics ---
+  - GAUC     : 0.8563
+  - AUC      : 0.8563
+-------------------------------------------------------
+  - Recall@5  : 0.5014   |   NDCG@5  : 0.3710
+  - Recall@10 : 0.6328   |   NDCG@10 : 0.4134
+  - Recall@20 : 0.7673   |   NDCG@20 : 0.4475
+  - Recall@50 : 0.9085   |   NDCG@50 : 0.4759
+-------------------------------------------------------
+
+
+
+
+                                                           
+                                                        
+Prompt
+
+--- Period 8 (Model) -> Period 9 (Test) Evaluation Finished ---
+  - GAUC     : 0.8049
+  - AUC      : 0.8049
+  -----------------------------------------------------
+  - Recall@5  : 0.4507   |   NDCG@5  : 0.3487
+  - Recall@10 : 0.5563   |   NDCG@10 : 0.3829
+  - Recall@20 : 0.6732   |   NDCG@20 : 0.4124
+  - Recall@50 : 0.8526   |   NDCG@50 : 0.4480
+  -----------------------------------------------------
+
+========================= Period 9 =========================
+--- [Data] Period 9 loaded. Total rows: 73563, Positive samples: 59438
+--- [Eval] Test set for T+1 (Period 10) prepared. Positive samples: 5910
+--- Building model, type: context_sasrec_mlp ---
+[ContextPromptSASRec_MLP] Initialized. Injecting Context as Transformer Prompt.
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_model.pth ---
+Epochs:  10%|███████▌                                                                   | 1/10 [00:39<05:54, 39.36s/it, patience=0/1, train_loss=5.2174, val_loss=5.2406]
+--- Training finished for period 9. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(9) ---
+    - Evaluating Model(9) on TestSet(Period 9)...
+    - TestSet(Period 9) GAUC: 0.8862                                                                                                                                     
+--- [CL] Average BWT GAUC for Model(9): 0.8862 ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(9) on TestSet(Period 10) ---
+                                                                                                                                                                         
+--- Period 9 (Model) -> Period 10 (Test) Evaluation Finished ---
+  - GAUC     : 0.8749
+  - AUC      : 0.8749
+  -----------------------------------------------------
+  - Recall@5  : 0.5904   |   NDCG@5  : 0.4768
+  - Recall@10 : 0.6920   |   NDCG@10 : 0.5098
+  - Recall@20 : 0.7861   |   NDCG@20 : 0.5335
+  - Recall@50 : 0.9162   |   NDCG@50 : 0.5595
+  -----------------------------------------------------
+
+========================= Period 10 =========================
+--- [Data] Period 10 loaded. Total rows: 73564, Positive samples: 59482
+--- [Eval] Test set for T+1 (Period 11) prepared. Positive samples: 5832
+--- Building model, type: context_sasrec_mlp ---
+[ContextPromptSASRec_MLP] Initialized. Injecting Context as Transformer Prompt.
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth ---
+Epochs:  10%|███████▌                                                                   | 1/10 [00:38<05:48, 38.78s/it, patience=0/1, train_loss=5.2342, val_loss=5.1219]
+--- Training finished for period 10. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(10) ---
+    - Evaluating Model(10) on TestSet(Period 9)...
+    - TestSet(Period 9) GAUC: 0.8358                                                                                                                                     
+    - Evaluating Model(10) on TestSet(Period 10)...
+    - TestSet(Period 10) GAUC: 0.8476                                                                                                                                    
+--- [CL] Average BWT GAUC for Model(10): 0.8417 ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(10) on TestSet(Period 11) ---
+                                                                                                                                                                         
+--- Period 10 (Model) -> Period 11 (Test) Evaluation Finished ---
+  - GAUC     : 0.8290
+  - AUC      : 0.8290
+  -----------------------------------------------------
+  - Recall@5  : 0.4028   |   NDCG@5  : 0.3035
+  - Recall@10 : 0.5312   |   NDCG@10 : 0.3450
+  - Recall@20 : 0.6879   |   NDCG@20 : 0.3845
+  - Recall@50 : 0.9074   |   NDCG@50 : 0.4282
+  -----------------------------------------------------
+
+========================= Period 11 =========================
+--- [Data] Period 11 loaded. Total rows: 73563, Positive samples: 58818
+--- [Eval] Test set for T+1 (Period 12) prepared. Positive samples: 5984
+--- Building model, type: context_sasrec_mlp ---
+[ContextPromptSASRec_MLP] Initialized. Injecting Context as Transformer Prompt.
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth ---
+Epochs:  10%|███████▌                                                                   | 1/10 [00:38<05:42, 38.07s/it, patience=0/1, train_loss=5.1248, val_loss=5.2917]
+--- Training finished for period 11. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(11) ---
+    - Evaluating Model(11) on TestSet(Period 9)...
+    - TestSet(Period 9) GAUC: 0.8651                                                                                                                                     
+    - Evaluating Model(11) on TestSet(Period 10)...
+    - TestSet(Period 10) GAUC: 0.8707                                                                                                                                    
+    - Evaluating Model(11) on TestSet(Period 11)...
+    - TestSet(Period 11) GAUC: 0.8892                                                                                                                                    
+--- [CL] Average BWT GAUC for Model(11): 0.8750 ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(11) on TestSet(Period 12) ---
+                                                                                                                                                                         
+--- Period 11 (Model) -> Period 12 (Test) Evaluation Finished ---
+  - GAUC     : 0.8813
+  - AUC      : 0.8813
+  -----------------------------------------------------
+  - Recall@5  : 0.6325   |   NDCG@5  : 0.5306
+  - Recall@10 : 0.7218   |   NDCG@10 : 0.5595
+  - Recall@20 : 0.8045   |   NDCG@20 : 0.5804
+  - Recall@50 : 0.9188   |   NDCG@50 : 0.6032
+  -----------------------------------------------------
+
+========================= Period 12 =========================
+--- [Data] Period 12 loaded. Total rows: 73563, Positive samples: 59757
+--- [Eval] Test set for T+1 (Period 13) prepared. Positive samples: 5669
+--- Building model, type: context_sasrec_mlp ---
+[ContextPromptSASRec_MLP] Initialized. Injecting Context as Transformer Prompt.
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth ---
+Epochs:  10%|███████▌                                                                   | 1/10 [00:38<05:43, 38.21s/it, patience=0/1, train_loss=5.1981, val_loss=5.2307]
+--- Training finished for period 12. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(12) ---
+    - Evaluating Model(12) on TestSet(Period 9)...
+    - TestSet(Period 9) GAUC: 0.8453                                                                                                                                     
+    - Evaluating Model(12) on TestSet(Period 10)...
+    - TestSet(Period 10) GAUC: 0.8483                                                                                                                                    
+    - Evaluating Model(12) on TestSet(Period 11)...
+    - TestSet(Period 11) GAUC: 0.8632                                                                                                                                    
+    - Evaluating Model(12) on TestSet(Period 12)...
+    - TestSet(Period 12) GAUC: 0.8738                                                                                                                                    
+--- [CL] Average BWT GAUC for Model(12): 0.8577 ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(12) on TestSet(Period 13) ---
+                                                                                                                                                                         
+--- Period 12 (Model) -> Period 13 (Test) Evaluation Finished ---
+  - GAUC     : 0.8599
+  - AUC      : 0.8599
+  -----------------------------------------------------
+  - Recall@5  : 0.5525   |   NDCG@5  : 0.4414
+  - Recall@10 : 0.6603   |   NDCG@10 : 0.4761
+  - Recall@20 : 0.7682   |   NDCG@20 : 0.5036
+  - Recall@50 : 0.9079   |   NDCG@50 : 0.5313
+  -----------------------------------------------------
+
+========================= Period 13 =========================
+--- [Data] Period 13 loaded. Total rows: 73563, Positive samples: 56835
+--- Building model, type: context_sasrec_mlp ---
+[ContextPromptSASRec_MLP] Initialized. Injecting Context as Transformer Prompt.
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth ---
+Epochs:  10%|███████▌                                                                   | 1/10 [00:39<05:52, 39.13s/it, patience=0/1, train_loss=4.9629, val_loss=4.9053]
+--- Training finished for period 13. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_13/best_model.pth ---
+
+==================== [ 學習率 0.001 總結報告 (FWT) ] ====================
+
+--- Average Forward Transfer Metrics ---
+  - GAUC     : 0.8500
+  - AUC      : 0.8500
+-------------------------------------------------------
+  - Recall@5  : 0.5258   |   NDCG@5  : 0.4202
+  - Recall@10 : 0.6323   |   NDCG@10 : 0.4547
+  - Recall@20 : 0.7440   |   NDCG@20 : 0.4829
+  - Recall@50 : 0.9006   |   NDCG@50 : 0.5140
+-------------------------------------------------------
+
+
+
+
+
+
+prompt full Data
+                                                                                                                                      
+--- Period 8 (Model) -> Period 9 (Test) Evaluation Finished ---
+  - GAUC     : 0.8539
+  - AUC      : 0.8539
+  -----------------------------------------------------
+  - Recall@5  : 0.5279   |   NDCG@5  : 0.4323
+  - Recall@10 : 0.6221   |   NDCG@10 : 0.4627
+  - Recall@20 : 0.7350   |   NDCG@20 : 0.4912
+  - Recall@50 : 0.9076   |   NDCG@50 : 0.5255
+  -----------------------------------------------------
+
+========================= Period 9 =========================
+--- [Data] Period 9 loaded. Total rows: 220690, Positive samples: 178563
+--- [Eval] Test set for T+1 (Period 10) prepared. Positive samples: 17781
+--- Building model, type: context_sasrec_mlp ---
+[ContextPromptSASRec_MLP] Initialized. Injecting Context as Transformer Prompt.
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_model.pth ---
+Epochs:  10%|███████▍                                                                  | 1/10 [01:52<16:54, 112.72s/it, patience=0/1, train_loss=5.0532, val_loss=5.2438]
+--- Training finished for period 9. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(9) ---
+    - Evaluating Model(9) on TestSet(Period 9)...
+    - TestSet(Period 9) GAUC: 0.8978                                                                                                                                     
+--- [CL] Average BWT GAUC for Model(9): 0.8978 ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(9) on TestSet(Period 10) ---
+                                                                                                                                                                         
+--- Period 9 (Model) -> Period 10 (Test) Evaluation Finished ---
+  - GAUC     : 0.8882
+  - AUC      : 0.8882
+  -----------------------------------------------------
+  - Recall@5  : 0.5937   |   NDCG@5  : 0.4857
+  - Recall@10 : 0.6967   |   NDCG@10 : 0.5189
+  - Recall@20 : 0.8036   |   NDCG@20 : 0.5460
+  - Recall@50 : 0.9386   |   NDCG@50 : 0.5729
+  -----------------------------------------------------
+
+========================= Period 10 =========================
+--- [Data] Period 10 loaded. Total rows: 220690, Positive samples: 178501
+--- [Eval] Test set for T+1 (Period 11) prepared. Positive samples: 17663
+--- Building model, type: context_sasrec_mlp ---
+[ContextPromptSASRec_MLP] Initialized. Injecting Context as Transformer Prompt.
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth ---
+Epochs:  10%|███████▍                                                                  | 1/10 [01:53<17:00, 113.36s/it, patience=0/1, train_loss=5.0679, val_loss=5.1151]
+--- Training finished for period 10. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(10) ---
+    - Evaluating Model(10) on TestSet(Period 9)...
+    - TestSet(Period 9) GAUC: 0.8696                                                                                                                                     
+    - Evaluating Model(10) on TestSet(Period 10)...
+    - TestSet(Period 10) GAUC: 0.8967                                                                                                                                    
+--- [CL] Average BWT GAUC for Model(10): 0.8831 ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(10) on TestSet(Period 11) ---
+                                                                                                                                                                         
+--- Period 10 (Model) -> Period 11 (Test) Evaluation Finished ---
+  - GAUC     : 0.8801
+  - AUC      : 0.8801
+  -----------------------------------------------------
+  - Recall@5  : 0.5775   |   NDCG@5  : 0.4712
+  - Recall@10 : 0.6843   |   NDCG@10 : 0.5057
+  - Recall@20 : 0.7918   |   NDCG@20 : 0.5328
+  - Recall@50 : 0.9305   |   NDCG@50 : 0.5606
+  -----------------------------------------------------
+
+========================= Period 11 =========================
+--- [Data] Period 11 loaded. Total rows: 220689, Positive samples: 176739
+--- [Eval] Test set for T+1 (Period 12) prepared. Positive samples: 18011
+--- Building model, type: context_sasrec_mlp ---
+[ContextPromptSASRec_MLP] Initialized. Injecting Context as Transformer Prompt.
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth ---
+Epochs:  10%|███████▍                                                                  | 1/10 [01:54<17:06, 114.08s/it, patience=0/1, train_loss=4.9715, val_loss=5.3304]
+--- Training finished for period 11. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(11) ---
+    - Evaluating Model(11) on TestSet(Period 9)...
+    - TestSet(Period 9) GAUC: 0.8586                                                                                                                                     
+    - Evaluating Model(11) on TestSet(Period 10)...
+    - TestSet(Period 10) GAUC: 0.8746                                                                                                                                    
+    - Evaluating Model(11) on TestSet(Period 11)...
+    - TestSet(Period 11) GAUC: 0.8995                                                                                                                                    
+--- [CL] Average BWT GAUC for Model(11): 0.8776 ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(11) on TestSet(Period 12) ---
+                                                                                                                                                                         
+--- Period 11 (Model) -> Period 12 (Test) Evaluation Finished ---
+  - GAUC     : 0.8855
+  - AUC      : 0.8855
+  -----------------------------------------------------
+  - Recall@5  : 0.6166   |   NDCG@5  : 0.5184
+  - Recall@10 : 0.7078   |   NDCG@10 : 0.5480
+  - Recall@20 : 0.8006   |   NDCG@20 : 0.5714
+  - Recall@50 : 0.9277   |   NDCG@50 : 0.5967
+  -----------------------------------------------------
+
+========================= Period 12 =========================
+--- [Data] Period 12 loaded. Total rows: 220690, Positive samples: 179435
+--- [Eval] Test set for T+1 (Period 13) prepared. Positive samples: 17041
+--- Building model, type: context_sasrec_mlp ---
+[ContextPromptSASRec_MLP] Initialized. Injecting Context as Transformer Prompt.
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth ---
+Epochs:  10%|███████▍                                                                  | 1/10 [01:52<16:55, 112.84s/it, patience=0/1, train_loss=5.0212, val_loss=5.3368]
+--- Training finished for period 12. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(12) ---
+    - Evaluating Model(12) on TestSet(Period 9)...
+    - TestSet(Period 9) GAUC: 0.8487                                                                                                                                     
+    - Evaluating Model(12) on TestSet(Period 10)...
+    - TestSet(Period 10) GAUC: 0.8611                                                                                                                                    
+    - Evaluating Model(12) on TestSet(Period 11)...
+    - TestSet(Period 11) GAUC: 0.8722                                                                                                                                    
+    - Evaluating Model(12) on TestSet(Period 12)...
+    - TestSet(Period 12) GAUC: 0.8946                                                                                                                                    
+--- [CL] Average BWT GAUC for Model(12): 0.8692 ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(12) on TestSet(Period 13) ---
+                                                                                                                                                                         
+--- Period 12 (Model) -> Period 13 (Test) Evaluation Finished ---
+  - GAUC     : 0.8779
+  - AUC      : 0.8779
+  -----------------------------------------------------
+  - Recall@5  : 0.5917   |   NDCG@5  : 0.4969
+  - Recall@10 : 0.6904   |   NDCG@10 : 0.5288
+  - Recall@20 : 0.7890   |   NDCG@20 : 0.5537
+  - Recall@50 : 0.9208   |   NDCG@50 : 0.5799
+  -----------------------------------------------------
+
+========================= Period 13 =========================
+--- [Data] Period 13 loaded. Total rows: 220689, Positive samples: 170880
+--- Building model, type: context_sasrec_mlp ---
+[ContextPromptSASRec_MLP] Initialized. Injecting Context as Transformer Prompt.
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth ---
+Epochs:  10%|███████▍                                                                  | 1/10 [01:53<16:58, 113.17s/it, patience=0/1, train_loss=4.8079, val_loss=4.9166]
+--- Training finished for period 13. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_13/best_model.pth ---
+
+==================== [ 學習率 0.001 總結報告 (FWT) ] ====================
+
+--- Average Forward Transfer Metrics ---
+  - GAUC     : 0.8771
+  - AUC      : 0.8771
+-------------------------------------------------------
+  - Recall@5  : 0.5815   |   NDCG@5  : 0.4809
+  - Recall@10 : 0.6803   |   NDCG@10 : 0.5128
+  - Recall@20 : 0.7840   |   NDCG@20 : 0.5390
+  - Recall@50 : 0.9250   |   NDCG@50 : 0.5671
+-------------------------------------------------------

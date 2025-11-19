@@ -16,7 +16,7 @@ max_epochs: 10         # 每個 period 最多跑 100 個 epoch
 validation_split: 0.2   # 從「當前 period」切 20% 出來當驗證集
 patience: 1            # 驗證集損失 (val_loss) 連續 10 次沒進步就停止
 
-debug_sample: 3
+debug_sample: 0
 
 evaluation:
   sampling_size: 99
@@ -36,7 +36,7 @@ distillation:
   weight: 100.5            # 蒸餾權重 (lambda)，可以試試 0.1, 0.5, 1.0
 
 # 選項: 'hybrid'  'mlp'  'lightgcn_only'  'sr_gnn' 'sr_gnn_mlp' 'pure_sasrec' 'sasrec_mlp' 'causal_sasrec_mlp' 'context_sasrec_mlp'
-model_type: 'context_sasrec_mlp'
+model_type: 'causal_sasrec_mlp'
 # Model Hyperparameters
 model:
   batch_size: 1024

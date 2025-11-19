@@ -292,3 +292,149 @@ Epochs:  10%|███████▌                                           
   - Recall@20 : 0.7921   |   NDCG@20 : 0.4462
   - Recall@50 : 0.9225   |   NDCG@50 : 0.4725
 -------------------------------------------------------
+
+
+
+
+
+
+full Data
+
+                                                                                                                                        
+--- Period 8 (Model) -> Period 9 (Test) Evaluation Finished ---
+  - GAUC     : 0.8650
+  - AUC      : 0.8650
+  -----------------------------------------------------
+  - Recall@5  : 0.5291   |   NDCG@5  : 0.3864
+  - Recall@10 : 0.6669   |   NDCG@10 : 0.4311
+  - Recall@20 : 0.7910   |   NDCG@20 : 0.4626
+  - Recall@50 : 0.9130   |   NDCG@50 : 0.4869
+  -----------------------------------------------------
+
+========================= Period 9 =========================
+--- [Data] Period 9 loaded. Total rows: 220690, Positive samples: 178563
+--- [Eval] Test set for T+1 (Period 10) prepared. Positive samples: 17781
+--- Building model, type: causal_sasrec_mlp ---
+[CausalSASRec_MLP] Initialized. Adding Bias Branch for Causal Debiasing.
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_model.pth ---
+Epochs:  10%|███████▍                                                                  | 1/10 [01:57<17:35, 117.30s/it, patience=0/1, train_loss=5.0361, val_loss=5.2722]
+--- Training finished for period 9. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(9) ---
+    - Evaluating Model(9) on TestSet(Period 9)...
+    - TestSet(Period 9) GAUC: 0.9041                                                                                                                                     
+--- [CL] Average BWT GAUC for Model(9): 0.9041 ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(9) on TestSet(Period 10) ---
+                                                                                                                                                                         
+--- Period 9 (Model) -> Period 10 (Test) Evaluation Finished ---
+  - GAUC     : 0.8816
+  - AUC      : 0.8816
+  -----------------------------------------------------
+  - Recall@5  : 0.5245   |   NDCG@5  : 0.3792
+  - Recall@10 : 0.6857   |   NDCG@10 : 0.4313
+  - Recall@20 : 0.8285   |   NDCG@20 : 0.4677
+  - Recall@50 : 0.9355   |   NDCG@50 : 0.4892
+  -----------------------------------------------------
+
+========================= Period 10 =========================
+--- [Data] Period 10 loaded. Total rows: 220690, Positive samples: 178501
+--- [Eval] Test set for T+1 (Period 11) prepared. Positive samples: 17663
+--- Building model, type: causal_sasrec_mlp ---
+[CausalSASRec_MLP] Initialized. Adding Bias Branch for Causal Debiasing.
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth ---
+Epochs:  10%|███████▍                                                                  | 1/10 [01:57<17:39, 117.76s/it, patience=0/1, train_loss=5.0530, val_loss=5.1483]
+--- Training finished for period 10. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(10) ---
+    - Evaluating Model(10) on TestSet(Period 9)...
+    - TestSet(Period 9) GAUC: 0.8998                                                                                                                                     
+    - Evaluating Model(10) on TestSet(Period 10)...
+    - TestSet(Period 10) GAUC: 0.9236                                                                                                                                    
+--- [CL] Average BWT GAUC for Model(10): 0.9117 ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(10) on TestSet(Period 11) ---
+                                                                                                                                                                         
+--- Period 10 (Model) -> Period 11 (Test) Evaluation Finished ---
+  - GAUC     : 0.9092
+  - AUC      : 0.9092
+  -----------------------------------------------------
+  - Recall@5  : 0.5876   |   NDCG@5  : 0.4280
+  - Recall@10 : 0.7499   |   NDCG@10 : 0.4808
+  - Recall@20 : 0.8749   |   NDCG@20 : 0.5127
+  - Recall@50 : 0.9600   |   NDCG@50 : 0.5300
+  -----------------------------------------------------
+
+========================= Period 11 =========================
+--- [Data] Period 11 loaded. Total rows: 220689, Positive samples: 176739
+--- [Eval] Test set for T+1 (Period 12) prepared. Positive samples: 18011
+--- Building model, type: causal_sasrec_mlp ---
+[CausalSASRec_MLP] Initialized. Adding Bias Branch for Causal Debiasing.
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth ---
+Epochs:  10%|███████▍                                                                  | 1/10 [01:56<17:27, 116.35s/it, patience=0/1, train_loss=4.9531, val_loss=5.3537]
+--- Training finished for period 11. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(11) ---
+    - Evaluating Model(11) on TestSet(Period 9)...
+    - TestSet(Period 9) GAUC: 0.8720                                                                                                                                     
+    - Evaluating Model(11) on TestSet(Period 10)...
+    - TestSet(Period 10) GAUC: 0.8908                                                                                                                                    
+    - Evaluating Model(11) on TestSet(Period 11)...
+    - TestSet(Period 11) GAUC: 0.9142                                                                                                                                    
+--- [CL] Average BWT GAUC for Model(11): 0.8923 ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(11) on TestSet(Period 12) ---
+                                                                                                                                                                         
+--- Period 11 (Model) -> Period 12 (Test) Evaluation Finished ---
+  - GAUC     : 0.9043
+  - AUC      : 0.9043
+  -----------------------------------------------------
+  - Recall@5  : 0.6227   |   NDCG@5  : 0.4656
+  - Recall@10 : 0.7552   |   NDCG@10 : 0.5086
+  - Recall@20 : 0.8627   |   NDCG@20 : 0.5359
+  - Recall@50 : 0.9475   |   NDCG@50 : 0.5530
+  -----------------------------------------------------
+
+========================= Period 12 =========================
+--- [Data] Period 12 loaded. Total rows: 220690, Positive samples: 179435
+--- [Eval] Test set for T+1 (Period 13) prepared. Positive samples: 17041
+--- Building model, type: causal_sasrec_mlp ---
+[CausalSASRec_MLP] Initialized. Adding Bias Branch for Causal Debiasing.
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth ---
+Epochs:  10%|███████▍                                                                  | 1/10 [01:56<17:24, 116.03s/it, patience=0/1, train_loss=5.0038, val_loss=5.3714]
+--- Training finished for period 12. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(12) ---
+    - Evaluating Model(12) on TestSet(Period 9)...
+    - TestSet(Period 9) GAUC: 0.8823                                                                                                                                     
+    - Evaluating Model(12) on TestSet(Period 10)...
+    - TestSet(Period 10) GAUC: 0.8921                                                                                                                                    
+    - Evaluating Model(12) on TestSet(Period 11)...
+    - TestSet(Period 11) GAUC: 0.9069                                                                                                                                    
+    - Evaluating Model(12) on TestSet(Period 12)...
+    - TestSet(Period 12) GAUC: 0.9272                                                                                                                                    
+--- [CL] Average BWT GAUC for Model(12): 0.9021 ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(12) on TestSet(Period 13) ---
+                                                                                                                                                                         
+--- Period 12 (Model) -> Period 13 (Test) Evaluation Finished ---
+  - GAUC     : 0.9163
+  - AUC      : 0.9163
+  -----------------------------------------------------
+  - Recall@5  : 0.6211   |   NDCG@5  : 0.4664
+  - Recall@10 : 0.7660   |   NDCG@10 : 0.5132
+  - Recall@20 : 0.8847   |   NDCG@20 : 0.5435
+  - Recall@50 : 0.9641   |   NDCG@50 : 0.5595
+  -----------------------------------------------------
+
+========================= Period 13 =========================
+--- [Data] Period 13 loaded. Total rows: 220689, Positive samples: 170880
+--- Building model, type: causal_sasrec_mlp ---
+[CausalSASRec_MLP] Initialized. Adding Bias Branch for Causal Debiasing.
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth ---
+Epochs:  10%|███████▍                                                                  | 1/10 [01:57<17:33, 117.07s/it, patience=0/1, train_loss=4.7929, val_loss=4.9393]
+--- Training finished for period 13. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_13/best_model.pth ---
+
+==================== [ 學習率 0.001 總結報告 (FWT) ] ====================
+
+--- Average Forward Transfer Metrics ---
+  - GAUC     : 0.8953
+  - AUC      : 0.8953
+-------------------------------------------------------
+  - Recall@5  : 0.5770   |   NDCG@5  : 0.4251
+  - Recall@10 : 0.7247   |   NDCG@10 : 0.4730
+  - Recall@20 : 0.8484   |   NDCG@20 : 0.5045
+  - Recall@50 : 0.9440   |   NDCG@50 : 0.5237
+-------------------------------------------------------

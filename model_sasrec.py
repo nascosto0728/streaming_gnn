@@ -709,130 +709,190 @@ class CausalSASRec_MLP(SASRec_MLP):
     
 
 
-
-    
 # model_sasrec.py
 
 class ContextSASRec_MLP(SASRec_MLP):
     """
-    全域上下文調變 SASRec (Global Context Modulation).
+    全域上下文 Prompt SASRec (Global Context as Prompt).
     
     核心機制:
-    1. 計算當前 Batch 的 Global Context (平均 Item Embedding)。
-    2. 使用 EMA (指數移動平均) 維護一個穩定的 Context Vector。
-    3. 使用 FiLM (Feature-wise Linear Modulation) 機制，
-       根據 Context 動態調整 User Embedding。
+    1. 計算全域 Context (Item Embedding 平均 + EMA)。
+    2. 將 Context 投影到 Transformer 的維度。
+    3. 將 Context 作為第 0 個 Token (Prompt) 拼接到序列前端: [Context, Item_1, Item_2...]。
+    4. 透過 Self-Attention 讓歷史物品與當下環境互動。
     """
     def __init__(self, cates: np.ndarray, cate_lens: np.ndarray, hyperparams: Dict, train_config: Dict,
                  item_init_vectors: torch.Tensor = None,  
                  cate_init_vectors: torch.Tensor = None): 
         
+        # 1. 初始化父類 (EmbSASRec_Model)
         super().__init__(cates, cate_lens, hyperparams, train_config, 
                          item_init_vectors, cate_init_vectors)
         
-        print("[ContextSASRec_MLP] Initialized. Using FiLM for Global Context Modulation.")
+        print("[ContextPromptSASRec_MLP] Initialized. Injecting Context as Transformer Prompt.")
         
-        self.context_dim = self.hparams['item_embed_dim']
-        # EmbMLP 的 User Tower 輸出是拼接了 [Static_User, History(Item+Cate)]
-        # 所以維度是: user_dim + item_dim + cate_dim
-        self.user_rep_dim = (
-            self.hparams['user_embed_dim'] + 
-            self.hparams['item_embed_dim'] + 
-            self.hparams['cate_embed_dim']
-        )
+        # 2. Context 來源維度
+        self.context_source_dim = self.hparams['item_embed_dim']
         
-        # 1. FiLM 網路
-        # 輸入: Context Vector (context_dim)
-        # 輸出: Gamma (user_rep_dim) 和 Beta (user_rep_dim)
-        self.context_film_net = nn.Sequential(
-            nn.Linear(self.context_dim, self.user_rep_dim),
-            nn.ReLU(),
-            nn.Linear(self.user_rep_dim, self.user_rep_dim * 2) # 輸出 [gamma, beta]
-        )
+        # 3. 投影層
+        self.transformer_dim_A = self.item_seq_input_dim
+        self.context_proj_A = nn.Linear(self.context_source_dim, self.transformer_dim_A)
         
-        # 初始化 FiLM: 讓 Gamma 接近 1, Beta 接近 0
-        with torch.no_grad():
-            self.context_film_net[2].weight.fill_(0.0)
-            self.context_film_net[2].bias[:self.user_rep_dim].fill_(1.0) # Gamma -> 1
-            self.context_film_net[2].bias[self.user_rep_dim:].fill_(0.0) # Beta -> 0
+        self.transformer_dim_B = self.user_seq_input_dim
+        self.context_proj_B = nn.Linear(self.context_source_dim, self.transformer_dim_B)
+        
+        # 4. 全域環境向量快取
+        self.register_buffer('global_context_ema', torch.zeros(self.context_source_dim))
+        self.ema_alpha = 0.95 
 
-        # 2. 全域環境向量快取 (Buffer)
-        # 不參與梯度更新，但會隨 state_dict 儲存
-        # 這裡存的是 Context，所以維度是 context_dim
-        self.register_buffer('global_context_ema', torch.zeros(self.context_dim))
+        # [!!! 關鍵修正：擴大 Positional Embedding !!!]
+        # 父類只分配了 maxlen (例如 30) 的空間。
+        # 我們加入了 Prompt，序列長度會變成 maxlen + 1。
+        # 所以我們需要重新初始化 Pos Emb，容量設為 maxlen + 1。
         
-        # EMA 衰減率 (Alpha)
-        # 0.99 代表非常平滑，0.1 代表變化很快
-        self.ema_alpha = 0.99 
+        new_maxlen = self.maxlen + 1
+        
+        # 覆蓋模組 A (itemSeq) 的 Pos Emb
+        self.item_seq_pos_emb = nn.Embedding(new_maxlen, self.transformer_dim_A)
+        
+        # 覆蓋模組 B (userSeq) 的 Pos Emb
+        self.user_seq_pos_emb = nn.Embedding(new_maxlen, self.transformer_dim_B)
+        
+        # 初始化權重 (保持與父類一致的初始化方式)
+        nn.init.xavier_normal_(self.item_seq_pos_emb.weight)
+        nn.init.xavier_normal_(self.user_seq_pos_emb.weight)
 
     def _update_context_ema(self, current_batch_context: torch.Tensor):
-        """
-        更新全域 EMA 環境向量
-        EMA_new = Alpha * EMA_old + (1-Alpha) * Current
-        """
-        if self.global_context_ema.abs().sum() == 0:
-            # 初始化
-            self.global_context_ema.data.copy_(current_batch_context.detach())
-        else:
-            self.global_context_ema.data.mul_(self.ema_alpha).add_(
-                current_batch_context.detach(), alpha=(1.0 - self.ema_alpha)
-            )
-
-    def _apply_film(self, user_emb: torch.Tensor, context_vector: torch.Tensor) -> torch.Tensor:
-        """
-        應用 FiLM 調變
-        User_New = Gamma(Context) * User + Beta(Context)
-        """
-        # context_vector: (D,) 或 (B, D)
-        if context_vector.dim() == 1:
-            context_vector = context_vector.unsqueeze(0) # (1, D)
-            
-        # 計算 Gamma, Beta
-        film_out = self.context_film_net(context_vector) # (..., 2D)
-        gamma, beta = torch.split(film_out, self.user_rep_dim, dim=-1)
+        """ 更新 EMA (同前) """
         
-        # 調變
-        # Gamma * User + Beta
-        return gamma * user_emb + beta
+        self.global_context_ema.data.mul_(self.ema_alpha).add_(
+            current_batch_context.detach(), alpha=(1.0 - self.ema_alpha)
+        )
 
-    def forward(self, batch: Dict) -> Tuple[torch.Tensor, torch.Tensor]:
+    def _run_transformer_with_prompt(self, 
+                                     seq_emb: torch.Tensor, 
+                                     seq_lens: torch.Tensor, 
+                                     prompt_emb: torch.Tensor,
+                                     transformer_module: nn.TransformerEncoder, 
+                                     pos_emb_module: nn.Embedding) -> torch.Tensor:
         """
-        訓練前向傳播
+        帶 Prompt 的 Transformer 執行器
         """
-        # 1. 獲取原始 Main Branch 輸出 (User, Item)
-        # 這裡 user_emb 已經經過 MLP 融合了
-        user_emb, item_emb = super().forward(batch)
+        B, T, D = seq_emb.shape
+        device = seq_emb.device
         
-        # 2. 計算當前 Batch 的 Context (環境向量)
-        # 這裡我們定義環境為: "當前這批 Item Embedding 的平均值"
-        # 注意: 這裡用 item_emb (Main Branch 的輸出) 還是 靜態 Embedding?
-        # 建議用靜態 Embedding，因為它比較穩定，代表 Item 的本質屬性
+        # --- 1. 拼接 Prompt ---
+        # prompt_emb: (B, D) -> (B, 1, D)
+        prompt_emb = prompt_emb.unsqueeze(1)
+        
+        # 新序列: [Prompt, Item_1, Item_2, ..., Item_T]
+        # (B, T+1, D)
+        seq_emb_with_prompt = torch.cat([prompt_emb, seq_emb], dim=1)
+        new_T = T + 1
+        
+        # --- 2. 處理 Mask ---
+        # 原始 Padding Mask: (B, T)
+        # 新 Padding Mask: (B, T+1) -> 第 0 位 (Prompt) 永遠不是 Padding (False)
+        original_padding_mask = torch.arange(T, device=device)[None, :] >= seq_lens[:, None]
+        prompt_padding_mask = torch.zeros(B, 1, device=device, dtype=torch.bool) # False
+        new_padding_mask = torch.cat([prompt_padding_mask, original_padding_mask], dim=1)
+
+        # --- 3. 位置編碼 ---
+        # (T+1,)
+        pos_ids = torch.arange(new_T, dtype=torch.long, device=device)
+        pos_embeddings = pos_emb_module(pos_ids).unsqueeze(0) # (1, T+1, D)
+        
+        # 加入位置編碼
+        seq_input = seq_emb_with_prompt + pos_embeddings
+        
+        # --- 4. 運行 Transformer ---
+        # (不需要 Causal Mask ? 其實還是需要，保持自回歸特性，雖然這裡是編碼器)
+        # 但因為我們只取最後一個，且 item_t 不應該看到 item_t+1
+        # 所以我們還是加上 Causal Mask
+        causal_mask = nn.Transformer.generate_square_subsequent_mask(new_T, device=device).bool()
+        
+        transformer_output = transformer_module(
+            src=seq_input,
+            mask=causal_mask,
+            src_key_padding_mask=new_padding_mask
+        )
+        
+        # --- 5. 聚合 (取最後一個 "有效" 物品) ---
+        # 注意索引變化：
+        # 原本 Item_1 在 index 0。現在 Item_1 在 index 1。
+        # 原本最後一個物品在 index = seq_len - 1。
+        # 現在最後一個物品在 index = (seq_len - 1) + 1 = seq_len。
+        
+        # 處理空序列 (seq_len=0) 的情況：
+        # 如果 seq_len=0，我們希望取 index 0 (Prompt 本身) 或是 0 向量？
+        # 取 Prompt 本身比較合理，代表"沒有歷史，只有環境"。
+        
+        # (B, 1, 1)
+        target_indices = seq_lens.view(B, 1, 1).expand(-1, 1, D)
+        
+        # (B, D)
+        pooled_output = torch.gather(transformer_output, 1, target_indices).squeeze(1)
+        
+        return pooled_output
+
+    def _build_feature_representations(self, batch: Dict) -> Tuple[torch.Tensor, torch.Tensor]:
+        """
+        (*** 覆寫 ***) 注入 Context Prompt
+        """
+        # 1. 準備 Context Vector
         current_items_static = self.item_emb_w(batch['items'])
+        batch_context = current_items_static.mean(dim=0) # (Context_Dim,)
         
-        # (B, D) -> (D,)
-        batch_context = current_items_static.mean(dim=0)
-        
-        # 3. 更新全域 EMA (只在訓練時)
         if self.training:
             self._update_context_ema(batch_context)
-            
-            # 訓練時，我們可以使用 "當前 Batch Context" 來做強調變 (更適應當下)
-            # 或者使用 EMA Context (更穩定)
-            # 建議: 使用 Batch Context，讓模型學會適應"當下"的變化
-            # context_to_use = batch_context
-            context_to_use = self.global_context_ema
+            context_to_use = batch_context
         else:
-            # 驗證時使用 EMA
             context_to_use = self.global_context_ema
             
-        # 4. 對 User Embedding 進行 FiLM 調變
-        # 這一步是關鍵：User Embedding 根據環境進行了"變形"
-        user_emb_modulated = self._apply_film(user_emb, context_to_use)
+        # 擴展到 Batch: (B, Context_Dim)
+        context_batch = context_to_use.unsqueeze(0).expand(len(batch['users']), -1)
         
-        # 5. 再次歸一化 (因為 FiLM 可能改變了長度)
-        user_emb_final = F.normalize(user_emb_modulated, p=2, dim=-1, eps=1e-8)
+        # 2. 準備 Prompt for A and B
+        prompt_A = self.context_proj_A(context_batch) # (B, dim_A)
+        prompt_B = self.context_proj_B(context_batch) # (B, dim_B)
         
-        return user_emb_final, item_emb
+        # === 使用者表示 (User Tower) ===
+        static_u_emb = self.user_emb_w(batch['users'])
+        
+        # 準備 itemSeq
+        hist_item_emb = self.item_emb_w(batch['item_history_matrix'])
+        hist_cates = self.cates[batch['item_history_matrix']]
+        hist_cates_emb = self.cate_emb_w(hist_cates)
+        avg_cate_emb_for_hist = average_pooling(hist_cates_emb, self.cate_lens[batch['item_history_matrix']])
+        hist_item_emb_with_cate = torch.cat([hist_item_emb, avg_cate_emb_for_hist], dim=2)
+
+        # [!!! 呼叫帶 Prompt 的 Transformer !!!]
+        user_history_emb = self._run_transformer_with_prompt(
+            hist_item_emb_with_cate, batch['item_history_len'], prompt_A,
+            self.item_seq_transformer, self.item_seq_pos_emb
+        )
+        
+        user_features = torch.cat([static_u_emb, user_history_emb.detach()], dim=-1)
+
+        # === 物品表示 (Item Tower) ===
+        static_item_emb = self.item_emb_w(batch['items'])
+        item_cates = self.cates[batch['items']]
+        item_cates_emb = self.cate_emb_w(item_cates)
+        avg_cate_emb_for_item = average_pooling(item_cates_emb, self.cate_lens[batch['items']])
+        item_emb_with_cate = torch.cat([static_item_emb, avg_cate_emb_for_item], dim=1)
+        
+        # 準備 userSeq
+        item_history_user_emb = self.user_emb_w(batch['user_history_matrix'])
+
+        # [!!! 呼叫帶 Prompt 的 Transformer !!!]
+        item_history_emb = self._run_transformer_with_prompt(
+            item_history_user_emb, batch['user_history_len'], prompt_B,
+            self.user_seq_transformer, self.user_seq_pos_emb
+        )
+        
+        item_features = torch.cat([item_emb_with_cate, item_history_emb.detach()], dim=-1)
+        
+        return user_features, item_features
 
     def inference(
         self,
@@ -840,60 +900,62 @@ class ContextSASRec_MLP(SASRec_MLP):
         neg_item_ids_batch: torch.Tensor
     ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         """
-        推論
+        推論 (需要手動複製邏輯以注入 Prompt)
         """
-        # 1. 獲取原始特徵 (為了避免重複計算，我們不能直接呼叫 super().inference)
-        # 我們需要手動執行 super().inference 的前半部分
-        
-        # --- 計算正樣本 (邏輯同 EmbSASRec) ---
+        # 1. 正樣本與特徵 (使用上面的 _build_feature_representations 即可)
         user_features, item_features = self._build_feature_representations(batch)
         pos_user_emb, pos_item_emb = self._get_embeddings_from_features(user_features, item_features)
-        
-        # [!!! NEW !!!] 在這裡插入調變
-        # 推論時，使用 EMA (全域環境向量)
-        context_to_use = self.global_context_ema
-        pos_user_emb = self._apply_film(pos_user_emb, context_to_use)
-        pos_user_emb = F.normalize(pos_user_emb, p=2, dim=-1, eps=1e-8)
-        
-        # 計算正樣本 Logits
         pos_logits = torch.sum(pos_user_emb * pos_item_emb, dim=1)
         
         per_sample_loss = F.binary_cross_entropy_with_logits(
             pos_logits, batch['labels'].float(), reduction='none'
         )
 
-        # --- 計算負樣本 (邏輯同 EmbSASRec) ---
+        # 2. 負樣本 (這部分比較麻煩，需要手動注入 Prompt 到負樣本的歷史計算中)
         num_neg_samples = neg_item_ids_batch.shape[1]
         
-        # ... (複製 EmbSASRec 的負樣本特徵建構邏輯) ...
+        # 準備 Context (推論用 EMA)
+        context_to_use = self.global_context_ema
+        context_batch = context_to_use.unsqueeze(0).expand(len(batch['users']), -1)
+        # 注意：這裡負樣本計算用到的是 userSeq (物品的歷史)，所以用 prompt_B
+        prompt_B = self.context_proj_B(context_batch) # (B, dim_B)
+        
+        # ... (負樣本靜態特徵部分同 EmbSASRec) ...
         neg_item_static_emb = self.item_emb_w(neg_item_ids_batch)
         neg_item_cate_emb = self.cate_emb_w(self.cates[neg_item_ids_batch])
-        neg_item_cates_len = self.cate_lens[neg_item_ids_batch]
-        avg_cate_emb_for_neg_item = average_pooling(neg_item_cate_emb, neg_item_cates_len)
+        avg_cate_emb_for_neg_item = average_pooling(neg_item_cate_emb, self.cate_lens[neg_item_ids_batch])
         neg_item_emb_with_cate = torch.cat([neg_item_static_emb, avg_cate_emb_for_neg_item], dim=2)
-        
-        item_history_emb_dim = self.user_seq_input_dim
-        item_history_emb = item_features[:, -item_history_emb_dim:]
-        item_history_emb_expanded = item_history_emb.unsqueeze(1).expand(-1, num_neg_samples, -1) # (B, M, D)
 
-        # 這裡需要從快取讀取嗎？EmbSASRec v2.1 是從快取讀取的
-        # 讓我們保持一致，使用 self.user_history_buffer
+        # ... (負樣本歷史部分) ...
+        # 這裡我們需要重新計算嗎？
+        # 我們的架構是雙塔，負樣本的 userSeq (物品歷史) 應該是從 batch['user_history_matrix'] 取出的嗎？
+        # 不，負樣本是隨機採樣的物品，它們有自己的 userSeq。
+        # 但 EmbMLP/SASRec 的 inference 簡化邏輯是假設我們無法即時獲取負樣本的 userSeq，
+        # 而是重用正樣本的 userSeq (item_history_emb) 或者使用快取。
+        
+        # [重要] 我們延續 EmbSASRec v2.1 的快取邏輯
+        # 我們在 _build_feature_representations 中已經算好了帶 Prompt 的 item_history_emb (userSeq result)
+        # 並存入了快取 (如果啟用)。
+        
+        # 讓我們檢查父類的 cache 機制。
+        # EmbSASRec v2.1 有 item_history_buffer。
+        # _build_feature_representations 會把算好的 (包含 Prompt 影響的) embedding 存進去。
+        # 所以 inference 只需要讀取 cache 即可，不需要再手動加 Prompt！
+        
+        # 直接讀取 Cache
         if hasattr(self, 'user_history_buffer'):
              item_history_emb_expanded = self.user_history_buffer(neg_item_ids_batch)
-        
+        else:
+             # 如果沒有 cache (例如第一輪)，退化為重用正樣本特徵 (雖然不太正確但可跑)
+             item_history_emb_dim = self.user_seq_input_dim
+             item_history_emb = item_features[:, -item_history_emb_dim:]
+             item_history_emb_expanded = item_history_emb.unsqueeze(1).expand(-1, num_neg_samples, -1)
+
         neg_item_features = torch.cat([neg_item_emb_with_cate, item_history_emb_expanded.detach()], dim=2)
         
         user_features_expanded = user_features.unsqueeze(1).expand(-1, num_neg_samples, -1)
         neg_user_emb_final, neg_item_emb_final = self._get_embeddings_from_features(user_features_expanded, neg_item_features)
         
-        # [!!! NEW !!!] 對負樣本計算時的 User Emb 也要調變
-        # 注意: neg_user_emb_final 其实就是 pos_user_emb 的 expanded 版 (如果 MLP 沒有互動)
-        # 但如果 MLP 有 User/Item 交叉，則需要重新計算。
-        # 您的 _get_embeddings_from_features 是雙塔結構，User Emb 不受 Item 影響。
-        # 所以我们可以直接用调变后的 pos_user_emb 扩展。
-        
-        pos_user_emb_expanded = pos_user_emb.unsqueeze(1).expand(-1, num_neg_samples, -1)
-        
-        neg_logits = torch.sum(pos_user_emb_expanded * neg_item_emb_final, dim=2)
+        neg_logits = torch.sum(neg_user_emb_final * neg_item_emb_final, dim=2)
         
         return pos_logits, neg_logits, per_sample_loss
