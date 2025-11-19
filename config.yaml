@@ -32,11 +32,11 @@ continual_learning:
   replay_sample_size_per_period: 30000 # 每期訓練時，從緩衝區取出 30000 筆
 
 distillation:
-  enabled: false          # <--- 開啟 Self-Distillation
+  enabled: false   
   weight: 100.5            # 蒸餾權重 (lambda)，可以試試 0.1, 0.5, 1.0
 
-# 選項: 'hybrid'  'mlp'  'lightgcn_only'  'sr_gnn' 'sr_gnn_mlp' 'pure_sasrec' 'sasrec_mlp' 'causal_sasrec_mlp' 'context_sasrec_mlp'
-model_type: 'causal_sasrec_mlp'
+# 選項: 'hybrid'  'mlp'  'lightgcn_only'  'sr_gnn' 'sr_gnn_mlp' 'pure_sasrec' 'sasrec_mlp' 'causal_sasrec_mlp' 'context_sasrec_mlp' 'dual_prompt_sasrec'
+model_type: 'dual_prompt_sasrec'
 # Model Hyperparameters
 model:
   batch_size: 1024

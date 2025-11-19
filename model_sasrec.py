@@ -959,3 +959,198 @@ class ContextSASRec_MLP(SASRec_MLP):
         neg_logits = torch.sum(neg_user_emb_final * neg_item_emb_final, dim=2)
         
         return pos_logits, neg_logits, per_sample_loss
+    
+
+
+
+class DualPromptSASRec(ContextSASRec_MLP):
+    """
+    雙重提示 SASRec (Dual Prompt: Learnable + Context).
+    
+    輸入序列結構:
+    [Learnable_Prompt, Context_Prompt, Item_1, Item_2, ..., Item_T]
+    
+    - Learnable_Prompt: 學習全域、長期的隱式模式 (Implicit Prior).
+    - Context_Prompt: 注入當下、顯式的環境資訊 (Explicit Context).
+    """
+    def __init__(self, cates: np.ndarray, cate_lens: np.ndarray, hyperparams: Dict, train_config: Dict,
+                 item_init_vectors: torch.Tensor = None,  
+                 cate_init_vectors: torch.Tensor = None): 
+        
+        # 1. 初始化父類 (ContextPromptSASRec_MLP)
+        # 這會建立 Context Projection Layer, EMA Buffer 等
+        super().__init__(cates, cate_lens, hyperparams, train_config, 
+                         item_init_vectors, cate_init_vectors)
+        
+        print("[DualPromptSASRec] Initialized. Using Dual Prompts (Learnable + Context).")
+        
+        # 2. 定義可學習的 Prompt (Learnable Parameters)
+        # 針對 itemSeq (模組 A)
+        self.learnable_prompt_A = nn.Parameter(torch.randn(1, self.transformer_dim_A))
+        nn.init.xavier_normal_(self.learnable_prompt_A)
+        
+        # 針對 userSeq (模組 B)
+        self.learnable_prompt_B = nn.Parameter(torch.randn(1, self.transformer_dim_B))
+        nn.init.xavier_normal_(self.learnable_prompt_B)
+        
+        # 3. [!!! 關鍵修正 !!!] 再次擴大 Positional Embedding
+        # 父類將其設為 maxlen + 1 (1個 Prompt)
+        # 我們現在有 2 個 Prompt，所以需要 maxlen + 2
+        
+        new_maxlen = self.maxlen + 2
+        
+        # 覆蓋模組 A 的 Pos Emb
+        self.item_seq_pos_emb = nn.Embedding(new_maxlen, self.transformer_dim_A)
+        nn.init.xavier_normal_(self.item_seq_pos_emb.weight)
+        
+        # 覆蓋模組 B 的 Pos Emb
+        self.user_seq_pos_emb = nn.Embedding(new_maxlen, self.transformer_dim_B)
+        nn.init.xavier_normal_(self.user_seq_pos_emb.weight)
+        
+        print(f"   - Resized Pos Embeddings to {new_maxlen} to accommodate 2 Prompt tokens.")
+
+    def _run_transformer_with_prompt(self, 
+                                     seq_emb: torch.Tensor, 
+                                     seq_lens: torch.Tensor, 
+                                     context_prompt: torch.Tensor, # 來自 EMA
+                                     learnable_prompt: torch.Tensor, # 來自 Parameter
+                                     transformer_module: nn.TransformerEncoder, 
+                                     pos_emb_module: nn.Embedding) -> torch.Tensor:
+        """
+        帶雙重 Prompt 的 Transformer 執行器
+        """
+        B, T, D = seq_emb.shape
+        device = seq_emb.device
+        
+        # --- 1. 準備 Prompts ---
+        # context_prompt: (B, D) -> (B, 1, D)
+        context_prompt = context_prompt.unsqueeze(1)
+        
+        # learnable_prompt: (1, D) -> (B, 1, D)
+        learnable_prompt = learnable_prompt.unsqueeze(0).expand(B, -1, -1)
+        
+        # --- 2. 拼接序列 ---
+        # 順序: [Learnable, Context, History...]
+        # 讓 Learnable 在最前面，作為一種全域的 [CLS] token 感覺
+        # (B, T+2, D)
+        seq_emb_with_prompts = torch.cat([learnable_prompt, context_prompt, seq_emb], dim=1)
+        new_T = T + 2
+        
+        # --- 3. 處理 Mask ---
+        # 原始 Padding Mask: (B, T)
+        # 新 Padding Mask: (B, T+2) -> 前 2 位永遠不是 Padding (False)
+        prompt_padding_mask = torch.zeros(B, 2, device=device, dtype=torch.bool) 
+        
+        # (注意: 這裡假設 seq_lens 是原始歷史長度，不包含 prompt)
+        original_padding_mask = torch.arange(T, device=device)[None, :] >= seq_lens[:, None]
+        
+        new_padding_mask = torch.cat([prompt_padding_mask, original_padding_mask], dim=1)
+
+        # --- 4. 位置編碼 ---
+        pos_ids = torch.arange(new_T, dtype=torch.long, device=device)
+        pos_embeddings = pos_emb_module(pos_ids).unsqueeze(0)
+        seq_input = seq_emb_with_prompts + pos_embeddings
+        
+        # --- 5. 運行 Transformer ---
+        # Causal Mask 大小為 T+2
+        causal_mask = nn.Transformer.generate_square_subsequent_mask(new_T, device=device).bool()
+        
+        transformer_output = transformer_module(
+            src=seq_input,
+            mask=causal_mask,
+            src_key_padding_mask=new_padding_mask
+        )
+        
+        # --- 6. [!!! 關鍵修正 !!!] NaN 安全保護 ---
+        # 如果 seq_len == 0，original_padding_mask 全為 True。
+        # 但因為我們加了 2 個 Prompt，new_padding_mask 前兩位是 False。
+        # 所以 softmax 不會全遮罩，不會產生 NaN！
+        # transformer_output 的前兩位會有值 (Prompt 的 Self-Attention)。
+        # 但是，後面的歷史部分仍然被遮罩。
+        
+        # 我們需要取最後一個「有效」物品。
+        # 如果 seq_len > 0: 取 item_history 的最後一個。
+        # 如果 seq_len == 0: 應該取誰？ Prompt 2 (Context) 還是 Prompt 1 (Learnable)?
+        # 建議取最後一個 Prompt (Context)，因為它離歷史最近。
+        
+        # 計算索引:
+        # Index 0: Learnable
+        # Index 1: Context
+        # Index 2: Item_0
+        # ...
+        # Last Item Index = (seq_len - 1) + 2 = seq_len + 1
+        
+        # 如果 seq_len == 0，我們希望取 Index 1 (Context)。
+        # 公式: (0) + 1 = 1。
+        # 所以通用公式是: target_index = seq_len + 1
+        
+        # (B, 1, 1)
+        target_indices = (seq_lens + 1).view(B, 1, 1).expand(-1, 1, D)
+        
+        # (B, D)
+        pooled_output = torch.gather(transformer_output, 1, target_indices).squeeze(1)
+        
+        return pooled_output
+
+    def _build_feature_representations(self, batch: Dict) -> Tuple[torch.Tensor, torch.Tensor]:
+        """
+        覆寫以傳入 Learnable Prompt
+        """
+        # 1. 準備 Context (同父類)
+        current_items_static = self.item_emb_w(batch['items'])
+        batch_context = current_items_static.mean(dim=0)
+        if self.training:
+            self._update_context_ema(batch_context)
+            context_to_use = batch_context
+        else:
+            context_to_use = self.global_context_ema
+        context_batch = context_to_use.unsqueeze(0).expand(len(batch['users']), -1)
+        
+        # 2. 投影 Context Prompts
+        prompt_context_A = self.context_proj_A(context_batch)
+        prompt_context_B = self.context_proj_B(context_batch)
+        
+        # === User Tower ===
+        static_u_emb = self.user_emb_w(batch['users'])
+        
+        hist_item_emb = self.item_emb_w(batch['item_history_matrix'])
+        hist_cates = self.cates[batch['item_history_matrix']]
+        hist_cates_emb = self.cate_emb_w(hist_cates)
+        avg_cate_emb_for_hist = average_pooling(hist_cates_emb, self.cate_lens[batch['item_history_matrix']])
+        hist_item_emb_with_cate = torch.cat([hist_item_emb, avg_cate_emb_for_hist], dim=2)
+
+        # [呼叫]
+        user_history_emb = self._run_transformer_with_prompt(
+            hist_item_emb_with_cate, batch['item_history_len'], 
+            prompt_context_A, self.learnable_prompt_A, # 傳入兩個 Prompt
+            self.item_seq_transformer, self.item_seq_pos_emb
+        )
+        user_features = torch.cat([static_u_emb, user_history_emb.detach()], dim=-1)
+
+        # === Item Tower ===
+        static_item_emb = self.item_emb_w(batch['items'])
+        item_cates = self.cates[batch['items']]
+        item_cates_emb = self.cate_emb_w(item_cates)
+        avg_cate_emb_for_item = average_pooling(item_cates_emb, self.cate_lens[batch['items']])
+        item_emb_with_cate = torch.cat([static_item_emb, avg_cate_emb_for_item], dim=1)
+        
+        item_history_user_emb = self.user_emb_w(batch['user_history_matrix'])
+
+        # [呼叫]
+        item_history_emb = self._run_transformer_with_prompt(
+            item_history_user_emb, batch['user_history_len'], 
+            prompt_context_B, self.learnable_prompt_B, # 傳入兩個 Prompt
+            self.user_seq_transformer, self.user_seq_pos_emb
+        )
+        item_features = torch.cat([item_emb_with_cate, item_history_emb.detach()], dim=-1)
+        
+        return user_features, item_features
+
+    # inference 方法不需要重寫！
+    # 因為我們繼承了 ContextPromptSASRec_MLP (父類)，
+    # 但我們覆寫了 _build_feature_representations。
+    # 父類的 inference 會呼叫我們覆寫後的 _build_feature_representations。
+    # 唯一的問題是負樣本計算。
+    # 父類的 inference 依賴快取 (item_history_buffer)。
+    # 我們的 _build_feature_representations 已經計算了正確的 item_history_emb (雙 Prompt) 並存入快取。
+    # 所以，直接使用父類的 inference 是安全的！它會直接讀取快取。
