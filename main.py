@@ -435,7 +435,8 @@ def run_experiment(config: Dict[str, Any]):
                 if os.path.exists(ckpt_path):
                     try:
                         print(f"--- [CL] Loading weights from: {ckpt_path} ---")
-                        model.load_state_dict(torch.load(ckpt_path, map_location=device))
+                        state_dict = torch.load(ckpt_path, map_location=device) 
+                        model.load_state_dict(state_dict)
                     except Exception as e:
                         print(f"--- [Warning] Could not load weights: {e} ---")
                 else:
@@ -635,12 +636,6 @@ if __name__ == "__main__":
     except FileNotFoundError:
         print(f"Error: Configuration file not found at {args.config}")
         exit()
-    
-    # --- 環境變數設定 ---
-    # 修正了 key 名稱
-    os.environ["CUDA_VISIBLE_DEVICES"] = config.get('cuda_visible_devices', "0")
-    # (!!!) 關鍵：允許 MPS (Apple Silicon) 在遇到不受支援的操作時，回退到 CPU，防止崩潰
-    os.environ["PYTORCH_ENABLE_MPS_FALLBACK"] = "1" 
     
     # --- 執行實驗 ---
     run_experiment(config)
