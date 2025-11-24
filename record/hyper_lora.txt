@@ -454,3 +454,159 @@ Epochs:  10%|███████▍                                           
   - Recall@20 : 0.9210   |   NDCG@20 : 0.8002
   - Recall@50 : 0.9532   |   NDCG@50 : 0.8067
 -------------------------------------------------------
+
+
+
+
+
+dim256
+
+
+========================= Period 8 =========================
+--- [Data] Period 8 loaded. Total rows: 220689, Positive samples: 180940
+--- [Eval] Test set for T+1 (Period 9) prepared. Positive samples: 17877
+--- Building model, type: hyper_lora_sasrec ---
+[HyperLoRASASRec] Initialized. FFN weights are modulated by Context.
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_7/best_model.pth ---
+Epochs:  10%|████████▌                                                                             | 1/10 [01:05<09:47, 65.29s/it, patience=0/1, train_loss=5.2470, val_loss=5.1918]
+--- Training finished for period 8. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(8) ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(8) on TestSet(Period 9) ---
+                                                                                                                                                                                    
+--- Period 8 (Model) -> Period 9 (Test) Evaluation Finished ---
+  - GAUC     : 0.9226
+  - AUC      : 0.9226
+  -----------------------------------------------------
+  - Recall@5  : 0.7880   |   NDCG@5  : 0.7044
+  - Recall@10 : 0.8458   |   NDCG@10 : 0.7232
+  - Recall@20 : 0.8923   |   NDCG@20 : 0.7350
+  - Recall@50 : 0.9414   |   NDCG@50 : 0.7448
+  -----------------------------------------------------
+
+========================= Period 9 =========================
+--- [Data] Period 9 loaded. Total rows: 220690, Positive samples: 178563
+--- [Eval] Test set for T+1 (Period 10) prepared. Positive samples: 17781
+--- Building model, type: hyper_lora_sasrec ---
+[HyperLoRASASRec] Initialized. FFN weights are modulated by Context.
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_8/best_model.pth ---
+Epochs:  10%|████████▌                                                                             | 1/10 [01:03<09:32, 63.58s/it, patience=0/1, train_loss=5.1331, val_loss=5.2912]
+--- Training finished for period 9. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(9) ---
+    - Evaluating Model(9) on TestSet(Period 9)...
+    - TestSet(Period 9) GAUC: 0.9221                                                                                                                                                
+--- [CL] Average BWT GAUC for Model(9): 0.9221 ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(9) on TestSet(Period 10) ---
+                                                                                                                                                                                    
+--- Period 9 (Model) -> Period 10 (Test) Evaluation Finished ---
+  - GAUC     : 0.9345
+  - AUC      : 0.9345
+  -----------------------------------------------------
+  - Recall@5  : 0.8463   |   NDCG@5  : 0.7909
+  - Recall@10 : 0.8823   |   NDCG@10 : 0.8026
+  - Recall@20 : 0.9108   |   NDCG@20 : 0.8098
+  - Recall@50 : 0.9462   |   NDCG@50 : 0.8168
+  -----------------------------------------------------
+
+========================= Period 10 =========================
+--- [Data] Period 10 loaded. Total rows: 220690, Positive samples: 178501
+--- [Eval] Test set for T+1 (Period 11) prepared. Positive samples: 17663
+--- Building model, type: hyper_lora_sasrec ---
+[HyperLoRASASRec] Initialized. FFN weights are modulated by Context.
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_9/best_model.pth ---
+Epochs:  10%|████████▌                                                                             | 1/10 [01:03<09:30, 63.40s/it, patience=0/1, train_loss=5.1338, val_loss=5.1639]
+--- Training finished for period 10. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(10) ---
+    - Evaluating Model(10) on TestSet(Period 9)...
+    - TestSet(Period 9) GAUC: 0.8751                                                                                                                                                
+    - Evaluating Model(10) on TestSet(Period 10)...
+    - TestSet(Period 10) GAUC: 0.9179                                                                                                                                               
+--- [CL] Average BWT GAUC for Model(10): 0.8965 ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(10) on TestSet(Period 11) ---
+                                                                                                                                                                                    
+--- Period 10 (Model) -> Period 11 (Test) Evaluation Finished ---
+  - GAUC     : 0.9322
+  - AUC      : 0.9322
+  -----------------------------------------------------
+  - Recall@5  : 0.8254   |   NDCG@5  : 0.7453
+  - Recall@10 : 0.8755   |   NDCG@10 : 0.7616
+  - Recall@20 : 0.9128   |   NDCG@20 : 0.7711
+  - Recall@50 : 0.9446   |   NDCG@50 : 0.7775
+  -----------------------------------------------------
+
+========================= Period 11 =========================
+--- [Data] Period 11 loaded. Total rows: 220689, Positive samples: 176739
+--- [Eval] Test set for T+1 (Period 12) prepared. Positive samples: 18011
+--- Building model, type: hyper_lora_sasrec ---
+[HyperLoRASASRec] Initialized. FFN weights are modulated by Context.
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_10/best_model.pth ---
+Epochs:  10%|████████▌                                                                             | 1/10 [01:03<09:30, 63.44s/it, patience=0/1, train_loss=5.0197, val_loss=5.3535]
+--- Training finished for period 11. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(11) ---
+    - Evaluating Model(11) on TestSet(Period 9)...
+    - TestSet(Period 9) GAUC: 0.8462                                                                                                                                                
+    - Evaluating Model(11) on TestSet(Period 10)...
+    - TestSet(Period 10) GAUC: 0.8650                                                                                                                                               
+    - Evaluating Model(11) on TestSet(Period 11)...
+    - TestSet(Period 11) GAUC: 0.9075                                                                                                                                               
+--- [CL] Average BWT GAUC for Model(11): 0.8729 ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(11) on TestSet(Period 12) ---
+                                                                                                                                                                                    
+--- Period 11 (Model) -> Period 12 (Test) Evaluation Finished ---
+  - GAUC     : 0.9317
+  - AUC      : 0.9317
+  -----------------------------------------------------
+  - Recall@5  : 0.8123   |   NDCG@5  : 0.7453
+  - Recall@10 : 0.8608   |   NDCG@10 : 0.7611
+  - Recall@20 : 0.9031   |   NDCG@20 : 0.7718
+  - Recall@50 : 0.9475   |   NDCG@50 : 0.7807
+  -----------------------------------------------------
+
+========================= Period 12 =========================
+--- [Data] Period 12 loaded. Total rows: 220690, Positive samples: 179435
+--- [Eval] Test set for T+1 (Period 13) prepared. Positive samples: 17041
+--- Building model, type: hyper_lora_sasrec ---
+[HyperLoRASASRec] Initialized. FFN weights are modulated by Context.
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_11/best_model.pth ---
+Epochs:  10%|████████▌                                                                             | 1/10 [01:03<09:29, 63.23s/it, patience=0/1, train_loss=5.0726, val_loss=5.3967]
+--- Training finished for period 12. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth ---
+--- [CL] Running Backward Transfer (BWT) Evaluation for Model(12) ---
+    - Evaluating Model(12) on TestSet(Period 9)...
+    - TestSet(Period 9) GAUC: 0.8625                                                                                                                                                
+    - Evaluating Model(12) on TestSet(Period 10)...
+    - TestSet(Period 10) GAUC: 0.8720                                                                                                                                               
+    - Evaluating Model(12) on TestSet(Period 11)...
+    - TestSet(Period 11) GAUC: 0.8917                                                                                                                                               
+    - Evaluating Model(12) on TestSet(Period 12)...
+    - TestSet(Period 12) GAUC: 0.9243                                                                                                                                               
+--- [CL] Average BWT GAUC for Model(12): 0.8876 ---
+--- [CL] Running Forward Transfer (FWT) Evaluation for Model(12) on TestSet(Period 13) ---
+                                                                                                                                                                                    
+--- Period 12 (Model) -> Period 13 (Test) Evaluation Finished ---
+  - GAUC     : 0.9420
+  - AUC      : 0.9420
+  -----------------------------------------------------
+  - Recall@5  : 0.8473   |   NDCG@5  : 0.7927
+  - Recall@10 : 0.8850   |   NDCG@10 : 0.8049
+  - Recall@20 : 0.9184   |   NDCG@20 : 0.8134
+  - Recall@50 : 0.9525   |   NDCG@50 : 0.8202
+  -----------------------------------------------------
+
+========================= Period 13 =========================
+--- [Data] Period 13 loaded. Total rows: 220689, Positive samples: 170880
+--- Building model, type: hyper_lora_sasrec ---
+[HyperLoRASASRec] Initialized. FFN weights are modulated by Context.
+--- [CL] Loading weights from: ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_12/best_model.pth ---
+Epochs:  10%|████████▌                                                                             | 1/10 [01:03<09:31, 63.48s/it, patience=0/1, train_loss=4.8512, val_loss=4.9444]
+--- Training finished for period 13. Best model saved to ./checkpoints/Meta_Refactored_Experiment_lr0.001/period_13/best_model.pth ---
+
+==================== [ 學習率 0.001 總結報告 (FWT) ] ====================
+
+--- Average Forward Transfer Metrics ---
+  - GAUC     : 0.9326
+  - AUC      : 0.9326
+-------------------------------------------------------
+  - Recall@5  : 0.8239   |   NDCG@5  : 0.7557
+  - Recall@10 : 0.8699   |   NDCG@10 : 0.7707
+  - Recall@20 : 0.9075   |   NDCG@20 : 0.7802
+  - Recall@50 : 0.9464   |   NDCG@50 : 0.7880
+-------------------------------------------------------

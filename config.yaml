@@ -43,10 +43,7 @@ model_type: 'hyper_lora_sasrec'
 model:
   batch_size: 1024
   text_embed_dim: 384
-  user_embed_dim: 128
+  user_embed_dim: 128 
   item_embed_dim: 128
   cate_embed_dim: 64
   lora_r: 64 # LoRA rank for hyper_lora_sasrec
-
-# Environment
-cuda_visible_devices: "1"
