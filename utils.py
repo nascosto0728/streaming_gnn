@@ -188,7 +188,6 @@ try:
 except ImportError:
     print("警告：未找到 PyTorch Geometric (torch_geometric)。")
     print("請執行 `pip install torch_geometric torch_sparse`")
-import scipy.sparse as sp
 
 def build_lightgcn_graph(interaction_df: pd.DataFrame, num_users: int, num_items: int, device: torch.device) -> torch.sparse.FloatTensor:
     """

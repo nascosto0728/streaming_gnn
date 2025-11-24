@@ -158,9 +158,13 @@ def run_experiment(config: Dict[str, Any]):
     # --- 0. 設備設定 ---
     print("--- 0. Setting up device ---")
     device = torch.device("cpu")
-    if torch.backends.mps.is_available():
+
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+        print("--- Using CUDA. ---")
+    elif torch.backends.mps.is_available():
         # device = torch.device("mps")
-        print("--- Using MPS (Apple Silicon GPU). ---")
+        pass
     else:
         print("--- Using CPU. ---")
 
