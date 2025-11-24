@@ -1154,3 +1154,276 @@ class DualPromptSASRec(ContextSASRec_MLP):
     # 父類的 inference 依賴快取 (item_history_buffer)。
     # 我們的 _build_feature_representations 已經計算了正確的 item_history_emb (雙 Prompt) 並存入快取。
     # 所以，直接使用父類的 inference 是安全的！它會直接讀取快取。
+
+
+
+
+
+
+
+
+
+class HyperLoRALinear(nn.Module):
+    """
+    支援 Hyper-Gating 的 LoRA 線性層。
+    
+    Forward:
+        y = Base(x) + LoRA_Up( Gate(context) * LoRA_Down(x) )
+    """
+    def __init__(self, in_features, out_features, r=8, dropout=0.0):
+        super().__init__()
+        
+        # 1. Base Layer (主權重)
+        self.base = nn.Linear(in_features, out_features)
+        
+        # 2. LoRA Layers (適應性路徑)
+        self.lora_down = nn.Linear(in_features, r, bias=False)
+        self.lora_up = nn.Linear(r, out_features, bias=False)
+        self.dropout = nn.Dropout(dropout)
+        
+        # 初始化 LoRA
+        nn.init.kaiming_uniform_(self.lora_down.weight, a=math.sqrt(5))
+        nn.init.zeros_(self.lora_up.weight) # 確保初始時不影響輸出
+        
+    def forward(self, x, context_gate):
+        """
+        x: (B, T, in_features)
+        context_gate: (B, r) - 由 HyperNet 生成的門控向量
+        """
+        # Base output
+        base_out = self.base(x)
+        
+        # LoRA output with Hyper-Gating
+        # 1. Down project: (B, T, r)
+        down_out = self.lora_down(x)
+        
+        # 2. Apply Gate: (B, T, r) * (B, 1, r) -> (B, T, r)
+        # context_gate 需要 unsqueeze 來廣播到序列長度
+        if context_gate.dim() == 2:
+            gate = context_gate.unsqueeze(1) 
+        else:
+            gate = context_gate
+            
+        gated_down = down_out * gate
+        
+        # 3. Up project: (B, T, out_features)
+        lora_out = self.lora_up(gated_down)
+        
+        return base_out + self.dropout(lora_out)
+    
+
+class HyperLoRATransformerLayer(nn.Module):
+    """
+    將 FFN 替換為 HyperLoRALinear 的 Transformer Encoder Layer。
+    """
+    def __init__(self, d_model, nhead, dim_feedforward=2048, dropout=0.1, lora_r=8):
+        super().__init__()
+        
+        # Self-Attention (保持標準)
+        self.self_attn = nn.MultiheadAttention(d_model, nhead, dropout=dropout, batch_first=True)
+        
+        # Feed Forward Network (使用 HyperLoRA)
+        # FFN 結構: Linear1 -> Activation -> Dropout -> Linear2
+        self.linear1 = HyperLoRALinear(d_model, dim_feedforward, r=lora_r, dropout=dropout)
+        self.dropout = nn.Dropout(dropout)
+        self.linear2 = HyperLoRALinear(dim_feedforward, d_model, r=lora_r, dropout=dropout)
+
+        # Norms & Dropouts
+        self.norm1 = nn.LayerNorm(d_model)
+        self.norm2 = nn.LayerNorm(d_model)
+        self.dropout1 = nn.Dropout(dropout)
+        self.dropout2 = nn.Dropout(dropout)
+        self.activation = F.relu
+
+    def forward(self, src, context_gate, src_mask=None, src_key_padding_mask=None):
+        # 1. Self-Attention Block
+        # (標準 Transformer 邏輯)
+        src2 = self.norm1(src)
+        attn_output, _ = self.self_attn(src2, src2, src2, attn_mask=src_mask, key_padding_mask=src_key_padding_mask)
+        src = src + self.dropout1(attn_output)
+        
+        # 2. Hyper-LoRA FFN Block
+        src2 = self.norm2(src)
+        
+        # Linear 1 (with Context Gate)
+        # 注意: FFN 中間層維度變大，我們假設 Gate 維度與 LoRA rank (r) 一致，自動廣播
+        ffn_out = self.linear1(src2, context_gate) 
+        ffn_out = self.activation(ffn_out)
+        ffn_out = self.dropout(ffn_out)
+        
+        # Linear 2 (with Context Gate)
+        ffn_out = self.linear2(ffn_out, context_gate)
+        
+        src = src + self.dropout2(ffn_out)
+        
+        return src
+    
+class HyperLoRASASRec(SASRec_MLP):
+    """
+    Hyper-LoRA SASRec.
+    
+    - 使用 EMA 計算 Global Context。
+    - 使用 HyperNetwork 生成 Context Gate。
+    - 使用 HyperLoRATransformerLayer 根據 Context 動態調整 FFN 權重。
+    """
+    def __init__(self, cates: np.ndarray, cate_lens: np.ndarray, hyperparams: Dict, train_config: Dict,
+                 item_init_vectors: torch.Tensor = None,  
+                 cate_init_vectors: torch.Tensor = None): 
+        
+        super().__init__(cates, cate_lens, hyperparams, train_config, 
+                         item_init_vectors, cate_init_vectors)
+        
+        print("[HyperLoRASASRec] Initialized. FFN weights are modulated by Context.")
+        
+        # 設定 LoRA Rank
+        self.lora_r = self.hparams.get('lora_r', 16)
+        self.context_dim = self.hparams['item_embed_dim']
+        
+        # HyperNetwork (Gate Generator)
+        # Input: Context (D) -> Output: Gate (r)
+        # 這決定了當下要激活 LoRA 的哪些維度
+        self.hyper_gate_net = nn.Sequential(
+            nn.Linear(self.context_dim, self.lora_r),
+            nn.Tanh(), # Gate 範圍 (-1, 1)，允許正負調節
+            nn.Linear(self.lora_r, self.lora_r),
+            nn.Tanh()
+        )
+        
+        # 替換父類的 Transformer (因為我們要用自定義 Layer)
+        # 需要重新建立 Encoder，使用 HyperLoRATransformerLayer
+        
+        # 模組 A (itemSeq)
+        dim_A = self.item_seq_input_dim
+        layers_A = nn.ModuleList([
+            HyperLoRATransformerLayer(
+                d_model=dim_A, 
+                nhead=self.hparams.get('transformer_n_heads', 4),
+                dim_feedforward=dim_A * 4,
+                dropout=self.hparams.get('transformer_dropout', 0.1),
+                lora_r=self.lora_r
+            )
+            for _ in range(self.hparams.get('transformer_n_layers', 2))
+        ])
+        self.item_seq_transformer_hyper = layers_A # 改名以避免父類干擾 (雖然 Python 會覆蓋)
+
+        # 模組 B (userSeq)
+        dim_B = self.user_seq_input_dim
+        layers_B = nn.ModuleList([
+            HyperLoRATransformerLayer(
+                d_model=dim_B, 
+                nhead=self.hparams.get('transformer_n_heads', 4),
+                dim_feedforward=dim_B * 4,
+                dropout=self.hparams.get('transformer_dropout', 0.1),
+                lora_r=self.lora_r
+            )
+            for _ in range(self.hparams.get('transformer_n_layers', 2))
+        ])
+        self.user_seq_transformer_hyper = layers_B
+        
+        # Context Buffer
+        self.register_buffer('global_context_ema', torch.zeros(self.context_dim))
+        self.ema_alpha = 0.9
+
+    def _update_context_ema(self, current_batch_context):
+        """ (同前) """
+        if self.global_context_ema.abs().sum() == 0:
+            self.global_context_ema.data.copy_(current_batch_context.detach())
+        else:
+            self.global_context_ema.data.mul_(self.ema_alpha).add_(
+                current_batch_context.detach(), alpha=(1.0 - self.ema_alpha)
+            )
+
+    def _run_hyper_transformer(self, seq_emb, seq_lens, context_vector, 
+                               layers_module_list, pos_emb_module):
+        """
+        運行 Hyper-LoRA Transformer
+        """
+        B, T, D = seq_emb.shape
+        device = seq_emb.device
+        
+        # 1. 生成 Context Gate
+        # (Context_Dim,) -> (1, Context_Dim) -> Hyper -> (1, r)
+        context_vector = context_vector.unsqueeze(0)
+        gate = self.hyper_gate_net(context_vector) # (1, r)
+        # 擴展到 Batch: (B, r) - 其實 Linear 層會自動廣播，但為了保險
+        gate = gate.expand(B, -1) 
+        
+        # 2. 準備輸入 (Pos Emb + Masks) - 同 EmbSASRec
+        pos_ids = torch.arange(T, dtype=torch.long, device=device)
+        pos_embeddings = pos_emb_module(pos_ids).unsqueeze(0)
+        seq_input = seq_emb + pos_embeddings
+        
+        causal_mask = nn.Transformer.generate_square_subsequent_mask(T, device=device).bool()
+        padding_mask = (torch.arange(T, device=device)[None, :] >= seq_lens[:, None])
+        
+        # 3. 逐層運行 (因為 nn.TransformerEncoder 不支援額外參數，我們手動迴圈)
+        output = seq_input
+        for layer in layers_module_list:
+            output = layer(
+                output, 
+                context_gate=gate, # 傳入 Gate
+                src_mask=causal_mask, 
+                src_key_padding_mask=padding_mask
+            )
+            
+        # 4. 聚合 (Last Item) - 同 EmbSASRec
+        # NaN 安全保護
+        zero_len_mask = (seq_lens == 0).unsqueeze(-1).unsqueeze(-1).expand(B, T, D)
+        output = torch.where(zero_len_mask, 0.0, output)
+        output = torch.nan_to_num(output, nan=0.0)
+        
+        target_indices = (seq_lens - 1).clamp(min=0).view(B, 1, 1).expand(-1, 1, D)
+        pooled_output = torch.gather(output, 1, target_indices).squeeze(1)
+        
+        return pooled_output
+
+    def _build_feature_representations(self, batch: Dict) -> Tuple[torch.Tensor, torch.Tensor]:
+        """
+        覆寫以使用 _run_hyper_transformer
+        """
+        # 1. 準備 Context
+        current_items_static = self.item_emb_w(batch['items'])
+        batch_context = current_items_static.mean(dim=0)
+        if self.training:
+            self._update_context_ema(batch_context)
+            context_to_use = batch_context
+        else:
+            context_to_use = self.global_context_ema
+            
+        # === User Tower ===
+        static_u_emb = self.user_emb_w(batch['users'])
+        
+        hist_item_emb = self.item_emb_w(batch['item_history_matrix'])
+        hist_cates = self.cates[batch['item_history_matrix']]
+        hist_cates_emb = self.cate_emb_w(hist_cates)
+        avg_cate_emb_for_hist = average_pooling(hist_cates_emb, self.cate_lens[batch['item_history_matrix']])
+        hist_item_emb_with_cate = torch.cat([hist_item_emb, avg_cate_emb_for_hist], dim=2)
+
+        # [呼叫 Hyper Transformer]
+        user_history_emb = self._run_hyper_transformer(
+            hist_item_emb_with_cate, batch['item_history_len'], 
+            context_to_use,
+            self.item_seq_transformer_hyper, self.item_seq_pos_emb
+        )
+        user_features = torch.cat([static_u_emb, user_history_emb.detach()], dim=-1)
+
+        # === Item Tower ===
+        static_item_emb = self.item_emb_w(batch['items'])
+        item_cates = self.cates[batch['items']]
+        item_cates_emb = self.cate_emb_w(item_cates)
+        avg_cate_emb_for_item = average_pooling(item_cates_emb, self.cate_lens[batch['items']])
+        item_emb_with_cate = torch.cat([static_item_emb, avg_cate_emb_for_item], dim=1)
+        
+        item_history_user_emb = self.user_emb_w(batch['user_history_matrix'])
+
+        # [呼叫 Hyper Transformer]
+        item_history_emb = self._run_hyper_transformer(
+            item_history_user_emb, batch['user_history_len'], 
+            context_to_use,
+            self.user_seq_transformer_hyper, self.user_seq_pos_emb
+        )
+        item_features = torch.cat([item_emb_with_cate, item_history_emb.detach()], dim=-1)
+        
+        return user_features, item_features
+
+    # inference 直接繼承 EmbSASRec，因為我們透過快取傳遞了結果
