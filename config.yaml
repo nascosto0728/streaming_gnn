@@ -26,10 +26,10 @@ item_vec_path: './vectors/item_vectors_kge.npy'
 cate_vec_path: './vectors/cate_vectors.npy'
 
 continual_learning:
-  replay_enabled: false             # 設為 true 來啟用經驗回放
-  replay_buffer_size: 500000        # 緩衝區最大容量 (例如 5 萬筆)
-  replay_add_size_per_period: 50000   # 每期結束後，從當期資料隨機存 50000 筆
-  replay_sample_size_per_period: 30000 # 每期訓練時，從緩衝區取出 30000 筆
+  replay_enabled: True             # 設為 true 來啟用經驗回放
+  replay_buffer_size: 5000000        # 緩衝區最大容量 (例如 5 萬筆)
+  replay_add_size_per_period: 200000   # 每期結束後，從當期資料隨機存 50000 筆
+  replay_sample_size_per_period: 60000 # 每期訓練時，從緩衝區取出 30000 筆
 
 distillation:
   enabled: false   
