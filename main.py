@@ -17,7 +17,7 @@ from torch.utils.data import DataLoader
 # (假設您的模型都已正確分離到這些檔案中)
 from model_gcn import Hybrid_GNN_MLP , LightGCN_Only
 from model_srgnn import PURE_SR_GNN, SR_GNN_MLP
-from model_sasrec import PureSASRec, SASRec_MLP, CausalSASRec_MLP, ContextSASRec_MLP, DualPromptSASRec
+from model_sasrec import PureSASRec, SASRec_MLP, CausalSASRec_MLP, ContextSASRec_MLP, DualPromptSASRec, HyperLoRASASRec
 from model_mlp import EmbMLP  
 
 from utils import (
@@ -417,6 +417,8 @@ def run_experiment(config: Dict[str, Any]):
                 model = ContextSASRec_MLP(cates_np, cate_lens_np, hyperparams, config).to(device)
             elif model_type == 'dual_prompt_sasrec':
                 model = DualPromptSASRec(cates_np, cate_lens_np, hyperparams, config).to(device)
+            elif model_type == 'hyper_lora_sasrec':
+                model = HyperLoRASASRec(cates_np, cate_lens_np, hyperparams, config).to(device)
             else:
                 raise ValueError(f"未知的 model_type: {model_type}")
             
